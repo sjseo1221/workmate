@@ -1,13 +1,13 @@
 # M0.1 A2A·Artifact 계약 증빙
 
 status: 검수 중
-latest_run_id: 20260812-215216
-latest_run_status: PASS (PostgreSQL 연결 검증 보류)
+latest_run_id: 20260812-222254
+latest_run_status: 부분 PASS (로컬 테스트 PASS, PostgreSQL·최종 Docker 재검증 보류)
 latest_approved_run_id: 20260812-212244
 approved_at: 2026-08-12 21:22:44 +09:00
 reviewer: 자동 승인(검증 명령)
 
-`latest_approved_run_id`는 구현 설명을 보강해 재검증한 M0.1-02 실행을 가리킨다. M0.1-01은 실행 `20260812-210001`로 승인됐다. M0.1-03은 로컬 SQLite 재시작·계약 검증과 기존 Docker 기동은 통과했지만 PostgreSQL 실제 연결·최종 Dockerfile 재검증이 남아 `검수 중`이다.
+`latest_approved_run_id`는 구현 설명을 보강해 재검증한 M0.1-02 실행을 가리킨다. M0.1-01은 실행 `20260812-210001`로 승인됐다. M0.1-03은 로컬 SQLite 재시작·계약 검증은 통과했지만 Docker daemon 응답 지연으로 PostgreSQL 실제 연결·최종 Dockerfile 재검증이 남아 `검수 중`이다.
 
 ## 목표
 
@@ -44,5 +44,6 @@ M0.1-01 실행 결과:
 - Docker 이미지·Health·Agent Card 재검수: [`runs/20260812-210001/result.md`](runs/20260812-210001/result.md)
 - 구현 설명을 포함한 M0.1-02 재검수: [`runs/20260812-212244/result.md`](runs/20260812-212244/result.md)
 - M0.1-03 Workflow·영속 Task 경계: [`runs/20260812-215216/result.md`](runs/20260812-215216/result.md)
+- M0.1-03 PostgreSQL·최종 Docker 재검수 시도: [`runs/20260812-222254/result.md`](runs/20260812-222254/result.md)
 
 M0.1은 A2A 런타임 복구에 필요한 최소 인프라 Migration만 완료한다. Task·Gmail·Calendar 업무 도메인 Migration과 Repository·샘플 데이터는 M1.1의 완료 범위다.
