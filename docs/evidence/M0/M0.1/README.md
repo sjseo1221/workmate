@@ -1,7 +1,7 @@
 # M0.1 A2A·Artifact 계약 증빙
 
 status: 검수 중
-latest_run_id: 20260812-203320
+latest_run_id: 20260812-204500
 latest_run_status: PASS (검수 대기)
 latest_approved_run_id: null
 approved_at: null
@@ -38,5 +38,6 @@ M0.1-01 실행 결과:
 
 - 런타임 부트스트랩: [`runs/20260812-112000/result.md`](runs/20260812-112000/result.md)
 - 주석·Docstring 정책 보강: [`runs/20260812-203320/result.md`](runs/20260812-203320/result.md)
+- 공개 전송 타입 Contract Test: [`runs/20260812-204500/result.md`](runs/20260812-204500/result.md)
 
 M0.1은 A2A 런타임 복구에 필요한 최소 인프라 Migration만 완료한다. Task·Gmail·Calendar 업무 도메인 Migration과 Repository·샘플 데이터는 M1.1의 완료 범위다.

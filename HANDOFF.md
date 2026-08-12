@@ -6,11 +6,11 @@
 
 - 현재 마일스톤: M0 계약·검증 기반
 - 진행 중 하위 마일스톤: M0.1 A2A·Artifact 계약
-- 현재 스프린트: Sprint 1 — M0.1 런타임 부트스트랩
+- 현재 스프린트: Sprint 1 — M0.1 공개 전송 타입 검증
 - 상태: 진행
 - 마지막 갱신: 2026-08-12 20:20 Asia/Seoul
 - 마지막 작업자: Codex
-- 기준 Git Commit: `workmate-agent` 작업 브랜치 커밋 예정
+- 기준 Git Commit: `M0.1-02 로컬 커밋 예정` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
 
 ## 2. 완료된 항목
@@ -18,27 +18,27 @@
 | 항목 | 상태 | 승인 증빙 |
 |---|---|---|
 | M0.1-01 SDK HTTP+JSON 런타임 부트스트랩 | 검수 중 | `docs/evidence/M0/M0.1/runs/20260812-112000/result.md` |
+| M0.1-02 공개 A2A 전송 타입 Contract Test | 검수 중 | `docs/evidence/M0/M0.1/runs/20260812-204500/result.md` |
 
 완료 항목은 검수자가 승인한 `result.md` 경로만 기록한다. 단순 구현 완료나 테스트 실행만으로 완료 처리하지 않는다.
 
 ## 3. 현재 진행 중인 작업
 
-- 백로그 ID: M0.1-01
-- 작업: 공식 A2A SDK HTTP+JSON 런타임 부트스트랩
+- 백로그 ID: M0.1-02
+- 작업: 공개 A2A 전송 타입 전환 및 승인 Schema Contract Test
 - 담당자: Codex
-- 구현 중인 파일: `workmate-agent/app/main.py`, `workmate-agent/app/a2a/runtime.py`
-- 완료된 부분: `a2a-sdk==1.1.2` 고정, SDK `DefaultRequestHandler`·`AgentExecutor`, Agent Card, Streaming·Subscribe 및 MVP Route allowlist, Bearer Token·A2A-Version 미들웨어, SDK Task 응답 테스트
-- 남은 부분: 검수 승인, 작업 브랜치 Push 및 다음 M0.1-02 Contract Test 전환
-- 현재 테스트 결과: `uv run python -m unittest discover -s tests -v` PASS (3개)
-- 마지막 실행 명령: `uv run python -m unittest discover -s tests -v`
-- 최신 실행 ID: `20260812-203320`
+- 구현 중인 파일: `workmate-agent/app/a2a/runtime.py`, `workmate-agent/tests/test_contract.py`, `workmate-agent/pyproject.toml`
+- 완료된 부분: SDK Message protobuf 직렬화, 승인 Skill·Artifact Schema 검증, Legacy `smoke_test.py` 제거, SDK 응답·Streaming·Route allowlist Contract Test
+- 남은 부분: 검수 승인, M0.1-03 Workflow·영속 Task 경계
+- 현재 테스트 결과: `uv run --frozen python -m unittest discover -s tests -v` PASS (7개)
+- 마지막 실행 명령: `uv run --frozen python -m unittest discover -s tests -v`
+- 최신 실행 ID: `20260812-204500`
 - 최신 승인 실행 ID: null
 
 ## 4. 다음 작업
 
-1. M0.1-01 실행 결과를 검수하고 작업 브랜치와 증빙을 Push
-2. M0.1-02 공개 A2A 경로의 자체 Pydantic 모델·Legacy Route 제거와 승인 Schema 기반 Contract Test 교체
-3. M0.1-03 `app/workflows/registry.py`·Artifact 변환·A2A 인프라 Migration·영속 Task Store·Checkpoint 경계 구현
+1. M0.1-02 실행 결과를 검수하고 작업 브랜치와 증빙을 Push
+2. M0.1-03 `app/workflows/registry.py`·Artifact 변환·A2A 인프라 Migration·영속 Task Store·Checkpoint 경계 구현
 4. M0.1-04 Agent Card·5개 Skill·Artifact·인증·오류·Adapter·Streaming 순서·Subscribe 상태·Route allowlist 통합 Contract Test
 5. 담당자 배정 후 M0.2-01 기존 모델·OAuth 평가 이력 검수는 M0.1과 병행 가능
 
@@ -96,7 +96,7 @@
 - Fixture/입력: M0.1-04에서 승인 Schema를 통과하는 5개 Skill Fixture 생성 예정
 - 모델 평가 Case: M0.2에서 기존 평가 원본 연결 예정
 - 모델 평가 결과: M0.2에서 기존 평가 원본 승인 예정
-- 최신 실행 로그: `docs/evidence/M0/M0.1/runs/20260812-203320/result.md`
+- 최신 실행 로그: `docs/evidence/M0/M0.1/runs/20260812-204500/result.md`
 - 최신 실행 결과: PASS (검수 대기)
 - 최신 결과 문서: `docs/evidence/M0/M0.1/README.md`
 
@@ -131,3 +131,5 @@
 | 2026-08-12 | Codex | `https://github.com/sjseo1221/workmate.git` 원격 등록과 `main` 기준선 Push, Git 추적 차단 해소 | `3b320923cc6684cb40508d8fc7c8978fc49a1496` |
 | 2026-08-12 | Codex | M0.1-01 공식 SDK 런타임·Agent Card·Streaming/Subscribe allowlist와 부트스트랩 테스트 구현, 실행 증빙 생성 | `feat/M0.1-01-sdk-runtime` 작업 중 |
 | 2026-08-12 | Codex | 주석·Docstring 확장 정책을 AGENTS·기술규격에 반영하고 M0.1 핵심 함수 문서화 보강, 테스트 재실행 | `feat/M0.1-01-sdk-runtime` 작업 중 |
+| 2026-08-12 | Codex | M0.1-01 `workmate-agent` 작업 브랜치 원격 Push 완료 | `639f35c`, `origin/feat/M0.1-01-sdk-runtime` |
+| 2026-08-12 | Codex | M0.1-02 승인 Schema Contract Test·SDK Message 검증·Legacy Smoke 제거, 7개 테스트 PASS | 로컬 커밋 예정 |
