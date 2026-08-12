@@ -8,9 +8,9 @@
 - 진행 중 하위 마일스톤: M0.1 A2A·Artifact 계약
 - 현재 스프린트: Sprint 1 — M0.1 공개 전송 타입 검증
 - 상태: 진행
-- 마지막 갱신: 2026-08-12 20:20 Asia/Seoul
+- 마지막 갱신: 2026-08-12 21:00 Asia/Seoul
 - 마지막 작업자: Codex
-- 기준 Git Commit: `9ba62fa` (`workmate-agent`)
+- 기준 Git Commit: `0149b92` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
 
 ## 2. 완료된 항목
@@ -30,9 +30,9 @@
 - 구현 중인 파일: `workmate-agent/app/a2a/runtime.py`, `workmate-agent/tests/test_contract.py`, `workmate-agent/pyproject.toml`
 - 완료된 부분: SDK Message protobuf 직렬화, 승인 Skill·Artifact Schema 검증, Legacy `smoke_test.py` 제거, SDK 응답·Streaming·Route allowlist Contract Test
 - 남은 부분: 검수 승인, M0.1-03 Workflow·영속 Task 경계
-- 현재 테스트 결과: `uv run --frozen python -m unittest discover -s tests -v` PASS (7개)
-- 마지막 실행 명령: `uv run --frozen python -m unittest discover -s tests -v`
-- 최신 실행 ID: `20260812-204500`
+- 현재 테스트 결과: 단위·Contract Test 7개 PASS, Docker Compose 빌드·기동 PASS, 컨테이너 `healthy`, Health·Agent Card PASS
+- 마지막 실행 명령: `docker compose up --build -d` 및 Health·Agent Card 확인
+- 최신 실행 ID: `20260812-210001`
 - 최신 승인 실행 ID: null
 
 ## 4. 다음 작업
@@ -46,7 +46,7 @@
 
 | 항목 | 원인 | 필요한 조치 | 해소 상태 |
 |---|---|---|---|
-| Docker Compose 검증 환경 | Docker Desktop Linux engine 미실행 | M0.1-01 착수 자체를 막지는 않지만 M0.1-03 Migration과 M0.1-04 통합 검수 전에 Docker daemon 기동 | 미해소 |
+| Docker Compose 검증 환경 | Dockerfile의 지원되지 않는 `uv sync --system` 옵션 | `--system` 제거, `.venv` PATH 연결 후 이미지 빌드·기동·Health·Agent Card 재검수 PASS | 해소 |
 | 루트 문서 Git 추적 | Superproject·Submodule·원격 기준선 필요 | `origin/main`에 기준 Commit Push 완료 | 해소 |
 
 실제 회의 음성 평가, R2 Lifecycle, 운영 부하·복구, 실제 Orchestrator 종단 간 검증은 현재 M0.1의 차단 사항이 아니다. 각각 M3.3, M3.6, M5.2~M5.4 완료 조건으로 추적한다.
@@ -96,7 +96,7 @@
 - Fixture/입력: M0.1-04에서 승인 Schema를 통과하는 5개 Skill Fixture 생성 예정
 - 모델 평가 Case: M0.2에서 기존 평가 원본 연결 예정
 - 모델 평가 결과: M0.2에서 기존 평가 원본 승인 예정
-- 최신 실행 로그: `docs/evidence/M0/M0.1/runs/20260812-204500/result.md`
+- 최신 실행 로그: `docs/evidence/M0/M0.1/runs/20260812-210001/result.md`
 - 최신 실행 결과: PASS (검수 대기)
 - 최신 결과 문서: `docs/evidence/M0/M0.1/README.md`
 
@@ -134,3 +134,4 @@
 | 2026-08-12 | Codex | M0.1-01 `workmate-agent` 작업 브랜치 원격 Push 완료 | `639f35c`, `origin/feat/M0.1-01-sdk-runtime` |
 | 2026-08-12 | Codex | M0.1-02 승인 Schema Contract Test·SDK Message 검증·Legacy Smoke 제거, 7개 테스트 PASS | 로컬 커밋 예정 |
 | 2026-08-12 | Codex | M0.1-02 `workmate-agent` 브랜치 원격 Push 완료 | `9ba62fa`, `origin/feat/M0.1-01-sdk-runtime` |
+| 2026-08-12 | Codex | Docker daemon 정상 연결 확인, Dockerfile의 `uv sync --system` 오류 수정, Compose·Health·Agent Card 재검수 PASS | `0149b92`, 실행 ID `20260812-210001` |
