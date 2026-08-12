@@ -107,6 +107,7 @@
 - 이전 검수 결과를 덮어쓰거나 삭제하지 않는다.
 - 실패 실행은 `docs/evidence/Mx/Mx.y/runs/{run_id}/`에 보존한다.
 - `latest_run_id`와 `latest_approved_run_id`를 구분해 기록한다.
+- 실행 결과의 구현·Schema·Migration·UI·테스트 경로는 저장소 파일로 이동하는 Markdown 링크로 기록하고, 삭제 파일은 삭제 사실과 대체 검증 경로만 남긴다.
 
 ## 10. 커밋·Push 인수인계 규칙
 

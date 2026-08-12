@@ -44,6 +44,19 @@
 - UI 코드: 해당 없음
 - 제외 범위: Gmail·Calendar·PostgreSQL·LLM 업무 Workflow와 영속 Task Store는 M0.1-03 범위
 
+### 클릭 가능한 구현·계약 경로
+
+- [runtime.py](../../../../../../workmate-agent/app/a2a/runtime.py)
+- [test_contract.py](../../../../../../workmate-agent/tests/test_contract.py)
+- [test_runtime_boot.py](../../../../../../workmate-agent/tests/test_runtime_boot.py)
+- [pyproject.toml](../../../../../../workmate-agent/pyproject.toml)
+- [uv.lock](../../../../../../workmate-agent/uv.lock)
+- [workmate-agent README](../../../../../../workmate-agent/README.md)
+- [workmate-skill-schemas.schema.json](../../../../../schemas/workmate-skill-schemas.schema.json)
+- [a2a-artifact.schema.json](../../../../../schemas/a2a-artifact.schema.json)
+
+`smoke_test.py`는 삭제된 Legacy 파일이므로 링크를 만들지 않고 삭제 사실만 기록한다.
+
 ## 5. 테스트 파일 경로
 
 - 단위·Contract Test: `workmate-agent/tests/test_contract.py`, `workmate-agent/tests/test_runtime_boot.py`
@@ -53,6 +66,11 @@
 - 기대 결과: 전체 테스트 7개 PASS
 - 모델 평가 Case: 해당 없음
 - 모델 평가 결과: 해당 없음
+
+### 클릭 가능한 테스트 경로
+
+- [test_contract.py](../../../../../../workmate-agent/tests/test_contract.py)
+- [test_runtime_boot.py](../../../../../../workmate-agent/tests/test_runtime_boot.py)
 
 ## 6. 실행 명령과 결과
 

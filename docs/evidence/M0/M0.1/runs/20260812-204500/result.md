@@ -19,6 +19,17 @@
 - `workmate-agent/README.md`
 - 삭제: `workmate-agent/smoke_test.py` (Legacy 요청 형식)
 
+### 클릭 가능한 구현 경로
+
+- [runtime.py](../../../../../../workmate-agent/app/a2a/runtime.py)
+- [test_contract.py](../../../../../../workmate-agent/tests/test_contract.py)
+- [test_runtime_boot.py](../../../../../../workmate-agent/tests/test_runtime_boot.py)
+- [pyproject.toml](../../../../../../workmate-agent/pyproject.toml)
+- [uv.lock](../../../../../../workmate-agent/uv.lock)
+- [workmate-agent README](../../../../../../workmate-agent/README.md)
+
+삭제된 `smoke_test.py`는 링크하지 않고 삭제 사실만 보존한다.
+
 ## 검증 명령과 결과
 
 ```text

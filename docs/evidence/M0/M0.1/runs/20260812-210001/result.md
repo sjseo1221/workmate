@@ -32,6 +32,11 @@
 - Schema 또는 Migration: 해당 없음
 - UI 코드: 해당 없음
 
+### 클릭 가능한 구현 경로
+
+- [Dockerfile](../../../../../../workmate-agent/Dockerfile)
+- [compose.yaml](../../../../../../workmate-agent/compose.yaml)
+
 ## 5. 테스트 파일 경로
 
 - 단위 테스트: `workmate-agent/tests/test_runtime_boot.py`, `workmate-agent/tests/test_contract.py`
@@ -41,6 +46,12 @@
 - 기대 결과: 이미지 빌드 성공, 컨테이너 healthy, `/health/live`, `/health/ready`, Agent Card 정상 응답
 - 모델 평가 Case: 해당 없음
 - 모델 평가 결과: 해당 없음
+
+### 클릭 가능한 테스트 경로
+
+- [test_runtime_boot.py](../../../../../../workmate-agent/tests/test_runtime_boot.py)
+- [test_contract.py](../../../../../../workmate-agent/tests/test_contract.py)
+- [compose.yaml](../../../../../../workmate-agent/compose.yaml)
 
 ## 6. 실행 명령과 결과
 
