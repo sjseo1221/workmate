@@ -47,6 +47,8 @@
 - `result.md`에 해당 작업의 구현 코드·Schema·테스트·Fixture·평가 Case와 결과 경로를 기록한다. 관련 없는 항목은 `해당 없음`으로 표시한다.
 - `HANDOFF.md`의 현재 상태·다음 작업·차단 사항·갱신 이력을 수정한다.
 - 마일스톤이 담당하는 실제 Workflow가 운영 실행 경로에서 Mock·고정 샘플 응답을 반환하면 완료 처리하지 않는다. Fake·Mock은 단위·계약 테스트의 명시적인 Fixture에서만 허용한다.
+- 실행 결과에 정의된 검증 명령이 모두 PASS이고 미실행·수동 검수·차단 항목이 없으면 해당 실행을 `자동 승인(검증 명령)`으로 묵시 승인한다. `latest_approved_run_id`·`approved_at`·`reviewer`를 기록하고 `docs/06-delivery-plan.md`의 백로그 상태와 `HANDOFF.md`를 `완료`로 함께 갱신한다.
+- 공개 A2A Schema·데이터 모델 변경, 외부 OAuth·실제 Provider, UI 육안 검수, 모델 평가처럼 사람의 판단이나 별도 권한이 필요한 항목은 자동 승인하지 않는다. 검증을 하나라도 건너뛰었거나 경고·보류·미해소 차단이 있으면 `검수 중` 또는 `재작업`을 유지한다.
 
 ## 커밋·Push 규칙
 
@@ -57,7 +59,7 @@
 - 커밋 메시지는 `<type>(<backlog-id>): <change>` 형식을 사용한다. 예: `feat(M1.2-04): implement Gmail watch renewal`.
 - Push 전에 변경 범위의 테스트, `git diff --check`, Schema·Contract Test 확인, Secret 검사, 증빙 경로와 `HANDOFF.md` 갱신을 완료한다.
 - 구현 결과가 생기기 전에는 빈 `result.md`를 만들지 않는다. 테스트 결과가 생긴 뒤 `runs/{run_id}/result.md`를 작성한다.
-- 마일스톤 완료와 Merge는 검수자가 `latest_approved_run_id`를 승인한 뒤에만 수행한다.
+- 마일스톤 완료와 Merge는 명시 승인 또는 완료 규칙에 따른 묵시 승인으로 `latest_approved_run_id`가 확정된 뒤에만 수행한다.
 - 공유 브랜치에 강제 Push하지 않는다. 이전 커밋이나 승인 증빙을 덮어쓰거나 삭제하지 않는다.
 - API Key, Token, Presigned URL, 실제 회의 음성, 평가 원본 Secret은 커밋·Push하지 않는다.
 

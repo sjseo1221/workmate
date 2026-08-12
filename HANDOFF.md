@@ -6,9 +6,9 @@
 
 - 현재 마일스톤: M0 계약·검증 기반
 - 진행 중 하위 마일스톤: M0.1 A2A·Artifact 계약
-- 현재 스프린트: Sprint 1 — M0.1 공개 전송 타입 검증
+- 현재 스프린트: Sprint 1 — M0.1 Workflow·영속 Task 경계 준비
 - 상태: 진행
-- 마지막 갱신: 2026-08-12 21:06 Asia/Seoul
+- 마지막 갱신: 2026-08-12 21:12 Asia/Seoul
 - 마지막 작업자: Codex
 - 기준 Git Commit: `0149b92` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
@@ -18,29 +18,28 @@
 | 항목 | 상태 | 승인 증빙 |
 |---|---|---|
 | M0.1-01 SDK HTTP+JSON 런타임 부트스트랩 | 완료 | `docs/evidence/M0/M0.1/runs/20260812-210001/result.md` |
-| M0.1-02 공개 A2A 전송 타입 Contract Test | 검수 중 | `docs/evidence/M0/M0.1/runs/20260812-204500/result.md` |
+| M0.1-02 공개 A2A 전송 타입 Contract Test | 완료 | `docs/evidence/M0/M0.1/runs/20260812-204500/result.md` |
 
-완료 항목은 검수자가 승인한 `result.md` 경로만 기록한다. 단순 구현 완료나 테스트 실행만으로 완료 처리하지 않는다.
+완료 항목은 명시 승인 또는 규칙에 따른 묵시 승인이 기록된 `result.md` 경로만 연결한다. 자동 승인 조건을 충족하지 않은 단순 구현 완료나 일부 테스트 실행만으로 완료 처리하지 않는다.
 
 ## 3. 현재 진행 중인 작업
 
-- 백로그 ID: M0.1-02
-- 작업: 공개 A2A 전송 타입 전환 및 승인 Schema Contract Test
+- 백로그 ID: M0.1-03
+- 작업: Workflow·영속 Task 경계 구현 착수 대기
 - 담당자: Codex
-- 구현 중인 파일: `workmate-agent/app/a2a/runtime.py`, `workmate-agent/tests/test_contract.py`, `workmate-agent/pyproject.toml`
-- 완료된 부분: SDK Message protobuf 직렬화, 승인 Skill·Artifact Schema 검증, Legacy `smoke_test.py` 제거, SDK 응답·Streaming·Route allowlist Contract Test
-- 남은 부분: 검수 승인, M0.1-03 Workflow·영속 Task 경계
+- 구현 중인 파일: 해당 없음 (착수 전)
+- 완료된 부분: M0.1-01 SDK 런타임, M0.1-02 공개 전송 타입·Contract Test 승인
+- 남은 부분: M0.1-03 Workflow·영속 Task 경계 구현, M0.1-04 통합 계약 검수
 - 현재 테스트 결과: 단위·Contract Test 7개 PASS, Docker Compose 빌드·기동 PASS, 컨테이너 `healthy`, Health·Agent Card PASS
 - 마지막 실행 명령: `docker compose up --build -d` 및 Health·Agent Card 확인
 - 최신 실행 ID: `20260812-210001`
-- 최신 승인 실행 ID: `20260812-210001` (M0.1-01)
+- 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-204500` (M0.1-02)
 
 ## 4. 다음 작업
 
-1. M0.1-02 실행 결과 검수 승인
-2. M0.1-03 `app/workflows/registry.py`·Artifact 변환·A2A 인프라 Migration·영속 Task Store·Checkpoint 경계 구현
-4. M0.1-04 Agent Card·5개 Skill·Artifact·인증·오류·Adapter·Streaming 순서·Subscribe 상태·Route allowlist 통합 Contract Test
-5. 담당자 배정 후 M0.2-01 기존 모델·OAuth 평가 이력 검수는 M0.1과 병행 가능
+1. M0.1-03 `app/workflows/registry.py`·Artifact 변환·A2A 인프라 Migration·영속 Task Store·Checkpoint 경계 구현
+2. M0.1-04 Agent Card·5개 Skill·Artifact·인증·오류·Adapter·Streaming 순서·Subscribe 상태·Route allowlist 통합 Contract Test
+3. 담당자 배정 후 M0.2-01 기존 모델·OAuth 평가 이력 검수는 M0.1과 병행 가능
 
 ## 5. 차단 사항
 
@@ -97,7 +96,7 @@
 - 모델 평가 Case: M0.2에서 기존 평가 원본 연결 예정
 - 모델 평가 결과: M0.2에서 기존 평가 원본 승인 예정
 - 최신 실행 로그: `docs/evidence/M0/M0.1/runs/20260812-210001/result.md`
-- 최신 실행 결과: PASS (M0.1-01 승인)
+- 최신 실행 결과: PASS (M0.1-01·M0.1-02 승인)
 - 최신 결과 문서: `docs/evidence/M0/M0.1/README.md`
 
 ## 9. 주의사항
@@ -116,6 +115,7 @@
 - 구현·테스트·증빙 커밋을 구분해 주요 커밋 ID와 내용을 남긴다.
 - Push 전 `git diff --check`, 변경 범위 테스트, Schema·Contract Test, Secret 검사를 수행한다.
 - 검수 전 상태는 `진행` 또는 `검수 중`으로 기록하고, `latest_approved_run_id` 승인 전에는 완료로 표시하지 않는다.
+- 정의된 검증 명령이 전부 PASS이고 미실행·수동 검수·차단 항목이 없으면 `자동 승인(검증 명령)`으로 묵시 승인하고 계획표·증빙·HANDOFF를 완료로 갱신한다. 공개 Schema·데이터 모델 변경과 외부 OAuth·UI·모델 평가처럼 명시 승인이 필요한 항목은 자동 승인하지 않는다.
 - API Key, Token, Presigned URL, 실제 회의 음성은 커밋·Push하지 않는다.
 
 ## 11. 갱신 이력
@@ -136,3 +136,4 @@
 | 2026-08-12 | Codex | M0.1-02 `workmate-agent` 브랜치 원격 Push 완료 | `9ba62fa`, `origin/feat/M0.1-01-sdk-runtime` |
 | 2026-08-12 | Codex | Docker daemon 정상 연결 확인, Dockerfile의 `uv sync --system` 오류 수정, Compose·Health·Agent Card 재검수 PASS | `0149b92`, 실행 ID `20260812-210001` |
 | 2026-08-12 | 사용자 | 실행 `20260812-210001` 검수 승인, M0.1-01 완료 처리 | M0.1-01 승인 |
+| 2026-08-12 | 사용자 | 실행 `20260812-204500` 검수 승인, M0.1-02 완료 처리 및 이후 전 검증 PASS 시 묵시 승인 규칙 확정 | M0.1-02 승인 |

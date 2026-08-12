@@ -7,7 +7,7 @@ latest_approved_run_id: 20260812-210001
 approved_at: 2026-08-12 21:06:29 +09:00
 reviewer: 사용자
 
-`latest_approved_run_id`는 현재 M0.1-01 백로그의 최신 승인 실행을 가리킨다. M0.1 전체 상태는 M0.1-02~04가 남아 있어 `검수 중`을 유지한다.
+`latest_approved_run_id`는 시간상 가장 최근에 승인된 M0.1-01 실행을 가리킨다. M0.1-02도 실행 `20260812-204500`으로 승인됐지만 M0.1 전체 상태는 M0.1-03~04가 남아 있어 `검수 중`을 유지한다.
 
 ## 목표
 
@@ -34,7 +34,7 @@ reviewer: 사용자
 
 ## 현재 상태
 
-M0.1-01에서 `workmate-agent`에 공식 SDK `DefaultRequestHandler`, `AgentExecutor`, Agent Card, Streaming·Subscribe를 포함한 HTTP+JSON 런타임 골격을 연결했다. 실제 업무 Artifact, 영속 Task Store, Gmail·Calendar·DB·LLM Workflow는 아직 구현하지 않았다. 기존 `smoke_test.py`의 Legacy 요청과 `mock`, `received` 같은 전용 필드 응답은 승인 Schema와 호환되지 않으므로 기준 테스트나 M0.1 승인 증빙으로 사용하지 않는다. M0.1-02에서 승인 Schema 기반 Contract Test로 교체한다.
+M0.1-01에서 `workmate-agent`에 공식 SDK `DefaultRequestHandler`, `AgentExecutor`, Agent Card, Streaming·Subscribe를 포함한 HTTP+JSON 런타임 골격을 연결했다. M0.1-02에서는 승인 Schema 기반 Contract Test로 교체하고 Legacy `smoke_test.py`와 자체 전송 기준을 제거했으며 실행 `20260812-204500`으로 승인 완료했다. 실제 업무 Artifact, 영속 Task Store, Gmail·Calendar·DB·LLM Workflow는 아직 구현하지 않았다.
 
 M0.1-01 실행 결과:
 
