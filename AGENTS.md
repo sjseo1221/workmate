@@ -27,6 +27,14 @@
 - 모든 조회에 요청된 `user_id` 조건을 적용한다.
 - 외부 Provider 장애 시 정의된 부분 결과와 `warnings`를 반환한다.
 - 공개 함수와 핵심 업무 규칙 함수에는 Docstring 또는 JSDoc을 작성한다.
+- 주석·Docstring은 다음 기준을 따른다.
+  - 모듈·공개 API·Domain·Adapter·인증·Streaming 경계에는 역할과 계약을 기록한다.
+  - 가능하면 입력, 반환값, 예외, 외부 시스템 제약을 포함한다.
+  - 이벤트 순서, 멱등성, 재시도, 취소처럼 코드만 읽어도 놓치기 쉬운 불변식은 명시한다.
+  - 단순한 코드 동작을 반복하는 인라인 주석은 작성하지 않는다.
+  - `TODO`에는 백로그 ID와 완료 조건을 함께 기록하고, 막연한 TODO는 남기지 않는다.
+  - Secret, Token, API Key, 개인정보는 주석·Docstring·Fixture에 기록하지 않는다.
+  - 생성된 SDK·Migration·외부 라이브러리 파일은 직접 수정하거나 주석을 추가하지 않는다.
 - FastAPI Route에는 업무 규칙을 직접 작성하지 않고 Workflow·Domain 함수로 전달한다.
 - 장기 Task의 원장은 영속 Task Store로 유지하고 프로세스 메모리 상태만으로 완료·복구를 판정하지 않는다.
 

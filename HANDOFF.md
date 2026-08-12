@@ -6,37 +6,37 @@
 
 - 현재 마일스톤: M0 계약·검증 기반
 - 진행 중 하위 마일스톤: M0.1 A2A·Artifact 계약
-- 현재 스프린트: 구현 전 계획 점검
-- 상태: 대기
-- 마지막 갱신: 2026-08-12
+- 현재 스프린트: Sprint 1 — M0.1 런타임 부트스트랩
+- 상태: 진행
+- 마지막 갱신: 2026-08-12 20:20 Asia/Seoul
 - 마지막 작업자: Codex
-- 기준 Git Commit: `3b320923cc6684cb40508d8fc7c8978fc49a1496`
-- 기준 브랜치: `main` (`origin/main`)
+- 기준 Git Commit: `workmate-agent` 작업 브랜치 커밋 예정
+- 기준 브랜치: `feat/M0.1-01-sdk-runtime`
 
 ## 2. 완료된 항목
 
 | 항목 | 상태 | 승인 증빙 |
 |---|---|---|
-| 해당 없음 | - | - |
+| M0.1-01 SDK HTTP+JSON 런타임 부트스트랩 | 검수 중 | `docs/evidence/M0/M0.1/runs/20260812-112000/result.md` |
 
 완료 항목은 검수자가 승인한 `result.md` 경로만 기록한다. 단순 구현 완료나 테스트 실행만으로 완료 처리하지 않는다.
 
 ## 3. 현재 진행 중인 작업
 
-- 백로그 ID: 미착수
-- 작업: M0.1 구현 전 계약·구현 순서 점검
-- 담당자: 미정
-- 구현 중인 파일: 해당 없음
-- 완료된 부분: 공식 A2A SDK 적용 방향, 전송 모델 경계, Workflow·영속 Task 경계, A2A 인프라 Migration 책임, Route allowlist, Streaming·Subscribe 검증, Agent Card Cache, Legacy Smoke 교체와 마일스톤별 Mock 종료 조건 문서화; 루트 Superproject와 `workmate-agent` 단일 Submodule 구성·원격 기준선 Push
-- 남은 부분: M0.1-01~04 구현·검증과 승인 증빙 생성
-- 현재 테스트 결과: 구현 전이므로 해당 없음
-- 마지막 실행 명령: 해당 없음
-- 최신 실행 ID: null
+- 백로그 ID: M0.1-01
+- 작업: 공식 A2A SDK HTTP+JSON 런타임 부트스트랩
+- 담당자: Codex
+- 구현 중인 파일: `workmate-agent/app/main.py`, `workmate-agent/app/a2a/runtime.py`
+- 완료된 부분: `a2a-sdk==1.1.2` 고정, SDK `DefaultRequestHandler`·`AgentExecutor`, Agent Card, Streaming·Subscribe 및 MVP Route allowlist, Bearer Token·A2A-Version 미들웨어, SDK Task 응답 테스트
+- 남은 부분: 검수 승인, 작업 브랜치 Push 및 다음 M0.1-02 Contract Test 전환
+- 현재 테스트 결과: `uv run python -m unittest discover -s tests -v` PASS (3개)
+- 마지막 실행 명령: `uv run python -m unittest discover -s tests -v`
+- 최신 실행 ID: `20260812-203320`
 - 최신 승인 실행 ID: null
 
 ## 4. 다음 작업
 
-1. M0.1-01 작업 브랜치를 만들고 공식 `a2a-sdk` REST Handler·`AgentExecutor` 런타임 부트스트랩
+1. M0.1-01 실행 결과를 검수하고 작업 브랜치와 증빙을 Push
 2. M0.1-02 공개 A2A 경로의 자체 Pydantic 모델·Legacy Route 제거와 승인 Schema 기반 Contract Test 교체
 3. M0.1-03 `app/workflows/registry.py`·Artifact 변환·A2A 인프라 Migration·영속 Task Store·Checkpoint 경계 구현
 4. M0.1-04 Agent Card·5개 Skill·Artifact·인증·오류·Adapter·Streaming 순서·Subscribe 상태·Route allowlist 통합 Contract Test
@@ -77,9 +77,9 @@
 
 ## 7. 실행 방법
 
-- 개발 환경 실행: M0.1-01 착수 시 실제 `pyproject.toml`·README 기준 명령 확정
+- 개발 환경 실행: `cd workmate-agent; uv sync --frozen; uv run uvicorn app.main:app --host 0.0.0.0 --port 8001`
 - Migration: M0.1-03에서 A2A 인프라 Migration, M1.1에서 업무 도메인 Migration 도구와 명령을 각각 확정
-- 단위 테스트: M0.1-01 착수 시 실제 테스트 러너 기준 명령 확정
+- 단위 테스트: `cd workmate-agent; uv run python -m unittest discover -s tests -v`
 - 통합 테스트: M0.1-04 착수 시 A2A Contract Test 명령 확정
 - 전체 Smoke Test: M5.3 착수 시 Docker Compose 명령 확정
 - 종료 방법: 실행 방법과 함께 같은 백로그에서 확정
@@ -96,9 +96,9 @@
 - Fixture/입력: M0.1-04에서 승인 Schema를 통과하는 5개 Skill Fixture 생성 예정
 - 모델 평가 Case: M0.2에서 기존 평가 원본 연결 예정
 - 모델 평가 결과: M0.2에서 기존 평가 원본 승인 예정
-- 최신 실행 로그:
-- 최신 실행 결과: 해당 없음
-- 최신 결과 문서: `docs/evidence/M0/M0.1/README.md` (계획 상태)
+- 최신 실행 로그: `docs/evidence/M0/M0.1/runs/20260812-203320/result.md`
+- 최신 실행 결과: PASS (검수 대기)
+- 최신 결과 문서: `docs/evidence/M0/M0.1/README.md`
 
 ## 9. 주의사항
 
@@ -129,3 +129,5 @@
 | 2026-08-12 | Codex | `workmate-ui-demo`를 폐기된 로컬 샘플로 구현·검수·Submodule 범위에서 제외하고 M0.4를 `workmate-agent` 최소 개발자 검증 페이지로 변경 | 루트 Git 미구성 |
 | 2026-08-12 | Codex | 루트 Superproject 초기 Commit과 `workmate-agent` 단일 Submodule 구성, Secret·로컬 산출물 제외 규칙 적용 | `bc22a073a47b25462727bf4a6cde1d7a9f404d52` |
 | 2026-08-12 | Codex | `https://github.com/sjseo1221/workmate.git` 원격 등록과 `main` 기준선 Push, Git 추적 차단 해소 | `3b320923cc6684cb40508d8fc7c8978fc49a1496` |
+| 2026-08-12 | Codex | M0.1-01 공식 SDK 런타임·Agent Card·Streaming/Subscribe allowlist와 부트스트랩 테스트 구현, 실행 증빙 생성 | `feat/M0.1-01-sdk-runtime` 작업 중 |
+| 2026-08-12 | Codex | 주석·Docstring 확장 정책을 AGENTS·기술규격에 반영하고 M0.1 핵심 함수 문서화 보강, 테스트 재실행 | `feat/M0.1-01-sdk-runtime` 작업 중 |

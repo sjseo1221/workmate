@@ -1,8 +1,8 @@
 # M0.1 A2A·Artifact 계약 증빙
 
-status: 대기
-latest_run_id: null
-latest_run_status: null
+status: 검수 중
+latest_run_id: 20260812-203320
+latest_run_status: PASS (검수 대기)
 latest_approved_run_id: null
 approved_at: null
 reviewer: null
@@ -32,6 +32,11 @@ reviewer: null
 
 ## 현재 상태
 
-현재 `workmate-agent`는 자체 Pydantic 전송 모델을 사용하는 Legacy Mock Shell이다. 공식 SDK 런타임, Streaming, 영속 Task Store와 실제 Gmail·Calendar·DB·LLM Workflow는 아직 구현하지 않았다. 기존 `smoke_test.py`의 Legacy 요청과 `mock`, `received` 같은 전용 필드 응답은 승인 Schema와 호환되지 않으므로 기준 테스트나 M0.1 승인 증빙으로 사용하지 않는다. M0.1-02에서 승인 Schema 기반 Contract Test로 교체하고, 구현과 테스트 실행 결과가 생긴 뒤에만 `runs/{run_id}/result.md`를 생성한다.
+M0.1-01에서 `workmate-agent`에 공식 SDK `DefaultRequestHandler`, `AgentExecutor`, Agent Card, Streaming·Subscribe를 포함한 HTTP+JSON 런타임 골격을 연결했다. 실제 업무 Artifact, 영속 Task Store, Gmail·Calendar·DB·LLM Workflow는 아직 구현하지 않았다. 기존 `smoke_test.py`의 Legacy 요청과 `mock`, `received` 같은 전용 필드 응답은 승인 Schema와 호환되지 않으므로 기준 테스트나 M0.1 승인 증빙으로 사용하지 않는다. M0.1-02에서 승인 Schema 기반 Contract Test로 교체한다.
+
+M0.1-01 실행 결과:
+
+- 런타임 부트스트랩: [`runs/20260812-112000/result.md`](runs/20260812-112000/result.md)
+- 주석·Docstring 정책 보강: [`runs/20260812-203320/result.md`](runs/20260812-203320/result.md)
 
 M0.1은 A2A 런타임 복구에 필요한 최소 인프라 Migration만 완료한다. Task·Gmail·Calendar 업무 도메인 Migration과 Repository·샘플 데이터는 M1.1의 완료 범위다.

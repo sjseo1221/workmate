@@ -162,6 +162,21 @@ function registerApprovedActionItem(...) {}
 
 변수명만으로 의미가 분명한 짧은 함수에는 불필요한 주석을 달지 않는다. 주석과 실제 계약이 달라지면 구현을 우선 수정하고, 검수 시 문서화 누락과 오래된 주석을 함께 확인한다.
 
+#### 4.1.1 확장 주석 정책
+
+주석은 코드의 양을 늘리기 위한 산출물이 아니라, 계약·불변식·외부 제약을 보존하기 위한 변경 안전장치다.
+
+- 모듈·공개 API·Domain·Adapter·인증·Streaming 경계에는 역할과 책임을 기록한다.
+- 함수 Docstring/JSDoc에는 가능한 경우 입력, 반환값, 예외, 외부 시스템 제약을 포함한다.
+- A2A 이벤트 순서, 멱등성, 재시도, 취소, 권한 범위처럼 코드만으로 오해하기 쉬운 불변식은 명시한다.
+- 테스트 함수는 무엇을 하는지보다 왜 필요한지 설명한다. 단순한 Given/When/Then 반복 주석은 생략한다.
+- `TODO`는 `{백로그 ID} — {완료 조건}` 형식으로 기록하며, 담당자·기한이 필요하면 함께 적는다.
+- Secret, Token, API Key, 개인정보, Presigned URL은 주석·Docstring·Fixture에 기록하지 않는다.
+- 생성된 SDK·Migration·외부 라이브러리 파일에는 직접 주석을 추가하지 않는다.
+- 검수 시 주석의 존재보다 실제 계약과의 일치 여부, 오래된 주석의 제거 여부를 확인한다.
+
+M0.1 런타임의 최소 검수 대상은 `Agent Card`, 인증 미들웨어, `AgentExecutor`, Route allowlist, Streaming·Subscribe 경계다. 각 함수의 문서화 확인 결과는 하위 마일스톤 `result.md`에 기록한다.
+
 ## 5. A2A 기술 규격
 
 ### 5.1 Protocol과 Binding
