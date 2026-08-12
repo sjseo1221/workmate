@@ -35,6 +35,7 @@ git diff --check
 - SDK `message:send` Task 응답: PASS
 - Streaming Route 응답(`text/event-stream`): 수동 확인 PASS
 - Docker Compose 실행: 보류 (호스트 Docker daemon 미실행)
+- 후속 조치: [`20260812-210001`](../20260812-210001/result.md) 재검수에서 Docker 이미지 빌드·기동·Health·Agent Card 검증 PASS로 해소됨
 
 ## 범위와 보류
 
