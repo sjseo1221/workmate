@@ -16,7 +16,7 @@
 ## 2. 최신 실행과 승인
 
 - latest_run_id: `20260812-215216`
-- latest_run_status: PASS (SQLite·Contract·Docker), PostgreSQL 연결 보류
+- latest_run_status: PASS (SQLite·Contract·기존 Docker 기동), PostgreSQL·최종 Dockerfile 재검증 보류
 - latest_approved_run_id: null
 - approved_at: null
 
@@ -74,11 +74,12 @@ docker compose down
 - 전체 단위·Contract·Persistence·Migration Test: 12개 PASS
 - Compile: PASS
 - Diff 검사: PASS
-- Docker 이미지 빌드·컨테이너 기동: PASS
+- Docker 이미지 빌드·컨테이너 기동: PASS (Migration 파일 COPY 변경 전 실행)
 - Compose 상태: `running`, `healthy`
 - Health: `alive`, `ready`
 - Agent Card: `Workmate AI`, `HTTP+JSON`, protocol `1.0`, streaming `true`
 - PostgreSQL 실제 연결: 보류 (`DATABASE_URL` 미설정; 로컬·Docker는 SQLite fallback으로 검증)
+- 최종 Dockerfile 재검증: 보류 (Migration 파일 COPY 변경 후 Docker API 명령이 중단됨)
 - 화면 캡처: 해당 없음
 - 함수 문서화: 신규 공개 경계 함수와 핵심 저장 함수에 한글 Docstring 작성
 
@@ -89,7 +90,7 @@ docker compose down
 | Registry가 Skill ID를 Workflow로 연결 | PASS | [registry.py](../../../../../../workmate-agent/app/workflows/registry.py), [test_persistence.py](../../../../../../workmate-agent/tests/test_persistence.py) |
 | Task·Message·Artifact·Checkpoint SQLite 재시작 복구 | PASS | [persistence.py](../../../../../../workmate-agent/app/a2a/persistence.py), [test_persistence.py](../../../../../../workmate-agent/tests/test_persistence.py) |
 | PostgreSQL 인프라 Migration 필수 테이블·Key 선언 | PASS | [001_a2a_infrastructure.sql](../../../../../../workmate-agent/migrations/001_a2a_infrastructure.sql), [test_migration.py](../../../../../../workmate-agent/tests/test_migration.py) |
-| Docker·Health·Agent Card 회귀 | PASS | [Dockerfile](../../../../../../workmate-agent/Dockerfile), [compose.yaml](../../../../../../workmate-agent/compose.yaml) |
+| Docker·Health·Agent Card 회귀 | PASS (기존 Dockerfile 기준) | [Dockerfile](../../../../../../workmate-agent/Dockerfile), [compose.yaml](../../../../../../workmate-agent/compose.yaml) |
 | PostgreSQL 실제 연결·Migration 실행 | 보류 | `DATABASE_URL` 미설정 |
 
 ## 8. 문제와 수정 이력
@@ -102,5 +103,5 @@ docker compose down
 ## 9. 최종 판단
 
 - 승인 여부: 보류
-- 검수 의견: 로컬 영속 경계·Migration 계약·Docker 회귀는 통과했으나 PostgreSQL 실제 연결 검증과 M0.1-04 Subscribe 통합 검수가 남아 있다.
+- 검수 의견: 로컬 영속 경계·Migration 계약·기존 Docker 회귀는 통과했으나 PostgreSQL 실제 연결, 최종 Dockerfile 재빌드, M0.1-04 Subscribe 통합 검수가 남아 있다.
 - 다음 조치: `DATABASE_URL`을 설정한 PostgreSQL Compose 검증 후 M0.1-04 통합 Contract Test 진행 여부를 사용자에게 확인

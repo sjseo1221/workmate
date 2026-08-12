@@ -7,7 +7,7 @@ latest_approved_run_id: 20260812-212244
 approved_at: 2026-08-12 21:22:44 +09:00
 reviewer: 자동 승인(검증 명령)
 
-`latest_approved_run_id`는 구현 설명을 보강해 재검증한 M0.1-02 실행을 가리킨다. M0.1-01은 실행 `20260812-210001`로 승인됐다. M0.1-03은 로컬 SQLite 재시작·계약 검증과 Docker 검증은 통과했지만 PostgreSQL 실제 연결 검증이 남아 `검수 중`이다.
+`latest_approved_run_id`는 구현 설명을 보강해 재검증한 M0.1-02 실행을 가리킨다. M0.1-01은 실행 `20260812-210001`로 승인됐다. M0.1-03은 로컬 SQLite 재시작·계약 검증과 기존 Docker 기동은 통과했지만 PostgreSQL 실제 연결·최종 Dockerfile 재검증이 남아 `검수 중`이다.
 
 ## 목표
 

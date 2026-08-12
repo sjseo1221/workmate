@@ -31,14 +31,14 @@
 - 구현 중인 파일: `workmate-agent/app/a2a/persistence.py`, `app/workflows/registry.py`, `migrations/001_a2a_infrastructure.sql`
 - 완료된 부분: M0.1-01 SDK 런타임, M0.1-02 공개 전송 타입·Contract Test 승인, M0.1-03 로컬 영속 경계·Registry·Migration 구현
 - 남은 부분: PostgreSQL 실제 연결·Migration 실행 검증, M0.1-04 통합 계약 검수
-- 현재 테스트 결과: 단위·Contract·Persistence·Migration Test 12개 PASS, Docker Compose 빌드·기동 PASS, 컨테이너 `healthy`, Health·Agent Card PASS
+- 현재 테스트 결과: 단위·Contract·Persistence·Migration Test 12개 PASS, 기존 Docker Compose 빌드·기동 PASS, 컨테이너 `healthy`, Health·Agent Card PASS; 최종 Dockerfile Migration COPY 재검증 보류
 - 마지막 실행 명령: `uv lock --check`, `uv sync --frozen`, 테스트 12개, `docker compose up --build -d`, Health·Agent Card 확인
 - 최신 실행 ID: `20260812-215216`
 - 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-212244` (M0.1-02)
 
 ## 4. 다음 작업
 
-1. PostgreSQL `DATABASE_URL` 환경에서 M0.1-03 Migration·Task Store 실제 연결 검증
+1. PostgreSQL `DATABASE_URL` 환경에서 M0.1-03 Migration·Task Store 실제 연결 검증과 최종 Dockerfile 재빌드
 2. M0.1-04 Agent Card·5개 Skill·Artifact·인증·오류·Adapter·Streaming 순서·Subscribe 상태·Route allowlist 통합 Contract Test
 3. 담당자 배정 후 M0.2-01 기존 모델·OAuth 평가 이력 검수는 M0.1과 병행 가능
 
