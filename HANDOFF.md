@@ -10,8 +10,8 @@
 - 상태: 대기
 - 마지막 갱신: 2026-08-12
 - 마지막 작업자: Codex
-- 기준 Git Commit: `bc22a073a47b25462727bf4a6cde1d7a9f404d52`
-- 기준 브랜치: `main` (로컬, 원격 미등록)
+- 기준 Git Commit: `3b320923cc6684cb40508d8fc7c8978fc49a1496`
+- 기준 브랜치: `main` (`origin/main`)
 
 ## 2. 완료된 항목
 
@@ -27,8 +27,8 @@
 - 작업: M0.1 구현 전 계약·구현 순서 점검
 - 담당자: 미정
 - 구현 중인 파일: 해당 없음
-- 완료된 부분: 공식 A2A SDK 적용 방향, 전송 모델 경계, Workflow·영속 Task 경계, A2A 인프라 Migration 책임, Route allowlist, Streaming·Subscribe 검증, Agent Card Cache, Legacy Smoke 교체와 마일스톤별 Mock 종료 조건 문서화; 루트 Superproject와 `workmate-agent` 단일 Submodule 로컬 구성
-- 남은 부분: 루트 원격 저장소 등록·기준 Commit Push, M0.1-01~04 구현·검증과 승인 증빙 생성
+- 완료된 부분: 공식 A2A SDK 적용 방향, 전송 모델 경계, Workflow·영속 Task 경계, A2A 인프라 Migration 책임, Route allowlist, Streaming·Subscribe 검증, Agent Card Cache, Legacy Smoke 교체와 마일스톤별 Mock 종료 조건 문서화; 루트 Superproject와 `workmate-agent` 단일 Submodule 구성·원격 기준선 Push
+- 남은 부분: M0.1-01~04 구현·검증과 승인 증빙 생성
 - 현재 테스트 결과: 구현 전이므로 해당 없음
 - 마지막 실행 명령: 해당 없음
 - 최신 실행 ID: null
@@ -36,19 +36,18 @@
 
 ## 4. 다음 작업
 
-1. 루트 원격 저장소를 등록하고 기준 Commit `bc22a073a47b25462727bf4a6cde1d7a9f404d52`를 Push
-2. M0.1-01 작업 브랜치를 만들고 공식 `a2a-sdk` REST Handler·`AgentExecutor` 런타임 부트스트랩
-3. M0.1-02 공개 A2A 경로의 자체 Pydantic 모델·Legacy Route 제거와 승인 Schema 기반 Contract Test 교체
-4. M0.1-03 `app/workflows/registry.py`·Artifact 변환·A2A 인프라 Migration·영속 Task Store·Checkpoint 경계 구현
-5. M0.1-04 Agent Card·5개 Skill·Artifact·인증·오류·Adapter·Streaming 순서·Subscribe 상태·Route allowlist 통합 Contract Test
-6. 담당자 배정 후 M0.2-01 기존 모델·OAuth 평가 이력 검수는 M0.1과 병행 가능
+1. M0.1-01 작업 브랜치를 만들고 공식 `a2a-sdk` REST Handler·`AgentExecutor` 런타임 부트스트랩
+2. M0.1-02 공개 A2A 경로의 자체 Pydantic 모델·Legacy Route 제거와 승인 Schema 기반 Contract Test 교체
+3. M0.1-03 `app/workflows/registry.py`·Artifact 변환·A2A 인프라 Migration·영속 Task Store·Checkpoint 경계 구현
+4. M0.1-04 Agent Card·5개 Skill·Artifact·인증·오류·Adapter·Streaming 순서·Subscribe 상태·Route allowlist 통합 Contract Test
+5. 담당자 배정 후 M0.2-01 기존 모델·OAuth 평가 이력 검수는 M0.1과 병행 가능
 
 ## 5. 차단 사항
 
 | 항목 | 원인 | 필요한 조치 | 해소 상태 |
 |---|---|---|---|
 | Docker Compose 검증 환경 | Docker Desktop Linux engine 미실행 | M0.1-01 착수 자체를 막지는 않지만 M0.1-03 Migration과 M0.1-04 통합 검수 전에 Docker daemon 기동 | 미해소 |
-| 루트 문서 Git 추적 | 로컬 Superproject와 `workmate-agent` Submodule은 구성했으나 루트 원격 저장소가 없음 | 루트 원격 저장소 URL 등록 후 기준 Commit Push | 부분 해소 |
+| 루트 문서 Git 추적 | Superproject·Submodule·원격 기준선 필요 | `origin/main`에 기준 Commit Push 완료 | 해소 |
 
 실제 회의 음성 평가, R2 Lifecycle, 운영 부하·복구, 실제 Orchestrator 종단 간 검증은 현재 M0.1의 차단 사항이 아니다. 각각 M3.3, M3.6, M5.2~M5.4 완료 조건으로 추적한다.
 
@@ -129,3 +128,4 @@
 | 2026-08-12 | Codex | 구현 전 권장안 반영: Superproject 구조, M0.1 백로그 경계, Streaming·Subscribe 검증, 현재 Task Snapshot 방식, Legacy Smoke 정리와 마일스톤별 Mock 종료 조건 확정 | 루트 Git 미구성 |
 | 2026-08-12 | Codex | `workmate-ui-demo`를 폐기된 로컬 샘플로 구현·검수·Submodule 범위에서 제외하고 M0.4를 `workmate-agent` 최소 개발자 검증 페이지로 변경 | 루트 Git 미구성 |
 | 2026-08-12 | Codex | 루트 Superproject 초기 Commit과 `workmate-agent` 단일 Submodule 구성, Secret·로컬 산출물 제외 규칙 적용 | `bc22a073a47b25462727bf4a6cde1d7a9f404d52` |
+| 2026-08-12 | Codex | `https://github.com/sjseo1221/workmate.git` 원격 등록과 `main` 기준선 Push, Git 추적 차단 해소 | `3b320923cc6684cb40508d8fc7c8978fc49a1496` |
