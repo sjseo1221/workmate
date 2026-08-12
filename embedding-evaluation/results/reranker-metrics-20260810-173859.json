@@ -1,0 +1,81 @@
+{
+  "generated_at": "2026-08-10T08:38:59.712409+00:00",
+  "model": "openai/gpt-4.1-mini",
+  "case_count": 60,
+  "provider_error_count": 0,
+  "candidate_recall": 1.0,
+  "baseline_ranking": {
+    "case_count": 50,
+    "hit_at_1": 0.94,
+    "hit_at_3": 1.0,
+    "hit_at_5": 1.0,
+    "mrr": 0.9666666666666667
+  },
+  "reranker_ranking": {
+    "case_count": 50,
+    "hit_at_1": 0.98,
+    "hit_at_3": 0.98,
+    "hit_at_5": 0.98,
+    "mrr": 0.98
+  },
+  "answerability": {
+    "case_count": 60,
+    "answerable_count": 50,
+    "unanswerable_count": 10,
+    "false_negative_count": 1,
+    "false_negative_rate": 0.02,
+    "false_positive_count": 0,
+    "false_positive_rate": 0.0,
+    "accuracy": 0.9833333333333333
+  },
+  "reranker_only_answerability": {
+    "case_count": 60,
+    "answerable_count": 50,
+    "unanswerable_count": 10,
+    "false_negative_count": 1,
+    "false_negative_rate": 0.02,
+    "false_positive_count": 0,
+    "false_positive_rate": 0.0,
+    "accuracy": 0.9833333333333333
+  },
+  "rank_changes": {
+    "improved": 3,
+    "unchanged": 46,
+    "worsened": 1,
+    "retrieval_miss": 0
+  },
+  "by_suite": {
+    "real_meeting": {
+      "baseline_ranking": {
+        "case_count": 50,
+        "hit_at_1": 0.94,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 0.9666666666666667
+      },
+      "reranker_ranking": {
+        "case_count": 50,
+        "hit_at_1": 0.98,
+        "hit_at_3": 0.98,
+        "hit_at_5": 0.98,
+        "mrr": 0.98
+      },
+      "answerability": {
+        "case_count": 60,
+        "answerable_count": 50,
+        "unanswerable_count": 10,
+        "false_negative_count": 1,
+        "false_negative_rate": 0.02,
+        "false_positive_count": 0,
+        "false_positive_rate": 0.0,
+        "accuracy": 0.9833333333333333
+      }
+    }
+  },
+  "latency": {
+    "p50_ms": 1161.1,
+    "p95_ms": 1650.5
+  },
+  "input_tokens": 57701,
+  "output_tokens": 1026
+}

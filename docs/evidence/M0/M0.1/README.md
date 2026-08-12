@@ -1,0 +1,37 @@
+# M0.1 A2A·Artifact 계약 증빙
+
+status: 대기
+latest_run_id: null
+latest_run_status: null
+latest_approved_run_id: null
+approved_at: null
+reviewer: null
+
+## 목표
+
+공식 `a2a-sdk[http-server]==1.1.2`의 Agent Card·Message·Task·Artifact 타입과 Executor 런타임을 Workmate의 고정 A2A 1.0 HTTP+JSON 계약 경계에 연결한다.
+
+## 구현 예정 범위
+
+- 공식 SDK REST Handler·`AgentExecutor` 런타임과 정확한 버전 고정
+- A2A 전송용 자체 Pydantic 모델을 공식 SDK 타입으로 교체
+- 전송 계층과 실제 업무 Workflow의 실행 경계
+- A2A Task·Message 멱등성·Artifact·`task_id ↔ thread_id` 최소 PostgreSQL Migration
+- PostgreSQL Task Store와 LangGraph Checkpoint 연결, 재시작 복구·취소, 현재 Task 스냅샷 이후 신규 이벤트 Streaming
+- Agent Card, 인증, Adapter, 5개 Skill, Streaming, Task 조회·취소·Subscribe Contract Test
+- Mock 전용 필드 없는 정식 Result Envelope·Artifact Schema 검증
+
+## 백로그
+
+| ID | 범위 | 완료 판단 |
+| --- | --- | --- |
+| M0.1-01 | 공식 SDK HTTP+JSON 런타임 부트스트랩 | 버전 고정, 공식 Handler·Executor와 테스트용 결정론적 Executor로 Agent Card·허용 Route 부팅 |
+| M0.1-02 | 공개 A2A 전송 타입 | 공개 경로에서 자체 전송 모델·Legacy Route 제거, SDK 타입 Contract Test와 승인 Schema 기반 신규 Smoke Test 통과 |
+| M0.1-03 | Workflow·영속 Task 경계 | Registry·A2A 인프라 Migration·Artifact 변환·복구·취소·Subscribe 검증 |
+| M0.1-04 | 통합 계약 검수 | 5개 Skill·Schema·인증·상태·오류·부분 실패, Streaming 순서, 활성 Task `POST /a2a/tasks/{id}:subscribe`, Terminal 오류, 비허용 `GET` Subscribe와 제외 Route 차단 전체 통과 |
+
+## 현재 상태
+
+현재 `workmate-agent`는 자체 Pydantic 전송 모델을 사용하는 Legacy Mock Shell이다. 공식 SDK 런타임, Streaming, 영속 Task Store와 실제 Gmail·Calendar·DB·LLM Workflow는 아직 구현하지 않았다. 기존 `smoke_test.py`의 Legacy 요청과 `mock`, `received` 같은 전용 필드 응답은 승인 Schema와 호환되지 않으므로 기준 테스트나 M0.1 승인 증빙으로 사용하지 않는다. M0.1-02에서 승인 Schema 기반 Contract Test로 교체하고, 구현과 테스트 실행 결과가 생긴 뒤에만 `runs/{run_id}/result.md`를 생성한다.
+
+M0.1은 A2A 런타임 복구에 필요한 최소 인프라 Migration만 완료한다. Task·Gmail·Calendar 업무 도메인 Migration과 Repository·샘플 데이터는 M1.1의 완료 범위다.

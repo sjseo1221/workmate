@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-08-10T05:28:16.383650+00:00",
+  "model": "openai/text-embedding-3-small",
+  "dimension": 1536,
+  "corpus_count": 32,
+  "case_count": 20,
+  "hit_at_1": 0.8,
+  "hit_at_3": 1.0,
+  "hit_at_5": 1.0,
+  "mean_reciprocal_rank": 0.9,
+  "mean_ndcg_at_10": 0.9261859507142916,
+  "query_latency_p50_ms": 960.2,
+  "query_latency_p95_ms": 1095.6,
+  "document_batch_latency_ms": 2649.3,
+  "document_tokens": 996,
+  "query_tokens": 479
+}

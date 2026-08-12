@@ -1,0 +1,10 @@
+services:
+  orchestrator:
+    build: .
+    ports:
+      - "9000:8000"
+    environment:
+      SERVICE_TOKEN: ${SERVICE_TOKEN:-dev-service-token}
+      WORKMATE_BASE_URL: ${WORKMATE_BASE_URL:-http://host.docker.internal:8001/a2a/v1}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

@@ -1,0 +1,30 @@
+# 폐기된 로컬 UI 샘플
+/workmate-ui-demo/
+
+# Secret과 로컬 인증 자료
+**/.env
+**/.env.*
+!**/.env.example
+**/client_secret*.json
+**/credentials*.json
+**/token.json
+**/*.pem
+**/*.key
+
+# 로컬 실행 환경과 생성물
+**/.venv/
+**/venv/
+**/__pycache__/
+**/*.py[cod]
+**/node_modules/
+**/.next/
+**/*.log
+**/*.tar
+**/results/*.db
+
+# Git에 저장하지 않는 원본 미디어
+**/*.wav
+**/*.mp3
+**/*.m4a
+**/*.webm
+**/*.ogg

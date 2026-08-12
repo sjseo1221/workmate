@@ -1,0 +1,17 @@
+services:
+  recording-mock:
+    build: .
+    ports:
+      - "8010:8010"
+    environment:
+      RECORDING_DB_PATH: /app/results/recording-test.db
+    volumes:
+      - recording-test-data:/app/results
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8010/health/ready')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  recording-test-data:

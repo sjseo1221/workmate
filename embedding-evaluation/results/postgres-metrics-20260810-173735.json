@@ -1,0 +1,331 @@
+{
+  "generated_at": "2026-08-10T08:37:35.581537+00:00",
+  "model": "openai/text-embedding-3-small",
+  "dimension": 1536,
+  "postgres": "16.14 (Debian 16.14-1.pgdg12+1)",
+  "pgvector": "0.8.2",
+  "pg_trgm": "1.6",
+  "corpus_count": 5,
+  "case_count": 60,
+  "trigram_min_score": 0.05,
+  "db_warmup_queries": 10,
+  "abstain_score": 0.45,
+  "embedding_batch_size": 100,
+  "hnsw_ef_search": 200,
+  "hnsw_iterative_scan": "strict_order",
+  "dense_exact": {
+    "hit_at_1": 0.94,
+    "hit_at_3": 1.0,
+    "hit_at_5": 1.0,
+    "mrr": 0.9666666666666667,
+    "mean_ndcg_at_10": 0.9752371901428583,
+    "zero_result_rate": 0.0
+  },
+  "fts_simple": {
+    "hit_at_1": 0.0,
+    "hit_at_3": 0.0,
+    "hit_at_5": 0.0,
+    "mrr": 0,
+    "mean_ndcg_at_10": 0.0,
+    "zero_result_rate": 1.0
+  },
+  "trigram": {
+    "hit_at_1": 0.68,
+    "hit_at_3": 0.68,
+    "hit_at_5": 0.68,
+    "mrr": 0.68,
+    "mean_ndcg_at_10": 0.68,
+    "zero_result_rate": 0.3
+  },
+  "rrf_exact_trigram": {
+    "hit_at_1": 0.94,
+    "hit_at_3": 1.0,
+    "hit_at_5": 1.0,
+    "mrr": 0.9666666666666667,
+    "mean_ndcg_at_10": 0.9752371901428583,
+    "zero_result_rate": 0.0
+  },
+  "rrf_hnsw_trigram": {
+    "hit_at_1": 0.94,
+    "hit_at_3": 1.0,
+    "hit_at_5": 1.0,
+    "mrr": 0.9666666666666667,
+    "mean_ndcg_at_10": 0.9752371901428583,
+    "zero_result_rate": 0.0
+  },
+  "hnsw": {
+    "hit_at_1": 0.94,
+    "hit_at_3": 1.0,
+    "hit_at_5": 1.0,
+    "mrr": 0.9666666666666667,
+    "mean_ndcg_at_10": 0.9752371901428583,
+    "zero_result_rate": 0.0
+  },
+  "rrf_exact_vs_dense": {
+    "improved": 0,
+    "unchanged": 50,
+    "worsened": 0
+  },
+  "rrf_vs_hnsw": {
+    "improved": 0,
+    "unchanged": 50,
+    "worsened": 0
+  },
+  "answerability": {
+    "threshold": 0.45,
+    "answerable_count": 50,
+    "unanswerable_count": 10,
+    "false_negative_count": 28,
+    "false_positive_count": 0,
+    "false_negative_rate": 0.56,
+    "false_positive_rate": 0.0,
+    "accuracy": 0.5333333333333333
+  },
+  "answerability_threshold_sweep": [
+    {
+      "threshold": 0.35,
+      "answerable_count": 50,
+      "unanswerable_count": 10,
+      "false_negative_count": 14,
+      "false_positive_count": 1,
+      "false_negative_rate": 0.28,
+      "false_positive_rate": 0.1,
+      "accuracy": 0.75
+    },
+    {
+      "threshold": 0.4,
+      "answerable_count": 50,
+      "unanswerable_count": 10,
+      "false_negative_count": 23,
+      "false_positive_count": 0,
+      "false_negative_rate": 0.46,
+      "false_positive_rate": 0.0,
+      "accuracy": 0.6166666666666667
+    },
+    {
+      "threshold": 0.45,
+      "answerable_count": 50,
+      "unanswerable_count": 10,
+      "false_negative_count": 28,
+      "false_positive_count": 0,
+      "false_negative_rate": 0.56,
+      "false_positive_rate": 0.0,
+      "accuracy": 0.5333333333333333
+    },
+    {
+      "threshold": 0.5,
+      "answerable_count": 50,
+      "unanswerable_count": 10,
+      "false_negative_count": 33,
+      "false_positive_count": 0,
+      "false_negative_rate": 0.66,
+      "false_positive_rate": 0.0,
+      "accuracy": 0.45
+    },
+    {
+      "threshold": 0.55,
+      "answerable_count": 50,
+      "unanswerable_count": 10,
+      "false_negative_count": 37,
+      "false_positive_count": 0,
+      "false_negative_rate": 0.74,
+      "false_positive_rate": 0.0,
+      "accuracy": 0.38333333333333336
+    },
+    {
+      "threshold": 0.6,
+      "answerable_count": 50,
+      "unanswerable_count": 10,
+      "false_negative_count": 44,
+      "false_positive_count": 0,
+      "false_negative_rate": 0.88,
+      "false_positive_rate": 0.0,
+      "accuracy": 0.26666666666666666
+    }
+  ],
+  "by_category": {
+    "exact_match": {
+      "case_count": 15,
+      "answerable_count": 15,
+      "hnsw": {
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0,
+        "mean_ndcg_at_10": 1.0,
+        "zero_result_rate": 0.0
+      },
+      "trigram": {
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0,
+        "mean_ndcg_at_10": 1.0,
+        "zero_result_rate": 0.0
+      },
+      "rrf_exact": {
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0,
+        "mean_ndcg_at_10": 1.0,
+        "zero_result_rate": 0.0
+      },
+      "rrf": {
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0,
+        "mean_ndcg_at_10": 1.0,
+        "zero_result_rate": 0.0
+      }
+    },
+    "korean_english_mixed": {
+      "case_count": 10,
+      "answerable_count": 10,
+      "hnsw": {
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0,
+        "mean_ndcg_at_10": 1.0,
+        "zero_result_rate": 0.0
+      },
+      "trigram": {
+        "hit_at_1": 0.8,
+        "hit_at_3": 0.8,
+        "hit_at_5": 0.8,
+        "mrr": 0.8,
+        "mean_ndcg_at_10": 0.8,
+        "zero_result_rate": 0.2
+      },
+      "rrf_exact": {
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0,
+        "mean_ndcg_at_10": 1.0,
+        "zero_result_rate": 0.0
+      },
+      "rrf": {
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0,
+        "mean_ndcg_at_10": 1.0,
+        "zero_result_rate": 0.0
+      }
+    },
+    "metadata_filter": {
+      "case_count": 10,
+      "answerable_count": 10,
+      "hnsw": {
+        "hit_at_1": 0.7,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 0.8333333333333334,
+        "mean_ndcg_at_10": 0.8761859507142915,
+        "zero_result_rate": 0.0
+      },
+      "trigram": {
+        "hit_at_1": 0.9,
+        "hit_at_3": 0.9,
+        "hit_at_5": 0.9,
+        "mrr": 0.9,
+        "mean_ndcg_at_10": 0.9,
+        "zero_result_rate": 0.0
+      },
+      "rrf_exact": {
+        "hit_at_1": 0.7,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 0.8333333333333334,
+        "mean_ndcg_at_10": 0.8761859507142915,
+        "zero_result_rate": 0.0
+      },
+      "rrf": {
+        "hit_at_1": 0.7,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 0.8333333333333334,
+        "mean_ndcg_at_10": 0.8761859507142915,
+        "zero_result_rate": 0.0
+      }
+    },
+    "semantic_paraphrase": {
+      "case_count": 15,
+      "answerable_count": 15,
+      "hnsw": {
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0,
+        "mean_ndcg_at_10": 1.0,
+        "zero_result_rate": 0.0
+      },
+      "trigram": {
+        "hit_at_1": 0.13333333333333333,
+        "hit_at_3": 0.13333333333333333,
+        "hit_at_5": 0.13333333333333333,
+        "mrr": 0.13333333333333333,
+        "mean_ndcg_at_10": 0.13333333333333333,
+        "zero_result_rate": 0.8666666666666667
+      },
+      "rrf_exact": {
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0,
+        "mean_ndcg_at_10": 1.0,
+        "zero_result_rate": 0.0
+      },
+      "rrf": {
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0,
+        "mean_ndcg_at_10": 1.0,
+        "zero_result_rate": 0.0
+      }
+    },
+    "unanswerable": {
+      "case_count": 10,
+      "answerable_count": 0
+    }
+  },
+  "mean_hnsw_recall_at_5": 1.0,
+  "latency": {
+    "query_embedding": {
+      "p50_ms": 993.0,
+      "p95_ms": 1191.6
+    },
+    "dense_exact_db": {
+      "p50_ms": 50.852,
+      "p95_ms": 57.583
+    },
+    "fts_db": {
+      "p50_ms": 2.94,
+      "p95_ms": 4.396
+    },
+    "trigram_db": {
+      "p50_ms": 3.853,
+      "p95_ms": 6.578
+    },
+    "hnsw_db": {
+      "p50_ms": 49.964,
+      "p95_ms": 57.033
+    },
+    "hybrid_sequential_db": {
+      "p50_ms": 54.082,
+      "p95_ms": 63.378
+    },
+    "hybrid_exact_sequential_db": {
+      "p50_ms": 55.227,
+      "p95_ms": 62.908
+    }
+  },
+  "hnsw_index_used": true,
+  "document_embedding_ms": 1879.0,
+  "document_tokens": 518,
+  "query_tokens": 1471
+}

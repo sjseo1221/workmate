@@ -1,0 +1,3 @@
+﻿suite,case_id,category,answerable,candidate_has_relevant,baseline_rank,predicted_answerable,reranker_rank,latency_ms,input_tokens,output_tokens,provider_error
+real_meeting,retrieval-046,metadata_filter,True,True,3,True,1,1168.3,901,24,
+real_meeting,retrieval-050,metadata_filter,True,True,1,True,1,1278.4,889,18,

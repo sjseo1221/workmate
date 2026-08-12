@@ -1,0 +1,310 @@
+{
+  "generated_at": "2026-08-10T07:30:55.104184+00:00",
+  "model": "openai/text-embedding-3-small",
+  "dimension": 1536,
+  "postgres": "16.14 (Debian 16.14-1.pgdg12+1)",
+  "pgvector": "0.8.2",
+  "pg_trgm": "1.6",
+  "corpus_count": 1000,
+  "case_count": 60,
+  "trigram_min_score": 0.05,
+  "db_warmup_queries": 10,
+  "abstain_score": 0.45,
+  "embedding_batch_size": 100,
+  "hnsw_ef_search": 200,
+  "hnsw_iterative_scan": "strict_order",
+  "dense_exact": {
+    "hit_at_1": 0.84,
+    "hit_at_3": 0.92,
+    "hit_at_5": 0.96,
+    "mrr": 0.8922222222222222,
+    "mean_ndcg_at_10": 0.9137220425219319,
+    "zero_result_rate": 0.0
+  },
+  "fts_simple": {
+    "hit_at_1": 0.0,
+    "hit_at_3": 0.0,
+    "hit_at_5": 0.0,
+    "mrr": 0,
+    "mean_ndcg_at_10": 0.0,
+    "zero_result_rate": 1.0
+  },
+  "trigram": {
+    "hit_at_1": 0.86,
+    "hit_at_3": 0.96,
+    "hit_at_5": 0.96,
+    "mrr": 0.9033333333333333,
+    "mean_ndcg_at_10": 0.9178557852142875,
+    "zero_result_rate": 0.02
+  },
+  "rrf_hnsw_trigram": {
+    "hit_at_1": 0.76,
+    "hit_at_3": 0.92,
+    "hit_at_5": 0.94,
+    "mrr": 0.8456666666666667,
+    "mean_ndcg_at_10": 0.878685816716124,
+    "zero_result_rate": 0.0
+  },
+  "hnsw": {
+    "hit_at_1": 0.7,
+    "hit_at_3": 0.78,
+    "hit_at_5": 0.8,
+    "mrr": 0.7472222222222222,
+    "mean_ndcg_at_10": 0.7651085113604641,
+    "zero_result_rate": 0.02
+  },
+  "rrf_vs_hnsw": {
+    "improved": 11,
+    "unchanged": 39,
+    "worsened": 0
+  },
+  "answerability": {
+    "threshold": 0.45,
+    "answerable_count": 50,
+    "unanswerable_count": 10,
+    "false_negative_count": 15,
+    "false_positive_count": 0,
+    "false_negative_rate": 0.3,
+    "false_positive_rate": 0.0,
+    "accuracy": 0.75
+  },
+  "answerability_threshold_sweep": [
+    {
+      "threshold": 0.35,
+      "answerable_count": 50,
+      "unanswerable_count": 10,
+      "false_negative_count": 6,
+      "false_positive_count": 6,
+      "false_negative_rate": 0.12,
+      "false_positive_rate": 0.6,
+      "accuracy": 0.8
+    },
+    {
+      "threshold": 0.4,
+      "answerable_count": 50,
+      "unanswerable_count": 10,
+      "false_negative_count": 8,
+      "false_positive_count": 3,
+      "false_negative_rate": 0.16,
+      "false_positive_rate": 0.3,
+      "accuracy": 0.8166666666666667
+    },
+    {
+      "threshold": 0.45,
+      "answerable_count": 50,
+      "unanswerable_count": 10,
+      "false_negative_count": 15,
+      "false_positive_count": 0,
+      "false_negative_rate": 0.3,
+      "false_positive_rate": 0.0,
+      "accuracy": 0.75
+    },
+    {
+      "threshold": 0.5,
+      "answerable_count": 50,
+      "unanswerable_count": 10,
+      "false_negative_count": 18,
+      "false_positive_count": 0,
+      "false_negative_rate": 0.36,
+      "false_positive_rate": 0.0,
+      "accuracy": 0.7
+    },
+    {
+      "threshold": 0.55,
+      "answerable_count": 50,
+      "unanswerable_count": 10,
+      "false_negative_count": 26,
+      "false_positive_count": 0,
+      "false_negative_rate": 0.52,
+      "false_positive_rate": 0.0,
+      "accuracy": 0.5666666666666667
+    },
+    {
+      "threshold": 0.6,
+      "answerable_count": 50,
+      "unanswerable_count": 10,
+      "false_negative_count": 28,
+      "false_positive_count": 0,
+      "false_negative_rate": 0.56,
+      "false_positive_rate": 0.0,
+      "accuracy": 0.5333333333333333
+    }
+  ],
+  "by_category": {
+    "action_item": {
+      "case_count": 8,
+      "answerable_count": 8,
+      "hnsw": {
+        "hit_at_1": 0.375,
+        "hit_at_3": 0.5,
+        "hit_at_5": 0.5,
+        "mrr": 0.4375,
+        "mean_ndcg_at_10": 0.4538662191964322,
+        "zero_result_rate": 0.0
+      },
+      "trigram": {
+        "hit_at_1": 0.875,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 0.9375,
+        "mean_ndcg_at_10": 0.9538662191964322,
+        "zero_result_rate": 0.0
+      },
+      "rrf": {
+        "hit_at_1": 0.375,
+        "hit_at_3": 0.75,
+        "hit_at_5": 0.875,
+        "mrr": 0.603125,
+        "mean_ndcg_at_10": 0.6993883680918304,
+        "zero_result_rate": 0.0
+      }
+    },
+    "exact_entity": {
+      "case_count": 11,
+      "answerable_count": 11,
+      "hnsw": {
+        "hit_at_1": 0.8181818181818182,
+        "hit_at_3": 0.9090909090909091,
+        "hit_at_5": 0.9090909090909091,
+        "mrr": 0.8636363636363636,
+        "mean_ndcg_at_10": 0.8755390685064961,
+        "zero_result_rate": 0.0
+      },
+      "trigram": {
+        "hit_at_1": 0.8181818181818182,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 0.8787878787878788,
+        "mean_ndcg_at_10": 0.9090909090909091,
+        "zero_result_rate": 0.0
+      },
+      "rrf": {
+        "hit_at_1": 0.8181818181818182,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 0.9090909090909091,
+        "mean_ndcg_at_10": 0.9328963188311741,
+        "zero_result_rate": 0.0
+      }
+    },
+    "metadata_filter": {
+      "case_count": 4,
+      "answerable_count": 4,
+      "hnsw": {
+        "hit_at_1": 0.75,
+        "hit_at_3": 0.75,
+        "hit_at_5": 0.75,
+        "mrr": 0.75,
+        "mean_ndcg_at_10": 0.75,
+        "zero_result_rate": 0.25
+      },
+      "trigram": {
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0,
+        "mean_ndcg_at_10": 1.0,
+        "zero_result_rate": 0.0
+      },
+      "rrf": {
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0,
+        "mean_ndcg_at_10": 1.0,
+        "zero_result_rate": 0.0
+      }
+    },
+    "mixed_terms": {
+      "case_count": 10,
+      "answerable_count": 10,
+      "hnsw": {
+        "hit_at_1": 0.7,
+        "hit_at_3": 0.8,
+        "hit_at_5": 0.8,
+        "mrr": 0.75,
+        "mean_ndcg_at_10": 0.7630929753571457,
+        "zero_result_rate": 0.0
+      },
+      "trigram": {
+        "hit_at_1": 0.8,
+        "hit_at_3": 0.8,
+        "hit_at_5": 0.8,
+        "mrr": 0.8,
+        "mean_ndcg_at_10": 0.8,
+        "zero_result_rate": 0.1
+      },
+      "rrf": {
+        "hit_at_1": 0.7,
+        "hit_at_3": 0.9,
+        "hit_at_5": 0.9,
+        "mrr": 0.8,
+        "mean_ndcg_at_10": 0.8261859507142915,
+        "zero_result_rate": 0.0
+      }
+    },
+    "semantic_paraphrase": {
+      "case_count": 17,
+      "answerable_count": 17,
+      "hnsw": {
+        "hit_at_1": 0.7647058823529411,
+        "hit_at_3": 0.8235294117647058,
+        "hit_at_5": 0.8823529411764706,
+        "mrr": 0.815359477124183,
+        "mean_ndcg_at_10": 0.8448609592534607,
+        "zero_result_rate": 0.0
+      },
+      "trigram": {
+        "hit_at_1": 0.8823529411764706,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 0.9411764705882353,
+        "mean_ndcg_at_10": 0.9565799710084067,
+        "zero_result_rate": 0.0
+      },
+      "rrf": {
+        "hit_at_1": 0.8823529411764706,
+        "hit_at_3": 0.9411764705882353,
+        "hit_at_5": 0.9411764705882353,
+        "mrr": 0.9093137254901961,
+        "mean_ndcg_at_10": 0.9303214633403369,
+        "zero_result_rate": 0.0
+      }
+    },
+    "unanswerable": {
+      "case_count": 10,
+      "answerable_count": 0
+    }
+  },
+  "mean_hnsw_recall_at_5": 0.88,
+  "latency": {
+    "query_embedding": {
+      "p50_ms": 1093.6,
+      "p95_ms": 1251.3
+    },
+    "dense_exact_db": {
+      "p50_ms": 63.567,
+      "p95_ms": 93.201
+    },
+    "fts_db": {
+      "p50_ms": 2.422,
+      "p95_ms": 6.244
+    },
+    "trigram_db": {
+      "p50_ms": 2.654,
+      "p95_ms": 5.593
+    },
+    "hnsw_db": {
+      "p50_ms": 52.872,
+      "p95_ms": 63.131
+    },
+    "hybrid_sequential_db": {
+      "p50_ms": 55.502,
+      "p95_ms": 68.621
+    }
+  },
+  "hnsw_index_used": true,
+  "document_embedding_ms": 33536.4,
+  "document_tokens": 46596,
+  "query_tokens": 1293
+}

@@ -1,0 +1,60 @@
+{"case_id": "retrieval-001", "query": "QA 빌드 날짜는 언제로 확정됐어?", "relevant_chunk_ids": ["chunk-qa-build"], "filters": {}, "category": "exact_entity", "answerable": true}
+{"case_id": "retrieval-002", "query": "회귀 테스트를 반영한 검증용 빌드는 며칠에 나오지?", "relevant_chunk_ids": ["chunk-qa-build"], "filters": {"date_to": "2026-08-10"}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-003", "query": "정기 점검 시작 날짜와 시간은?", "relevant_chunk_ids": ["chunk-maint-start"], "filters": {}, "category": "exact_entity", "answerable": true}
+{"case_id": "retrieval-004", "query": "결제 장애가 발생한 원인이 뭐였어?", "relevant_chunk_ids": ["chunk-payment-cause"], "filters": {}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-005", "query": "이벤트 보상 지급일을 알려줘", "relevant_chunk_ids": ["chunk-event-reward"], "filters": {}, "category": "exact_entity", "answerable": true}
+{"case_id": "retrieval-006", "query": "새 서버 설정 담당자는 누구야?", "relevant_chunk_ids": ["chunk-server-owner"], "filters": {"participant_user_ids": ["user-johyunwoo"]}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-007", "query": "점검 중 로그 수집을 언제부터 몇 분 동안 멈춰?", "relevant_chunk_ids": ["chunk-log-stop"], "filters": {}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-008", "query": "할로윈 트레일러 Final Review 담당자가 누구지?", "relevant_chunk_ids": ["chunk-trailer-review"], "filters": {}, "category": "mixed_terms", "answerable": true}
+{"case_id": "retrieval-009", "query": "Low-end device의 shadow quality 설정은 어떻게 정했어?", "relevant_chunk_ids": ["chunk-shadow-low"], "filters": {}, "category": "mixed_terms", "answerable": true}
+{"case_id": "retrieval-010", "query": "신규 matchmaking server의 초기 rollout 비율은?", "relevant_chunk_ids": ["chunk-match-rollout"], "filters": {}, "category": "mixed_terms", "answerable": true}
+{"case_id": "retrieval-011", "query": "macOS client beta 공개일은 언제야?", "relevant_chunk_ids": ["chunk-macos-beta"], "filters": {}, "category": "mixed_terms", "answerable": true}
+{"case_id": "retrieval-012", "query": "QA에서만 발생한 로그인 문제를 누가 언제까지 분석하기로 했어?", "relevant_chunk_ids": ["chunk-login-action"], "filters": {"meeting_ids": ["meeting-login"]}, "category": "action_item", "answerable": true}
+{"case_id": "retrieval-013", "query": "던전 보상 수치를 다시 계산하기로 한 담당자와 공유 시점은?", "relevant_chunk_ids": ["chunk-reward-recalc"], "filters": {}, "category": "action_item", "answerable": true}
+{"case_id": "retrieval-014", "query": "특정 맵 메모리 급증에 대해 다음 주까지 하기로 한 일은?", "relevant_chunk_ids": ["chunk-profiling"], "filters": {}, "category": "action_item", "answerable": true}
+{"case_id": "retrieval-015", "query": "아시아 리전 지연 문제로 오늘 오후까지 점검할 항목은?", "relevant_chunk_ids": ["chunk-routing"], "filters": {}, "category": "action_item", "answerable": true}
+{"case_id": "retrieval-016", "query": "설정 화면 접근성을 위해 수정하거나 작성하기로 한 내용은?", "relevant_chunk_ids": ["chunk-accessibility-button", "chunk-accessibility-checklist"], "filters": {"meeting_ids": ["meeting-accessibility"]}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-017", "query": "신규 사용자가 가장 많이 이탈한 튜토리얼 구간은?", "relevant_chunk_ids": ["chunk-tutorial-dropoff"], "filters": {}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-018", "query": "야간 장애 이후 문서화하기로 한 절차와 마감일은?", "relevant_chunk_ids": ["chunk-restart-procedure"], "filters": {}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-019", "query": "시즌 음원 사용 범위 확인을 위해 내일까지 검토할 자료는?", "relevant_chunk_ids": ["chunk-license-check"], "filters": {"meeting_ids": ["meeting-music"]}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-020", "query": "음원 권리 확인이 끝나면 어느 팀에 전달하기로 했어?", "relevant_chunk_ids": ["chunk-license-transfer"], "filters": {"meeting_ids": ["meeting-music"]}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-021", "query": "안티치트 SDK 버전은 무엇으로 정했어?", "relevant_chunk_ids": ["chunk-expanded-001-answer"], "filters": {}, "category": "exact_entity", "answerable": true}
+{"case_id": "retrieval-022", "query": "시즌 9는 언제 시작해?", "relevant_chunk_ids": ["chunk-expanded-002-answer"], "filters": {}, "category": "exact_entity", "answerable": true}
+{"case_id": "retrieval-023", "query": "이번 QA 검증 빌드 번호가 뭐야?", "relevant_chunk_ids": ["chunk-expanded-003-answer"], "filters": {}, "category": "exact_entity", "answerable": true}
+{"case_id": "retrieval-024", "query": "8월 정기 점검 시작 시각은?", "relevant_chunk_ids": ["chunk-expanded-004-answer"], "filters": {}, "category": "exact_entity", "answerable": true}
+{"case_id": "retrieval-025", "query": "Vulkan 시험 브랜치 이름이 뭐야?", "relevant_chunk_ids": ["chunk-expanded-005-answer"], "filters": {}, "category": "exact_entity", "answerable": true}
+{"case_id": "retrieval-026", "query": "로비 크래시 티켓 번호 알려줘.", "relevant_chunk_ids": ["chunk-expanded-006-answer"], "filters": {}, "category": "exact_entity", "answerable": true}
+{"case_id": "retrieval-027", "query": "출시 지원 언어는 몇 개야?", "relevant_chunk_ids": ["chunk-expanded-007-answer"], "filters": {}, "category": "exact_entity", "answerable": true}
+{"case_id": "retrieval-028", "query": "플레이스테이션 인증은 언제 제출해?", "relevant_chunk_ids": ["chunk-expanded-008-answer"], "filters": {}, "category": "exact_entity", "answerable": true}
+{"case_id": "retrieval-029", "query": "길드전 상대를 고르는 기준이 뭐야?", "relevant_chunk_ids": ["chunk-expanded-009-answer"], "filters": {}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-030", "query": "서버를 자동 증설하는 기준 부하는 얼마야?", "relevant_chunk_ids": ["chunk-expanded-010-answer"], "filters": {}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-031", "query": "신규 이용자가 가장 많이 나가는 튜토리얼 구간은?", "relevant_chunk_ids": ["chunk-expanded-011-answer"], "filters": {}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-032", "query": "사용자 저장 파일 보호에 어떤 암호화를 써?", "relevant_chunk_ids": ["chunk-expanded-012-answer"], "filters": {}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-033", "query": "정예 몬스터를 잡은 뒤 다시 나오기까지 얼마나 걸려?", "relevant_chunk_ids": ["chunk-expanded-013-answer"], "filters": {}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-034", "query": "보이스 채팅 배경 소음을 줄이는 기술은 뭐야?", "relevant_chunk_ids": ["chunk-expanded-014-answer"], "filters": {}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-035", "query": "오지급 아이템을 되돌릴 수 있는 시간 범위는?", "relevant_chunk_ids": ["chunk-expanded-015-answer"], "filters": {}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-036", "query": "레이드 보스가 분노 상태로 바뀌는 체력 조건은?", "relevant_chunk_ids": ["chunk-expanded-016-answer"], "filters": {}, "category": "semantic_paraphrase", "answerable": true}
+{"case_id": "retrieval-037", "query": "60 FPS Frame Pacing budget이 얼마야?", "relevant_chunk_ids": ["chunk-expanded-017-answer"], "filters": {}, "category": "mixed_terms", "answerable": true}
+{"case_id": "retrieval-038", "query": "이번 Hotfix resource bundle 이름은?", "relevant_chunk_ids": ["chunk-expanded-018-answer"], "filters": {}, "category": "mixed_terms", "answerable": true}
+{"case_id": "retrieval-039", "query": "MMR decay가 시작되는 inactive 기간은?", "relevant_chunk_ids": ["chunk-expanded-019-answer"], "filters": {}, "category": "mixed_terms", "answerable": true}
+{"case_id": "retrieval-040", "query": "Shader Cache warmup 시간은 얼마나 잡았어?", "relevant_chunk_ids": ["chunk-expanded-020-answer"], "filters": {}, "category": "mixed_terms", "answerable": true}
+{"case_id": "retrieval-041", "query": "배포 후 CDN purge SLA는?", "relevant_chunk_ids": ["chunk-expanded-021-answer"], "filters": {}, "category": "mixed_terms", "answerable": true}
+{"case_id": "retrieval-042", "query": "Telemetry opt-out 메뉴 위치가 어디야?", "relevant_chunk_ids": ["chunk-expanded-022-answer"], "filters": {}, "category": "mixed_terms", "answerable": true}
+{"case_id": "retrieval-043", "query": "인벤토리 복제 오류 담당자와 기한은?", "relevant_chunk_ids": ["chunk-expanded-023-answer"], "filters": {}, "category": "action_item", "answerable": true}
+{"case_id": "retrieval-044", "query": "부하 테스트 보고서 후속 작업은 누가 언제까지 해?", "relevant_chunk_ids": ["chunk-expanded-024-answer"], "filters": {}, "category": "action_item", "answerable": true}
+{"case_id": "retrieval-045", "query": "등급 심의 자료 제출 담당자와 마감일은?", "relevant_chunk_ids": ["chunk-expanded-025-answer"], "filters": {}, "category": "action_item", "answerable": true}
+{"case_id": "retrieval-046", "query": "수익화 지표 시트 수정 후속 업무는?", "relevant_chunk_ids": ["chunk-expanded-026-answer"], "filters": {}, "category": "action_item", "answerable": true}
+{"case_id": "retrieval-047", "query": "A팀 QA 빌드 배포일은?", "relevant_chunk_ids": ["chunk-expanded-027-answer"], "filters": {"meeting_ids": ["meeting-expanded-027"]}, "category": "metadata_filter", "answerable": true}
+{"case_id": "retrieval-048", "query": "김전투가 맡은 보스 검수 기한은?", "relevant_chunk_ids": ["chunk-expanded-028-answer"], "filters": {"meeting_ids": ["meeting-expanded-028"]}, "category": "metadata_filter", "answerable": true}
+{"case_id": "retrieval-049", "query": "8월 운영 회의에서 정한 이벤트 서버 오픈일은?", "relevant_chunk_ids": ["chunk-expanded-029-answer"], "filters": {"meeting_ids": ["meeting-expanded-029"]}, "category": "metadata_filter", "answerable": true}
+{"case_id": "retrieval-050", "query": "클라이언트 A 메모리 점검 마감은?", "relevant_chunk_ids": ["chunk-expanded-030-answer"], "filters": {"meeting_ids": ["meeting-expanded-030"]}, "category": "metadata_filter", "answerable": true}
+{"case_id": "retrieval-051", "query": "닌텐도 스위치 출시일은 언제로 확정됐어?", "relevant_chunk_ids": [], "filters": {}, "category": "unanswerable", "answerable": false}
+{"case_id": "retrieval-052", "query": "브라질 전용 서버는 언제 열어?", "relevant_chunk_ids": [], "filters": {}, "category": "unanswerable", "answerable": false}
+{"case_id": "retrieval-053", "query": "VR 모드는 어떤 기기를 지원해?", "relevant_chunk_ids": [], "filters": {}, "category": "unanswerable", "answerable": false}
+{"case_id": "retrieval-054", "query": "블록체인 NFT 아이템을 도입하기로 했어?", "relevant_chunk_ids": [], "filters": {}, "category": "unanswerable", "answerable": false}
+{"case_id": "retrieval-055", "query": "유명 배우 컬래버레이션 일정 알려줘.", "relevant_chunk_ids": [], "filters": {}, "category": "unanswerable", "answerable": false}
+{"case_id": "retrieval-056", "query": "아랍어 음성 더빙 담당 업체는 어디야?", "relevant_chunk_ids": [], "filters": {}, "category": "unanswerable", "answerable": false}
+{"case_id": "retrieval-057", "query": "e스포츠 월드컵 총상금은 얼마야?", "relevant_chunk_ids": [], "filters": {}, "category": "unanswerable", "answerable": false}
+{"case_id": "retrieval-058", "query": "macOS 앱스토어 심사 제출일은?", "relevant_chunk_ids": [], "filters": {}, "category": "unanswerable", "answerable": false}
+{"case_id": "retrieval-059", "query": "확률형 아이템의 전설 등급 확률은 몇 퍼센트야?", "relevant_chunk_ids": [], "filters": {}, "category": "unanswerable", "answerable": false}
+{"case_id": "retrieval-060", "query": "스팀덱 공식 인증을 언제 받았어?", "relevant_chunk_ids": [], "filters": {}, "category": "unanswerable", "answerable": false}

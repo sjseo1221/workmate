@@ -1,0 +1,7 @@
+.env
+audio/**/*.wav
+audio/**/*.mp3
+audio/**/*.m4a
+results/*
+!results/.gitkeep
+__pycache__/

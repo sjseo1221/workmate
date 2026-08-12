@@ -1,0 +1,107 @@
+{
+  "generated_at": "2026-08-10T08:09:01.223766+00:00",
+  "model": "openai/gpt-4.1-mini",
+  "case_count": 80,
+  "provider_error_count": 0,
+  "candidate_recall": 0.9857142857142858,
+  "baseline_ranking": {
+    "case_count": 70,
+    "hit_at_1": 0.8285714285714286,
+    "hit_at_3": 0.9428571428571428,
+    "hit_at_5": 0.9857142857142858,
+    "mrr": 0.8892857142857142
+  },
+  "reranker_ranking": {
+    "case_count": 70,
+    "hit_at_1": 0.9714285714285714,
+    "hit_at_3": 0.9857142857142858,
+    "hit_at_5": 0.9857142857142858,
+    "mrr": 0.9785714285714285
+  },
+  "answerability": {
+    "case_count": 80,
+    "answerable_count": 70,
+    "unanswerable_count": 10,
+    "false_negative_count": 1,
+    "false_negative_rate": 0.014285714285714285,
+    "false_positive_count": 0,
+    "false_positive_rate": 0.0,
+    "accuracy": 0.9875
+  },
+  "reranker_only_answerability": {
+    "case_count": 79,
+    "answerable_count": 69,
+    "unanswerable_count": 10,
+    "false_negative_count": 0,
+    "false_negative_rate": 0.0,
+    "false_positive_count": 0,
+    "false_positive_rate": 0.0,
+    "accuracy": 1.0
+  },
+  "rank_changes": {
+    "improved": 11,
+    "unchanged": 58,
+    "worsened": 0,
+    "retrieval_miss": 1
+  },
+  "by_suite": {
+    "expanded": {
+      "baseline_ranking": {
+        "case_count": 50,
+        "hit_at_1": 0.9,
+        "hit_at_3": 0.98,
+        "hit_at_5": 0.98,
+        "mrr": 0.9366666666666666
+      },
+      "reranker_ranking": {
+        "case_count": 50,
+        "hit_at_1": 0.96,
+        "hit_at_3": 0.98,
+        "hit_at_5": 0.98,
+        "mrr": 0.97
+      },
+      "answerability": {
+        "case_count": 60,
+        "answerable_count": 50,
+        "unanswerable_count": 10,
+        "false_negative_count": 1,
+        "false_negative_rate": 0.02,
+        "false_positive_count": 0,
+        "false_positive_rate": 0.0,
+        "accuracy": 0.9833333333333333
+      }
+    },
+    "lexical_holdout": {
+      "baseline_ranking": {
+        "case_count": 20,
+        "hit_at_1": 0.65,
+        "hit_at_3": 0.85,
+        "hit_at_5": 1.0,
+        "mrr": 0.7708333333333334
+      },
+      "reranker_ranking": {
+        "case_count": 20,
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0
+      },
+      "answerability": {
+        "case_count": 20,
+        "answerable_count": 20,
+        "unanswerable_count": 0,
+        "false_negative_count": 0,
+        "false_negative_rate": 0.0,
+        "false_positive_count": 0,
+        "false_positive_rate": 0.0,
+        "accuracy": 1.0
+      }
+    }
+  },
+  "latency": {
+    "p50_ms": 1109.3,
+    "p95_ms": 2639.5
+  },
+  "input_tokens": 38245,
+  "output_tokens": 1420
+}

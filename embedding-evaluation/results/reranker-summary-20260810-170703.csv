@@ -1,0 +1,3 @@
+﻿suite,case_id,category,answerable,candidate_has_relevant,baseline_rank,predicted_answerable,reranker_rank,latency_ms,input_tokens,output_tokens,provider_error
+expanded,retrieval-016,semantic_paraphrase,True,True,1,True,1,1271.1,326,17,
+expanded,retrieval-046,action_item,True,True,1,True,1,1908.6,511,18,

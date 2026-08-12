@@ -1,0 +1,20 @@
+{"case_id":"retrieval-001","query":"QA 빌드 날짜는 언제로 확정됐어?","relevant_chunk_ids":["chunk-qa-build"],"filters":{},"category":"exact_entity","answerable":true}
+{"case_id":"retrieval-002","query":"회귀 테스트를 반영한 검증용 빌드는 며칠에 나오지?","relevant_chunk_ids":["chunk-qa-build"],"filters":{"date_to":"2026-08-10"},"category":"semantic_paraphrase","answerable":true}
+{"case_id":"retrieval-003","query":"정기 점검 시작 날짜와 시간은?","relevant_chunk_ids":["chunk-maint-start"],"filters":{},"category":"exact_entity","answerable":true}
+{"case_id":"retrieval-004","query":"결제 장애가 발생한 원인이 뭐였어?","relevant_chunk_ids":["chunk-payment-cause"],"filters":{},"category":"semantic_paraphrase","answerable":true}
+{"case_id":"retrieval-005","query":"이벤트 보상 지급일을 알려줘","relevant_chunk_ids":["chunk-event-reward"],"filters":{},"category":"exact_entity","answerable":true}
+{"case_id":"retrieval-006","query":"새 서버 설정 담당자는 누구야?","relevant_chunk_ids":["chunk-server-owner"],"filters":{"participant_user_ids":["user-johyunwoo"]},"category":"semantic_paraphrase","answerable":true}
+{"case_id":"retrieval-007","query":"점검 중 로그 수집을 언제부터 몇 분 동안 멈춰?","relevant_chunk_ids":["chunk-log-stop"],"filters":{},"category":"semantic_paraphrase","answerable":true}
+{"case_id":"retrieval-008","query":"할로윈 트레일러 Final Review 담당자가 누구지?","relevant_chunk_ids":["chunk-trailer-review"],"filters":{},"category":"mixed_terms","answerable":true}
+{"case_id":"retrieval-009","query":"Low-end device의 shadow quality 설정은 어떻게 정했어?","relevant_chunk_ids":["chunk-shadow-low"],"filters":{},"category":"mixed_terms","answerable":true}
+{"case_id":"retrieval-010","query":"신규 matchmaking server의 초기 rollout 비율은?","relevant_chunk_ids":["chunk-match-rollout"],"filters":{},"category":"mixed_terms","answerable":true}
+{"case_id":"retrieval-011","query":"macOS client beta 공개일은 언제야?","relevant_chunk_ids":["chunk-macos-beta"],"filters":{},"category":"mixed_terms","answerable":true}
+{"case_id":"retrieval-012","query":"QA에서만 발생한 로그인 문제를 누가 언제까지 분석하기로 했어?","relevant_chunk_ids":["chunk-login-action"],"filters":{"meeting_ids":["meeting-login"]},"category":"action_item","answerable":true}
+{"case_id":"retrieval-013","query":"던전 보상 수치를 다시 계산하기로 한 담당자와 공유 시점은?","relevant_chunk_ids":["chunk-reward-recalc"],"filters":{},"category":"action_item","answerable":true}
+{"case_id":"retrieval-014","query":"특정 맵 메모리 급증에 대해 다음 주까지 하기로 한 일은?","relevant_chunk_ids":["chunk-profiling"],"filters":{},"category":"action_item","answerable":true}
+{"case_id":"retrieval-015","query":"아시아 리전 지연 문제로 오늘 오후까지 점검할 항목은?","relevant_chunk_ids":["chunk-routing"],"filters":{},"category":"action_item","answerable":true}
+{"case_id":"retrieval-016","query":"설정 화면 접근성을 위해 수정하거나 작성하기로 한 내용은?","relevant_chunk_ids":["chunk-accessibility-button","chunk-accessibility-checklist"],"filters":{"meeting_ids":["meeting-accessibility"]},"category":"semantic_paraphrase","answerable":true}
+{"case_id":"retrieval-017","query":"신규 사용자가 가장 많이 이탈한 튜토리얼 구간은?","relevant_chunk_ids":["chunk-tutorial-dropoff"],"filters":{},"category":"semantic_paraphrase","answerable":true}
+{"case_id":"retrieval-018","query":"야간 장애 이후 문서화하기로 한 절차와 마감일은?","relevant_chunk_ids":["chunk-restart-procedure"],"filters":{},"category":"semantic_paraphrase","answerable":true}
+{"case_id":"retrieval-019","query":"시즌 음원 사용 범위 확인을 위해 내일까지 검토할 자료는?","relevant_chunk_ids":["chunk-license-check"],"filters":{"meeting_ids":["meeting-music"]},"category":"semantic_paraphrase","answerable":true}
+{"case_id":"retrieval-020","query":"음원 권리 확인이 끝나면 어느 팀에 전달하기로 했어?","relevant_chunk_ids":["chunk-license-transfer"],"filters":{"meeting_ids":["meeting-music"]},"category":"semantic_paraphrase","answerable":true}

@@ -1,0 +1,20 @@
+{"case_id": "synthetic-001", "audio": "audio/pilot/synthetic-001.mp3", "language": "ko", "must_include": ["QA 빌드"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-002", "audio": "audio/pilot/synthetic-002.mp3", "language": "ko", "must_include": ["로그인 오류"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-003", "audio": "audio/pilot/synthetic-003.mp3", "language": "ko", "must_include": ["캐릭터 밸런스"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-004", "audio": "audio/pilot/synthetic-004.mp3", "language": "ko", "must_include": ["서버 재시작"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-005", "audio": "audio/pilot/synthetic-005.mp3", "language": "ko", "must_include": ["회귀 테스트"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-006", "audio": "audio/pilot/synthetic-006.mp3", "language": "ko", "must_include": ["스토어 심사"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-007", "audio": "audio/pilot/synthetic-007.mp3", "language": "ko", "must_include": ["메모리 누수"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-008", "audio": "audio/pilot/synthetic-008.mp3", "language": "ko", "must_include": ["트레일러"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-009", "audio": "audio/pilot/synthetic-009.mp3", "language": "ko", "must_include": ["배포 자동화"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-010", "audio": "audio/pilot/synthetic-010.mp3", "language": "ko", "must_include": ["결제 오류"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-011", "audio": "audio/pilot/synthetic-011.mp3", "language": "ko", "must_include": ["저사양"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-012", "audio": "audio/pilot/synthetic-012.mp3", "language": "ko", "must_include": ["번역"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-013", "audio": "audio/pilot/synthetic-013.mp3", "language": "ko", "must_include": ["네트워크 지연"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-014", "audio": "audio/pilot/synthetic-014.mp3", "language": "ko", "must_include": ["튜토리얼"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-015", "audio": "audio/pilot/synthetic-015.mp3", "language": "ko", "must_include": ["로그"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-016", "audio": "audio/pilot/synthetic-016.mp3", "language": "ko", "must_include": ["안드로이드 빌드"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-017", "audio": "audio/pilot/synthetic-017.mp3", "language": "ko", "must_include": ["iOS"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-018", "audio": "audio/pilot/synthetic-018.mp3", "language": "ko", "must_include": ["공지"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-019", "audio": "audio/pilot/synthetic-019.mp3", "language": "ko", "must_include": ["크래시"], "forbidden": ["출시 완료"], "expected_speaker_count": null}
+{"case_id": "synthetic-020", "audio": "audio/pilot/synthetic-020.mp3", "language": "ko", "must_include": ["출시 체크리스트"], "forbidden": ["출시 완료"], "expected_speaker_count": null}

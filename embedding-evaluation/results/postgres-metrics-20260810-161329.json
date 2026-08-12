@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-08-10T07:13:29.876463+00:00",
+  "model": "openai/text-embedding-3-small",
+  "dimension": 1536,
+  "postgres": "16.14 (Debian 16.14-1.pgdg12+1)",
+  "pgvector": "0.8.2",
+  "pg_trgm": "1.6",
+  "corpus_count": 32,
+  "case_count": 20,
+  "trigram_min_score": 0.05,
+  "dense_exact": {
+    "hit_at_1": 0.8,
+    "hit_at_3": 1.0,
+    "hit_at_5": 1.0,
+    "mrr": 0.9,
+    "mean_ndcg_at_10": 0.9261859507142916,
+    "zero_result_rate": 0.0
+  },
+  "fts_simple": {
+    "hit_at_1": 0.0,
+    "hit_at_3": 0.0,
+    "hit_at_5": 0.0,
+    "mrr": 0,
+    "mean_ndcg_at_10": 0.0,
+    "zero_result_rate": 1.0
+  },
+  "trigram": {
+    "hit_at_1": 0.8,
+    "hit_at_3": 0.9,
+    "hit_at_5": 0.9,
+    "mrr": 0.85,
+    "mean_ndcg_at_10": 0.8630929753571458,
+    "zero_result_rate": 0.1
+  },
+  "rrf_hnsw_trigram": {
+    "hit_at_1": 0.85,
+    "hit_at_3": 1.0,
+    "hit_at_5": 1.0,
+    "mrr": 0.925,
+    "mean_ndcg_at_10": 0.9446394630357187,
+    "zero_result_rate": 0.0
+  },
+  "hnsw": {
+    "hit_at_1": 0.8,
+    "hit_at_3": 1.0,
+    "hit_at_5": 1.0,
+    "mrr": 0.9,
+    "mean_ndcg_at_10": 0.9261859507142916,
+    "zero_result_rate": 0.0
+  },
+  "rrf_vs_hnsw": {
+    "improved": 1,
+    "unchanged": 19,
+    "worsened": 0
+  },
+  "mean_hnsw_recall_at_5": 1.0,
+  "latency": {
+    "query_embedding": {
+      "p50_ms": 1132.2,
+      "p95_ms": 2039.1
+    },
+    "dense_exact_db": {
+      "p50_ms": 52.713,
+      "p95_ms": 57.561
+    },
+    "fts_db": {
+      "p50_ms": 3.283,
+      "p95_ms": 4.626
+    },
+    "trigram_db": {
+      "p50_ms": 4.24,
+      "p95_ms": 7.63
+    },
+    "hnsw_db": {
+      "p50_ms": 53.131,
+      "p95_ms": 56.64
+    },
+    "hybrid_sequential_db": {
+      "p50_ms": 56.513,
+      "p95_ms": 63.72
+    }
+  },
+  "hnsw_index_used": true,
+  "document_embedding_ms": 2808.6,
+  "document_tokens": 996,
+  "query_tokens": 479
+}

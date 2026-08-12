@@ -1,0 +1,81 @@
+{
+  "generated_at": "2026-08-10T08:22:42.940761+00:00",
+  "model": "openai/gpt-4.1-mini",
+  "case_count": 3,
+  "provider_error_count": 0,
+  "candidate_recall": 1.0,
+  "baseline_ranking": {
+    "case_count": 3,
+    "hit_at_1": 0.6666666666666666,
+    "hit_at_3": 1.0,
+    "hit_at_5": 1.0,
+    "mrr": 0.7777777777777778
+  },
+  "reranker_ranking": {
+    "case_count": 3,
+    "hit_at_1": 0.3333333333333333,
+    "hit_at_3": 0.3333333333333333,
+    "hit_at_5": 0.3333333333333333,
+    "mrr": 0.3333333333333333
+  },
+  "answerability": {
+    "case_count": 3,
+    "answerable_count": 3,
+    "unanswerable_count": 0,
+    "false_negative_count": 2,
+    "false_negative_rate": 0.6666666666666666,
+    "false_positive_count": 0,
+    "false_positive_rate": 0.0,
+    "accuracy": 0.3333333333333333
+  },
+  "reranker_only_answerability": {
+    "case_count": 3,
+    "answerable_count": 3,
+    "unanswerable_count": 0,
+    "false_negative_count": 2,
+    "false_negative_rate": 0.6666666666666666,
+    "false_positive_count": 0,
+    "false_positive_rate": 0.0,
+    "accuracy": 0.3333333333333333
+  },
+  "rank_changes": {
+    "improved": 0,
+    "unchanged": 1,
+    "worsened": 2,
+    "retrieval_miss": 0
+  },
+  "by_suite": {
+    "real_meeting": {
+      "baseline_ranking": {
+        "case_count": 3,
+        "hit_at_1": 0.6666666666666666,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 0.7777777777777778
+      },
+      "reranker_ranking": {
+        "case_count": 3,
+        "hit_at_1": 0.3333333333333333,
+        "hit_at_3": 0.3333333333333333,
+        "hit_at_5": 0.3333333333333333,
+        "mrr": 0.3333333333333333
+      },
+      "answerability": {
+        "case_count": 3,
+        "answerable_count": 3,
+        "unanswerable_count": 0,
+        "false_negative_count": 2,
+        "false_negative_rate": 0.6666666666666666,
+        "false_positive_count": 0,
+        "false_positive_rate": 0.0,
+        "accuracy": 0.3333333333333333
+      }
+    }
+  },
+  "latency": {
+    "p50_ms": 1101.6,
+    "p95_ms": 2258.3
+  },
+  "input_tokens": 2696,
+  "output_tokens": 42
+}

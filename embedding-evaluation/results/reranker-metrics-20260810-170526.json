@@ -1,0 +1,91 @@
+{
+  "generated_at": "2026-08-10T08:05:26.211518+00:00",
+  "model": "openai/gpt-4.1-mini",
+  "case_count": 80,
+  "provider_error_count": 0,
+  "candidate_recall": 0.9857142857142858,
+  "baseline_ranking": {
+    "case_count": 70,
+    "hit_at_1": 0.8285714285714286,
+    "hit_at_3": 0.9428571428571428,
+    "hit_at_5": 0.9857142857142858,
+    "mrr": 0.8892857142857142
+  },
+  "reranker_ranking": {
+    "case_count": 70,
+    "hit_at_1": 0.9428571428571428,
+    "hit_at_3": 0.9571428571428572,
+    "hit_at_5": 0.9571428571428572,
+    "mrr": 0.95
+  },
+  "answerability": {
+    "case_count": 80,
+    "answerable_count": 70,
+    "unanswerable_count": 10,
+    "false_negative_count": 3,
+    "false_negative_rate": 0.04285714285714286,
+    "false_positive_count": 0,
+    "false_positive_rate": 0.0,
+    "accuracy": 0.9625
+  },
+  "by_suite": {
+    "expanded": {
+      "baseline_ranking": {
+        "case_count": 50,
+        "hit_at_1": 0.9,
+        "hit_at_3": 0.98,
+        "hit_at_5": 0.98,
+        "mrr": 0.9366666666666666
+      },
+      "reranker_ranking": {
+        "case_count": 50,
+        "hit_at_1": 0.92,
+        "hit_at_3": 0.94,
+        "hit_at_5": 0.94,
+        "mrr": 0.93
+      },
+      "answerability": {
+        "case_count": 60,
+        "answerable_count": 50,
+        "unanswerable_count": 10,
+        "false_negative_count": 3,
+        "false_negative_rate": 0.06,
+        "false_positive_count": 0,
+        "false_positive_rate": 0.0,
+        "accuracy": 0.95
+      }
+    },
+    "lexical_holdout": {
+      "baseline_ranking": {
+        "case_count": 20,
+        "hit_at_1": 0.65,
+        "hit_at_3": 0.85,
+        "hit_at_5": 1.0,
+        "mrr": 0.7708333333333334
+      },
+      "reranker_ranking": {
+        "case_count": 20,
+        "hit_at_1": 1.0,
+        "hit_at_3": 1.0,
+        "hit_at_5": 1.0,
+        "mrr": 1.0
+      },
+      "answerability": {
+        "case_count": 20,
+        "answerable_count": 20,
+        "unanswerable_count": 0,
+        "false_negative_count": 0,
+        "false_negative_rate": 0.0,
+        "false_positive_count": 0,
+        "false_positive_rate": 0.0,
+        "accuracy": 1.0
+      }
+    }
+  },
+  "latency": {
+    "p50_ms": 1137.2,
+    "p95_ms": 2104.9
+  },
+  "input_tokens": 34325,
+  "output_tokens": 1360
+}

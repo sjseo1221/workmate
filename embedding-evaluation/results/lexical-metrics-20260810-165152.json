@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-08-10T07:51:52.964990+00:00",
+  "corpus_count": 1000,
+  "case_count": 20,
+  "baseline": {
+    "hit_at_1": 0.65,
+    "hit_at_3": 0.65,
+    "hit_at_5": 0.75,
+    "mrr": 0.675,
+    "p95_ms": 2.095
+  },
+  "alias_expanded": {
+    "hit_at_1": 0.65,
+    "hit_at_3": 0.85,
+    "hit_at_5": 1.0,
+    "mrr": 0.7708333333333334,
+    "p95_ms": 3.402
+  },
+  "changes": {
+    "improved": 5,
+    "unchanged": 15,
+    "worsened": 0
+  }
+}

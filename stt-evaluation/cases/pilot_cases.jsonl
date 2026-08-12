@@ -1,0 +1,2 @@
+{"case_id":"meeting-001","audio":"audio/pilot/meeting-001.wav","language":"ko","must_include":["QA 빌드"],"forbidden":["출시 완료"],"expected_speaker_count":null}
+{"case_id":"meeting-002","audio":"audio/pilot/meeting-002.wav","language":"ko","must_include":["로그인 오류","내일 오전"],"forbidden":["금요일까지 배포"],"expected_speaker_count":null}
