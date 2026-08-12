@@ -6,11 +6,11 @@
 
 - 현재 마일스톤: M0 계약·검증 기반
 - 진행 중 하위 마일스톤: M0.1 A2A·Artifact 계약
-- 현재 스프린트: Sprint 1 — M0.1 Workflow·영속 Task 경계 준비
-- 상태: 검수 중
-- 마지막 갱신: 2026-08-12 22:22 Asia/Seoul
+- 현재 스프린트: Sprint 1 — M0.1-04 통합 A2A 계약 검수 준비
+- 상태: 진행
+- 마지막 갱신: 2026-08-12 22:47 Asia/Seoul
 - 마지막 작업자: Codex
-- 기준 Git Commit: `85a4036` (`workmate-agent`)
+- 기준 Git Commit: `c17d4c2` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
 
 ## 2. 완료된 항목
@@ -19,27 +19,26 @@
 |---|---|---|
 | M0.1-01 SDK HTTP+JSON 런타임 부트스트랩 | 완료 | `docs/evidence/M0/M0.1/runs/20260812-210001/result.md` |
 | M0.1-02 공개 A2A 전송 타입 Contract Test | 완료 | `docs/evidence/M0/M0.1/runs/20260812-204500/result.md` |
-| M0.1-03 Workflow·영속 Task 경계 구현 | 검수 중 | `docs/evidence/M0/M0.1/runs/20260812-222254/result.md` |
+| M0.1-03 Workflow·영속 Task 경계 구현 | 완료 | `docs/evidence/M0/M0.1/runs/20260812-224743/result.md` |
 
 완료 항목은 명시 승인 또는 규칙에 따른 묵시 승인이 기록된 `result.md` 경로만 연결한다. 자동 승인 조건을 충족하지 않은 단순 구현 완료나 일부 테스트 실행만으로 완료 처리하지 않는다.
 
 ## 3. 현재 진행 중인 작업
 
-- 백로그 ID: M0.1-03
-- 작업: Workflow·영속 Task 경계 PostgreSQL 연결 검수
+- 백로그 ID: M0.1-04
+- 작업: 통합 A2A 계약 검수
 - 담당자: Codex
-- 구현 중인 파일: `workmate-agent/app/a2a/persistence.py`, `app/workflows/registry.py`, `migrations/001_a2a_infrastructure.sql`
-- 완료된 부분: M0.1-01 SDK 런타임, M0.1-02 공개 전송 타입·Contract Test 승인, M0.1-03 로컬 영속 경계·Registry·Migration 구현
-- 남은 부분: Docker daemon 정상화 후 PostgreSQL 실제 연결·Migration 실행 검증과 최종 Dockerfile 재빌드, M0.1-04 통합 계약 검수
-- 현재 테스트 결과: 단위·Contract·Persistence·Migration Test 12개 PASS, PostgreSQL 통합 테스트는 `DATABASE_URL` 미설정으로 SKIP; 최종 Dockerfile 재빌드와 새 이미지 Health·Agent Card 재검증은 Docker daemon 응답 지연으로 보류
-- 마지막 실행 명령: `uv lock --check`, `uv sync --frozen`, 테스트 13개(12 PASS·1 SKIP), compileall, `git diff --check`
-- 최신 실행 ID: `20260812-222254`
+- 구현 중인 파일: `workmate-agent/tests/` (M0.1-04 Contract Test 예정)
+- 완료된 부분: M0.1-01 SDK 런타임, M0.1-02 공개 전송 타입·Contract Test 승인, M0.1-03 Registry·SQLite/PostgreSQL 영속 경계·Migration·최종 Docker 검증
+- 남은 부분: M0.1-04 통합 계약 검수
+- 현재 테스트 결과: 로컬 12 PASS·1 SKIP(환경변수 미설정), 실제 PostgreSQL 통합 PASS, 최종 Docker build·Migration 파일·healthy·Health·Agent Card PASS
+- 마지막 실행 명령: `uv lock --check`, `uv sync --frozen`, 테스트 13개, compileall, `git diff --check`, PostgreSQL 통합 테스트, Docker build/compose 검증
+- 최신 실행 ID: `20260812-224743`
 - 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-212244` (M0.1-02)
 
 ## 4. 다음 작업
 
-1. Docker daemon 정상화 후 PostgreSQL `DATABASE_URL` 환경에서 M0.1-03 Migration·Task Store 실제 연결 검증과 최종 Dockerfile 재빌드
-2. M0.1-04 Agent Card·5개 Skill·Artifact·인증·오류·Adapter·Streaming 순서·Subscribe 상태·Route allowlist 통합 Contract Test
+1. M0.1-04 Agent Card·5개 Skill·Artifact·인증·오류·Adapter·Streaming 순서·Subscribe 상태·Route allowlist 통합 Contract Test
 3. 담당자 배정 후 M0.2-01 기존 모델·OAuth 평가 이력 검수는 M0.1과 병행 가능
 
 ## 5. 차단 사항
@@ -48,7 +47,7 @@
 |---|---|---|---|
 | Docker Compose 검증 환경 | Dockerfile의 지원되지 않는 `uv sync --system` 옵션 | `--system` 제거, `.venv` PATH 연결 후 이미지 빌드·기동·Health·Agent Card 재검수 PASS | 해소 |
 | 루트 문서 Git 추적 | Superproject·Submodule·원격 기준선 필요 | `origin/main`에 기준 Commit Push 완료 | 해소 |
-| PostgreSQL·최종 Docker 재검수 | Docker CLI의 컨테이너 실행·Compose build 요청이 제한 시간 내 완료되지 않음 | Docker daemon 정상 응답 후 격리 PostgreSQL 컨테이너와 최종 이미지 재검증 | 진행 |
+| PostgreSQL·최종 Docker 재검수 | Docker CLI 응답 지연으로 최초 검증 보류 | 격리 PostgreSQL 연결·최종 이미지 build/Health/Agent Card 재검증 PASS | 해소 |
 
 실제 회의 음성 평가, R2 Lifecycle, 운영 부하·복구, 실제 Orchestrator 종단 간 검증은 현재 M0.1의 차단 사항이 아니다. 각각 M3.3, M3.6, M5.2~M5.4 완료 조건으로 추적한다.
 
@@ -97,8 +96,8 @@
 - Fixture/입력: M0.1-04에서 승인 Schema를 통과하는 5개 Skill Fixture 생성 예정
 - 모델 평가 Case: M0.2에서 기존 평가 원본 연결 예정
 - 모델 평가 결과: M0.2에서 기존 평가 원본 승인 예정
-- 최신 실행 로그: `docs/evidence/M0/M0.1/runs/20260812-222254/result.md`
-- 최신 실행 결과: 로컬 테스트 12 PASS·1 SKIP, PostgreSQL·최종 Docker 재검증 보류
+- 최신 실행 로그: `docs/evidence/M0/M0.1/runs/20260812-224743/result.md`
+- 최신 실행 결과: 로컬 12 PASS·1 SKIP, 실제 PostgreSQL·최종 Docker 검증 PASS
 - 최신 결과 문서: `docs/evidence/M0/M0.1/README.md`
 
 ## 9. 주의사항
@@ -147,3 +146,4 @@
 | 2026-08-12 | 사용자 | 새로 작성·수정하는 Docstring·JSDoc은 한글을 기본 언어로 사용하고 기술 식별자는 원문을 유지하는 정책 확정 | 문서 정책 반영 |
 | 2026-08-12 | Codex | M0.1-03 Registry·SQLite/PostgreSQL Task Store·A2A Migration·Checkpoint 경계 구현, 12개 테스트 PASS; PostgreSQL 실제 연결은 별도 검수 대기 | `82839ac`, 실행 `20260812-215216` |
 | 2026-08-12 | Codex | PostgreSQL 통합 테스트 경계 추가, 로컬 12 PASS·1 SKIP; Docker daemon 응답 지연으로 실제 PostgreSQL·최종 Docker 재검증 보류 | `85a4036`, 실행 `20260812-222254` |
+| 2026-08-12 | Codex | 실제 PostgreSQL Migration·Task 멱등성·삭제, 최종 Docker build·Migration 파일·Health·Agent Card 검증 PASS; M0.1-03 자동 승인 | `c17d4c2`, 실행 `20260812-224743` |
