@@ -1,10 +1,10 @@
 # M0.1 A2A·Artifact 계약 증빙
 
 status: 완료
-latest_run_id: 20260812-224743
+latest_run_id: 20260812-230413
 latest_run_status: PASS
-latest_approved_run_id: 20260812-224743
-approved_at: 2026-08-12 22:47:00 +09:00
+latest_approved_run_id: 20260812-230413
+approved_at: 2026-08-12 23:04:00 +09:00
 reviewer: 자동 승인(검증 명령)
 
 `latest_approved_run_id`는 M0.1-03의 PostgreSQL·최종 Docker 검증까지 통과한 실행을 가리킨다. M0.1-01은 실행 `20260812-210001`, M0.1-02는 실행 `20260812-212244`로 승인됐다.
@@ -46,5 +46,6 @@ M0.1-01 실행 결과:
 - M0.1-03 Workflow·영속 Task 경계: [`runs/20260812-215216/result.md`](runs/20260812-215216/result.md)
 - M0.1-03 PostgreSQL·최종 Docker 재검수 시도: [`runs/20260812-222254/result.md`](runs/20260812-222254/result.md)
 - M0.1-03 PostgreSQL·최종 Docker 검증 승인: [`runs/20260812-224743/result.md`](runs/20260812-224743/result.md)
+- M0.1-04 통합 A2A 계약 검증 승인: [`runs/20260812-230413/result.md`](runs/20260812-230413/result.md)
 
 M0.1은 A2A 런타임 복구에 필요한 최소 인프라 Migration만 완료한다. Task·Gmail·Calendar 업무 도메인 Migration과 Repository·샘플 데이터는 M1.1의 완료 범위다.
