@@ -8,7 +8,7 @@
 - 진행 중 하위 마일스톤: M0.1 A2A·Artifact 계약
 - 현재 스프린트: Sprint 1 — M0.1 공개 전송 타입 검증
 - 상태: 진행
-- 마지막 갱신: 2026-08-12 21:00 Asia/Seoul
+- 마지막 갱신: 2026-08-12 21:06 Asia/Seoul
 - 마지막 작업자: Codex
 - 기준 Git Commit: `0149b92` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
@@ -17,7 +17,7 @@
 
 | 항목 | 상태 | 승인 증빙 |
 |---|---|---|
-| M0.1-01 SDK HTTP+JSON 런타임 부트스트랩 | 검수 중 | `docs/evidence/M0/M0.1/runs/20260812-112000/result.md` |
+| M0.1-01 SDK HTTP+JSON 런타임 부트스트랩 | 완료 | `docs/evidence/M0/M0.1/runs/20260812-210001/result.md` |
 | M0.1-02 공개 A2A 전송 타입 Contract Test | 검수 중 | `docs/evidence/M0/M0.1/runs/20260812-204500/result.md` |
 
 완료 항목은 검수자가 승인한 `result.md` 경로만 기록한다. 단순 구현 완료나 테스트 실행만으로 완료 처리하지 않는다.
@@ -33,7 +33,7 @@
 - 현재 테스트 결과: 단위·Contract Test 7개 PASS, Docker Compose 빌드·기동 PASS, 컨테이너 `healthy`, Health·Agent Card PASS
 - 마지막 실행 명령: `docker compose up --build -d` 및 Health·Agent Card 확인
 - 최신 실행 ID: `20260812-210001`
-- 최신 승인 실행 ID: null
+- 최신 승인 실행 ID: `20260812-210001` (M0.1-01)
 
 ## 4. 다음 작업
 
@@ -97,7 +97,7 @@
 - 모델 평가 Case: M0.2에서 기존 평가 원본 연결 예정
 - 모델 평가 결과: M0.2에서 기존 평가 원본 승인 예정
 - 최신 실행 로그: `docs/evidence/M0/M0.1/runs/20260812-210001/result.md`
-- 최신 실행 결과: PASS (검수 대기)
+- 최신 실행 결과: PASS (M0.1-01 승인)
 - 최신 결과 문서: `docs/evidence/M0/M0.1/README.md`
 
 ## 9. 주의사항
@@ -135,3 +135,4 @@
 | 2026-08-12 | Codex | M0.1-02 승인 Schema Contract Test·SDK Message 검증·Legacy Smoke 제거, 7개 테스트 PASS | 로컬 커밋 예정 |
 | 2026-08-12 | Codex | M0.1-02 `workmate-agent` 브랜치 원격 Push 완료 | `9ba62fa`, `origin/feat/M0.1-01-sdk-runtime` |
 | 2026-08-12 | Codex | Docker daemon 정상 연결 확인, Dockerfile의 `uv sync --system` 오류 수정, Compose·Health·Agent Card 재검수 PASS | `0149b92`, 실행 ID `20260812-210001` |
+| 2026-08-12 | 사용자 | 실행 `20260812-210001` 검수 승인, M0.1-01 완료 처리 | M0.1-01 승인 |

@@ -2,10 +2,12 @@
 
 status: 검수 중
 latest_run_id: 20260812-210001
-latest_run_status: PASS (검수 대기)
-latest_approved_run_id: null
-approved_at: null
-reviewer: null
+latest_run_status: PASS (승인)
+latest_approved_run_id: 20260812-210001
+approved_at: 2026-08-12 21:06:29 +09:00
+reviewer: 사용자
+
+`latest_approved_run_id`는 현재 M0.1-01 백로그의 최신 승인 실행을 가리킨다. M0.1 전체 상태는 M0.1-02~04가 남아 있어 `검수 중`을 유지한다.
 
 ## 목표
 

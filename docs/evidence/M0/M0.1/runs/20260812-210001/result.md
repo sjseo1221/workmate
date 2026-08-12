@@ -5,8 +5,8 @@
 - 마일스톤: M0.1 A2A·Artifact 계약
 - 백로그: M0.1-01 공식 A2A SDK HTTP+JSON 런타임 부트스트랩
 - 담당자: Codex
-- 검수자: 미정
-- 상태: 검수 중
+- 검수자: 사용자
+- 상태: 완료
 - 실행일: 2026-08-12
 - 실행 ID: `20260812-210001`
 - 코드 버전: `workmate-agent` `0149b921b9c74139774f66c56a174d5b34c671f1`
@@ -15,16 +15,16 @@
 ## 2. 최신 실행과 승인
 
 - latest_run_id: `20260812-210001`
-- latest_run_status: PASS (검수 대기)
-- latest_approved_run_id: null
-- approved_at: null
+- latest_run_status: PASS (승인)
+- latest_approved_run_id: `20260812-210001`
+- approved_at: 2026-08-12 21:06:29 +09:00
 
 ## 3. 목표와 완료 기준
 
 - 목표: Docker Desktop Linux engine에서 Workmate 이미지를 빌드하고 A2A 런타임을 정상 기동한다.
 - 완료 기준: Compose 빌드·기동 성공, 컨테이너 `healthy`, liveness·readiness·Agent Card 응답 정상
 - 백로그 범위: M0.1-01의 기존 Docker Compose 보류 항목 재검수
-- 미완료·보류 백로그: 검수자 승인
+- 미완료·보류 백로그: 해당 없음
 
 ## 4. 구현 경로
 
@@ -90,6 +90,6 @@ docker compose down
 
 ## 9. 최종 판단
 
-- 승인 여부: 검수 대기
-- 검수 의견: 기존 Docker daemon 미실행 차단은 해소됐고 Docker 재검수 항목은 모두 PASS
-- 다음 조치: 검수자 승인 후 M0.1-01의 `latest_approved_run_id` 갱신
+- 승인 여부: 승인
+- 검수 의견: 기존 Docker daemon 미실행 차단이 해소됐고 Docker 재검수 항목이 모두 PASS하여 사용자가 M0.1-01 완료를 승인함
+- 다음 조치: M0.1-02 검수 승인
