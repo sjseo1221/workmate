@@ -1,13 +1,13 @@
 # M0.1 A2A·Artifact 계약 증빙
 
 status: 검수 중
-latest_run_id: 20260812-210001
-latest_run_status: PASS (승인)
-latest_approved_run_id: 20260812-210001
-approved_at: 2026-08-12 21:06:29 +09:00
-reviewer: 사용자
+latest_run_id: 20260812-212244
+latest_run_status: PASS (자동 승인)
+latest_approved_run_id: 20260812-212244
+approved_at: 2026-08-12 21:22:44 +09:00
+reviewer: 자동 승인(검증 명령)
 
-`latest_approved_run_id`는 시간상 가장 최근에 승인된 M0.1-01 실행을 가리킨다. M0.1-02도 실행 `20260812-204500`으로 승인됐지만 M0.1 전체 상태는 M0.1-03~04가 남아 있어 `검수 중`을 유지한다.
+`latest_approved_run_id`는 구현 설명을 보강해 재검증한 M0.1-02 실행을 가리킨다. M0.1-01은 실행 `20260812-210001`로 승인됐으며 M0.1 전체 상태는 M0.1-03~04가 남아 있어 `검수 중`을 유지한다.
 
 ## 목표
 
@@ -42,5 +42,6 @@ M0.1-01 실행 결과:
 - 주석·Docstring 정책 보강: [`runs/20260812-203320/result.md`](runs/20260812-203320/result.md)
 - 공개 전송 타입 Contract Test: [`runs/20260812-204500/result.md`](runs/20260812-204500/result.md)
 - Docker 이미지·Health·Agent Card 재검수: [`runs/20260812-210001/result.md`](runs/20260812-210001/result.md)
+- 구현 설명을 포함한 M0.1-02 재검수: [`runs/20260812-212244/result.md`](runs/20260812-212244/result.md)
 
 M0.1은 A2A 런타임 복구에 필요한 최소 인프라 Migration만 완료한다. Task·Gmail·Calendar 업무 도메인 Migration과 Repository·샘플 데이터는 M1.1의 완료 범위다.
