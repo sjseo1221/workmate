@@ -10,7 +10,7 @@
 - 상태: 진행
 - 마지막 갱신: 2026-08-12 20:20 Asia/Seoul
 - 마지막 작업자: Codex
-- 기준 Git Commit: `M0.1-02 로컬 커밋 예정` (`workmate-agent`)
+- 기준 Git Commit: `9ba62fa` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
 
 ## 2. 완료된 항목
@@ -37,7 +37,7 @@
 
 ## 4. 다음 작업
 
-1. M0.1-02 실행 결과를 검수하고 작업 브랜치와 증빙을 Push
+1. M0.1-02 실행 결과 검수 승인
 2. M0.1-03 `app/workflows/registry.py`·Artifact 변환·A2A 인프라 Migration·영속 Task Store·Checkpoint 경계 구현
 4. M0.1-04 Agent Card·5개 Skill·Artifact·인증·오류·Adapter·Streaming 순서·Subscribe 상태·Route allowlist 통합 Contract Test
 5. 담당자 배정 후 M0.2-01 기존 모델·OAuth 평가 이력 검수는 M0.1과 병행 가능
@@ -133,3 +133,4 @@
 | 2026-08-12 | Codex | 주석·Docstring 확장 정책을 AGENTS·기술규격에 반영하고 M0.1 핵심 함수 문서화 보강, 테스트 재실행 | `feat/M0.1-01-sdk-runtime` 작업 중 |
 | 2026-08-12 | Codex | M0.1-01 `workmate-agent` 작업 브랜치 원격 Push 완료 | `639f35c`, `origin/feat/M0.1-01-sdk-runtime` |
 | 2026-08-12 | Codex | M0.1-02 승인 Schema Contract Test·SDK Message 검증·Legacy Smoke 제거, 7개 테스트 PASS | 로컬 커밋 예정 |
+| 2026-08-12 | Codex | M0.1-02 `workmate-agent` 브랜치 원격 Push 완료 | `9ba62fa`, `origin/feat/M0.1-01-sdk-runtime` |
