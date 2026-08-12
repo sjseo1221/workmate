@@ -1,13 +1,13 @@
 # M0.1 A2A·Artifact 계약 증빙
 
 status: 검수 중
-latest_run_id: 20260812-212244
-latest_run_status: PASS (자동 승인)
+latest_run_id: 20260812-215216
+latest_run_status: PASS (PostgreSQL 연결 검증 보류)
 latest_approved_run_id: 20260812-212244
 approved_at: 2026-08-12 21:22:44 +09:00
 reviewer: 자동 승인(검증 명령)
 
-`latest_approved_run_id`는 구현 설명을 보강해 재검증한 M0.1-02 실행을 가리킨다. M0.1-01은 실행 `20260812-210001`로 승인됐으며 M0.1 전체 상태는 M0.1-03~04가 남아 있어 `검수 중`을 유지한다.
+`latest_approved_run_id`는 구현 설명을 보강해 재검증한 M0.1-02 실행을 가리킨다. M0.1-01은 실행 `20260812-210001`로 승인됐다. M0.1-03은 로컬 SQLite 재시작·계약 검증과 Docker 검증은 통과했지만 PostgreSQL 실제 연결 검증이 남아 `검수 중`이다.
 
 ## 목표
 
@@ -34,7 +34,7 @@ reviewer: 자동 승인(검증 명령)
 
 ## 현재 상태
 
-M0.1-01에서 `workmate-agent`에 공식 SDK `DefaultRequestHandler`, `AgentExecutor`, Agent Card, Streaming·Subscribe를 포함한 HTTP+JSON 런타임 골격을 연결했다. M0.1-02에서는 승인 Schema 기반 Contract Test로 교체하고 Legacy `smoke_test.py`와 자체 전송 기준을 제거했으며 실행 `20260812-204500`으로 승인 완료했다. 실제 업무 Artifact, 영속 Task Store, Gmail·Calendar·DB·LLM Workflow는 아직 구현하지 않았다.
+M0.1-01에서 `workmate-agent`에 공식 SDK `DefaultRequestHandler`, `AgentExecutor`, Agent Card, Streaming·Subscribe를 포함한 HTTP+JSON 런타임 골격을 연결했다. M0.1-02에서는 승인 Schema 기반 Contract Test로 교체하고 Legacy `smoke_test.py`와 자체 전송 기준을 제거했으며 실행 `20260812-204500`으로 승인 완료했다. M0.1-03에서는 Registry, A2A 인프라 Migration, SQLite·PostgreSQL Task Store 경계, Message 멱등성, Artifact·Checkpoint 저장을 구현했다. 실제 Gmail·Calendar 업무 Workflow와 M1.1 업무 DB는 아직 연결하지 않았다.
 
 M0.1-01 실행 결과:
 
@@ -43,5 +43,6 @@ M0.1-01 실행 결과:
 - 공개 전송 타입 Contract Test: [`runs/20260812-204500/result.md`](runs/20260812-204500/result.md)
 - Docker 이미지·Health·Agent Card 재검수: [`runs/20260812-210001/result.md`](runs/20260812-210001/result.md)
 - 구현 설명을 포함한 M0.1-02 재검수: [`runs/20260812-212244/result.md`](runs/20260812-212244/result.md)
+- M0.1-03 Workflow·영속 Task 경계: [`runs/20260812-215216/result.md`](runs/20260812-215216/result.md)
 
 M0.1은 A2A 런타임 복구에 필요한 최소 인프라 Migration만 완료한다. Task·Gmail·Calendar 업무 도메인 Migration과 Repository·샘플 데이터는 M1.1의 완료 범위다.

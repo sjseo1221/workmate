@@ -579,10 +579,10 @@ Adapter Contract Test는 다음을 고정한다.
 
 ### 5.1.1 런타임 구현 범위와 테스트 영향
 
-구현 목표는 공개 `/a2a` 경로에서 공식 SDK REST Handler와 `AgentExecutor`를 직접 사용하는 것이다. A2A 전송 계층은 SDK의 `SendMessageRequest`, `Task`, `Artifact`, SSE Streaming 응답을 사용하고, 업무 도메인·내부 UI API의 Pydantic 모델은 유지한다. SDK 런타임 경계는 `workmate-agent/app/a2a/runtime.py`에 둔다. 현재 `workmate-agent`는 자체 Pydantic 전송 모델을 사용하는 Mock Shell이므로 이 전환은 아직 구현되지 않았다.
+구현 목표는 공개 `/a2a` 경로에서 공식 SDK REST Handler와 `AgentExecutor`를 직접 사용하는 것이다. A2A 전송 계층은 SDK의 `SendMessageRequest`, `Task`, `Artifact`, SSE Streaming 응답을 사용하고, 업무 도메인·내부 UI API의 Pydantic 모델은 유지한다. SDK 런타임 경계는 `workmate-agent/app/a2a/runtime.py`에 두며, M0.1-01·02에서 이 전송 경계를 구현·검증했다. M0.1-03에서는 `skill_id → Workflow Registry`와 A2A Task·Message 멱등성·Artifact·`task_id ↔ thread_id`·Checkpoint 영속 경계를 연결한다.
 
 - 실제 Workflow 연결 시 `AgentExecutor`는 공통 `skill_id`, `user_id`, `request_id`를 전송 계층과 독립적인 요청 객체로 변환하고 `skill_id → Workflow` Registry를 호출한다. Workflow 결과는 공통 Artifact 변환기에서 SDK `Task`·`Artifact`로 직렬화한다.
-- 현재 5개 Skill은 Mock Shell의 결정론적 임시 핸들러로 응답한다. 공식 `AgentExecutor`와 Workflow Registry는 구현 단계에서 추가하고, Task·Gmail·Calendar·회의·검색·우선순위 실제 Workflow는 마일스톤 순서에 따라 연결한다.
+- 현재 5개 Skill은 Registry를 통과하는 런타임 준비 Workflow로 연결되어 있으나 업무 결과를 생성하지 않는다. Task·Gmail·Calendar·회의·검색·우선순위 실제 Workflow는 마일스톤 순서에 따라 연결한다.
 - 구현 이후에도 A2A Route와 Executor에는 Provider 호출, SQL, 우선순위 계산 같은 업무 규칙을 작성하지 않는다. 실제 Workflow가 Repository·Provider·Domain 함수를 조합한다.
 - Contract Test와 Smoke Test는 Agent Card의 `Cache-Control`, SDK REST 요청·응답, Artifact, 인증, Adapter 상태·오류 매핑과 5개 Skill을 검증한다. `/message:stream`은 첫 이벤트가 Task이고 이후 상태·Artifact 순서가 유지되는지 확인한다. 활성 Task의 `POST` Subscribe는 현재 Task 스냅샷부터 신규 이벤트를 전달해야 하고, Terminal Task Subscribe는 정의된 SDK 오류를 반환해야 한다. 비허용 `GET` Subscribe와 나머지 허용 목록 밖 Route는 `404` 또는 `405`여야 한다.
 - 구현 후 SDK 표준 응답은 `SendMessageResponse`의 `task` 필드를 사용한다. Task 조회·취소 응답은 SDK REST 규격에 따라 Task 객체를 직접 반환하며, 완료 Task 취소는 `400 Task cannot be canceled`로 처리한다.

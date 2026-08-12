@@ -21,6 +21,7 @@
 **/*.log
 **/*.tar
 **/results/*.db
+**/.runtime/
 
 # Git에 저장하지 않는 원본 미디어
 **/*.wav

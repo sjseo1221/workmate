@@ -354,10 +354,10 @@ PostgreSQL Task Store는 외부 A2A Task 상태·Artifact·Message 멱등성 Key
 
 ### 7.1.1 구현 예정 런타임의 검증 범위
 
-구현할 공개 `/a2a` 경로는 공식 SDK REST Handler와 `AgentExecutor`를 직접 사용한다. A2A 전송 계층은 SDK `SendMessageRequest`, `Task`, `Artifact`, SSE Streaming 응답을 사용하고, 업무 도메인·내부 UI API의 Pydantic 모델은 유지한다. 현재 `workmate-agent`는 자체 Pydantic 전송 모델을 사용하는 Mock Shell이며 공식 SDK 전환은 아직 구현하지 않았다.
+구현한 공개 `/a2a` 경로는 공식 SDK REST Handler와 `AgentExecutor`를 직접 사용한다. A2A 전송 계층은 SDK `SendMessageRequest`, `Task`, `Artifact`, SSE Streaming 응답을 사용하고, 업무 도메인·내부 UI API의 Pydantic 모델은 유지한다. M0.1-01·02에서 SDK 전송 경계와 Contract Test를 완료했으며, M0.1-03에서 Registry·A2A 인프라 영속 경계를 연결한다. 실제 업무 Workflow는 후속 M1~M4에서 연결한다.
 
 - 실제 업무 기능 연결 시 SDK `AgentExecutor`는 공통 요청 필드를 전송 독립 요청 객체로 변환하고 Registry에서 Workflow를 선택한다. Workflow 결과의 Markdown·구조화 결과·최신성·경고는 공통 변환기에서 SDK Task·Artifact로 만든다.
-- 현재는 Mock Shell의 결정론적 임시 핸들러가 5개 Skill에 응답한다. 공식 `AgentExecutor`와 Workflow Registry는 구현 백로그에서 추가하고 실제 업무 Workflow는 M1~M4 검수 순서에 따라 연결한다.
+- 현재 5개 Skill은 Registry를 통과하는 런타임 준비 Workflow로 응답하며, 이 응답은 업무 결과가 아니다. 실제 업무 Workflow는 M1~M4 검수 순서에 따라 연결한다.
 - Smoke Test와 Contract Test는 Agent Card의 `Cache-Control`, SDK REST 요청·응답, Artifact, 인증, Adapter 상태·오류 매핑과 5개 Skill을 검증한다. `/message:stream`은 첫 Task와 후속 상태·Artifact 순서를, 활성 Task `POST` Subscribe는 현재 Task 스냅샷과 신규 이벤트를, Terminal Task Subscribe는 정의된 SDK 오류를 검증한다. 비허용 `GET` Subscribe를 포함한 허용 목록 밖 SDK Route는 `404` 또는 `405`여야 한다.
 - 구현 후 SDK 표준 응답은 `SendMessageResponse`의 `task` 필드를 사용한다. Task 조회·취소 응답은 SDK REST 규격에 따라 Task 객체를 직접 반환하며, 완료 Task 취소는 HTTP 400으로 처리한다.
 - Push Notification은 저장소·발송기가 연결되지 않아 비활성화하며 Agent Card의 `pushNotifications`는 `false`로 유지한다.
