@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -13,18 +14,21 @@ from run_eval import (
     ProviderError,
     assert_format_validation,
     build_generation_schema,
+    build_run_metadata,
     build_target_schema,
     call_model,
     call_nvidia_gemma,
     check_nvidia_models_available,
     expectation_score,
     grade_output,
+    generation_settings,
     load_cases,
     run_case,
     strip_gemma_thought,
     strip_optional_nulls,
     validate_case_inputs,
     validation_errors,
+    write_results,
 )
 
 
@@ -382,6 +386,66 @@ class EvaluationRunnerTest(unittest.TestCase):
         self.assertEqual(10, timeout)
         self.assertEqual(9, result["input_tokens"])
         self.assertEqual(3, result["output_tokens"])
+
+    def test_openai2_uses_explicit_generation_settings(self):
+        response = {
+            "choices": [{"message": {"content": '{"answer":"ok"}'}}],
+            "usage": {"prompt_tokens": 9, "completion_tokens": 3},
+        }
+        env = {
+            "OPENAI_BASE_URL2": "https://provider.example/v1/",
+            "OPENAI_API_KEY2": "test-key",
+            "OPENAI_MODEL2": "openai/test-model",
+            "LLM_TEMPERATURE": "0.0",
+            "LLM_TOP_P": "1.0",
+            "LLM_MAX_TOKENS": "2048",
+        }
+        with patch.dict(os.environ, env), patch("run_eval.post_json", return_value=response) as post:
+            call_model("openai2", [{"role": "user", "content": "test"}], {"type": "object"}, 10)
+
+        payload = post.call_args.args[1]
+        self.assertEqual({"temperature": 0.0, "top_p": 1.0, "max_tokens": 2048, "stream": False}, {
+            key: payload[key] for key in ("temperature", "top_p", "max_tokens", "stream")
+        })
+
+    def test_run_metadata_hashes_inputs_and_csv_preserves_fields(self):
+        case = self.cases[3]
+        schema = build_target_schema(self.root_schema, case["schema_def"])
+        base = build_run_metadata(
+            run_id="20260813-080000",
+            name="openai2",
+            cases_path=ROOT / "cases" / "sample_cases.jsonl",
+            repeat_no=1,
+            timeout=30,
+        )
+        valid = {
+            "answer": "12일 주간 개발 회의에서 결정됐습니다.",
+            "sources": [{
+                "meeting_id": "meeting-501", "meeting_title": "주간 개발 회의",
+                "meeting_date": "2026-08-06", "speaker": "김서연",
+                "meeting_chunk_id": "chunk-501-8",
+                "quote": "회귀 테스트까지 반영해서 12일 QA 빌드로 확정하겠습니다.",
+            }],
+            "insufficient_evidence": False,
+        }
+        with patch("run_eval.call_model", return_value={
+            "content": json.dumps(valid, ensure_ascii=False),
+            "input_tokens": 10, "output_tokens": 5, "tokens_per_second": None,
+        }):
+            result = run_case("openai2", case, schema, 30, base)
+
+        metadata = result["run_metadata"]
+        for key in ("run_id", "case_file_hash", "case_hash", "prompt_hash", "schema_hash", "generation_schema_hash"):
+            self.assertTrue(metadata[key])
+        self.assertNotIn("test-key", json.dumps(metadata))
+        self.assertEqual(0.0, metadata["generation_settings"]["temperature"])
+        self.assertEqual("unavailable", metadata["pricing"]["status"])
+
+        with tempfile.TemporaryDirectory() as directory, patch("run_eval.ROOT", Path(directory)):
+            _, csv_path = write_results([result], "20260813-080000")
+            csv_text = csv_path.read_text(encoding="utf-8-sig")
+        self.assertIn("prompt_hash", csv_text.splitlines()[0])
+        self.assertIn(metadata["prompt_hash"], csv_text)
 
     def test_nvidia_gemma_uses_documented_payload_and_cleans_thought_prefix(self):
         response = {

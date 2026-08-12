@@ -55,6 +55,8 @@ python run_eval.py --cases cases/full_cases2.jsonl --models openai2 --repeat 1
 
 결과는 `results/run-*.jsonl`과 Excel에서 바로 열 수 있는 `results/summary-*.csv`로 생성된다. JSONL에는 시도별 토큰·오류, Schema/의미 검증 결과와 메모리 측정값이 저장된다. Provider 실패는 `provider_error`로 분리하며 Schema와 의미 점수를 비워 모델 품질 집계에서 제외한다. `final_score`는 정상 응답이 Schema와 의미 검증을 모두 통과한 경우에만 기대값 점수를 사용하고, 하나라도 실패하면 0점이다.
 
+실제 평가 결과에는 `run_metadata`로 모델·Provider·Repeat·Timeout·Retry 정책, Temperature·Top P·최대 출력 Token, Case 파일·Case·Prompt·정식/생성 Schema Hash, 평가기 버전·Commit과 비용 산정 상태를 기록한다. `EVALUATOR_COMMIT`은 실행한 평가기 Commit을 입력하고, `LLM_PRICING_SOURCE`는 가격표 출처를 입력한다. API Key와 실제 Base URL은 결과에 저장하지 않는다.
+
 ## 4. Case 형식
 
 한 줄에 JSON 객체 하나를 쓰는 JSONL 형식이다.

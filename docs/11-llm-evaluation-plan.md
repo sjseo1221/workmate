@@ -182,7 +182,7 @@ Provider Timeout·429·502·503·504는 한 번 재시도한다. 정상 응답�
 
 실행 결과는 `llm-evaluation/results/run-*.jsonl`과 `llm-evaluation/results/summary-*.csv`에 저장한다. 상세 시도, 오류, Token, Schema·의미 검증 결과와 메모리 사용량은 JSONL에 보존한다.
 
-2026-08-10까지의 `openai2` 결과에는 Temperature와 최대 출력 Token을 명시적으로 전달하지 않아 Provider 기본값이 사용됐다. 실행 결과에도 Case 파일 경로, Repeat 번호, Prompt·Schema Version 또는 Hash가 저장되지 않았고 Provider 가격을 알 수 없어 비용은 `null`이다. 다음 재평가 전에는 이 값을 실행 메타데이터로 기록해 결과 재현성을 보완한다. 실제 API Base URL과 Key는 결과나 문서에 기록하지 않는다.
+2026-08-10까지의 `openai2` 결과에는 Temperature와 최대 출력 Token을 명시적으로 전달하지 않아 Provider 기본값이 사용됐다. 실행 결과에도 Case 파일 경로, Repeat 번호, Prompt·Schema Version 또는 Hash가 저장되지 않았고 Provider 가격을 알 수 없어 비용은 `null`이다. 이후 재평가부터는 실행기가 `run_metadata`와 CSV 메타데이터 열에 생성 설정, Case 파일·Case·Prompt·Schema Hash, 평가기 버전·Commit, Retry 정책과 비용 산정 상태를 기록한다. 실제 API Base URL과 Key는 결과나 문서에 기록하지 않는다. 과거 실행의 누락 정보는 소급하지 않고 새 실행 결과로 보완한다.
 
 ## 9. 평가 및 수정 이력
 

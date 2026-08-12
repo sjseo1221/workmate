@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import os
 import platform
@@ -34,6 +35,22 @@ MODEL_PRICES = {
     "openai": {"input": 0.75 / 1_000_000, "output": 4.50 / 1_000_000},
 }
 NVIDIA_MODELS = {"nvidia_llama", "nvidia_gemma"}
+EVALUATOR_VERSION = "metadata-v1"
+
+
+def sha256_bytes(value: bytes) -> str:
+    """바이트 입력의 SHA-256 해시를 반환한다."""
+    return hashlib.sha256(value).hexdigest()
+
+
+def canonical_hash(value: Any) -> str:
+    """JSON 값을 정렬·압축 직렬화한 뒤 SHA-256 해시를 반환한다."""
+    return sha256_bytes(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+
+
+def file_hash(path: Path) -> str:
+    """평가 입력 파일의 내용을 해시한다. Secret 파일에는 호출하지 않는다."""
+    return sha256_bytes(path.read_bytes())
 
 
 class ProviderError(RuntimeError):
@@ -336,6 +353,102 @@ def model_config(name: str) -> dict[str, str]:
     raise ValueError(f"지원하지 않는 모델: {name}")
 
 
+def generation_settings(name: str) -> dict[str, Any]:
+    """모델별 생성 설정을 요청과 실행 메타데이터에 동일하게 사용한다."""
+    if name in {"openai", "openai2"}:
+        return {
+            "temperature": float(os.getenv("LLM_TEMPERATURE", "0")),
+            "top_p": float(os.getenv("LLM_TOP_P", "1")),
+            "max_tokens": int(os.getenv("LLM_MAX_TOKENS", "1024")),
+            "stream": False,
+        }
+    if name == "nvidia_llama":
+        return {
+            "temperature": float(os.getenv("NVIDIA_TEMPERATURE", "0.2")),
+            "top_p": float(os.getenv("NVIDIA_TOP_P", "0.7")),
+            "max_tokens": int(os.getenv("NVIDIA_MAX_TOKENS", "1024")),
+            "stream": False,
+        }
+    if name == "nvidia_gemma":
+        return {
+            "temperature": float(os.getenv("NVIDIA_GEMMA_TEMPERATURE", "1.0")),
+            "top_p": float(os.getenv("NVIDIA_GEMMA_TOP_P", "0.95")),
+            "max_tokens": int(os.getenv("NVIDIA_GEMMA_MAX_TOKENS", "1024")),
+            "stream": False,
+        }
+    return {
+        "temperature": None,
+        "top_p": None,
+        "max_tokens": int(os.getenv("OLLAMA_NUM_PREDICT", "1024")),
+        "num_ctx": int(os.getenv("OLLAMA_NUM_CTX", "8192")),
+        "stream": False,
+    }
+
+
+def build_messages(name: str, case: dict[str, Any], schema: dict[str, Any]) -> list[dict[str, str]]:
+    """Case와 Schema로 실제 Provider에 전달할 Prompt 메시지를 만든다."""
+    system = SYSTEM_PROMPT.read_text(encoding="utf-8")
+    user = case["instruction"] + "\n\n입력:\n" + json.dumps(case["input"], ensure_ascii=False, indent=2)
+    if name == "nvidia_gemma":
+        user += "\n\n반드시 다음 JSON Schema를 만족하는 JSON 객체만 반환하라:\n" + json.dumps(
+            schema, ensure_ascii=False, separators=(",", ":")
+        )
+        return [{"role": "user", "content": system + "\n\n" + user}]
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+
+def build_run_metadata(
+    *, run_id: str, name: str, cases_path: Path, repeat_no: int, timeout: int,
+) -> dict[str, Any]:
+    """실행 조건을 Secret 없이 기록할 공통 메타데이터를 만든다."""
+    price = MODEL_PRICES.get(name)
+    resolved_cases_path = cases_path.resolve()
+    try:
+        case_file = str(resolved_cases_path.relative_to(ROOT.parent)).replace("\\", "/")
+    except ValueError:
+        case_file = resolved_cases_path.name
+    return {
+        "run_id": run_id,
+        "evaluator_version": EVALUATOR_VERSION,
+        "evaluator_commit": os.getenv("EVALUATOR_COMMIT", "unknown"),
+        "model_group": name,
+        "model": model_config(name)["model"],
+        "provider": "openai-compatible" if name in {"openai", "openai2"} else name,
+        "case_file": case_file,
+        "case_file_hash": file_hash(cases_path),
+        "repeat": repeat_no,
+        "timeout_seconds": timeout,
+        "generation_settings": generation_settings(name),
+        "retry_policy": {
+            "provider_retries": int(os.getenv("PROVIDER_RETRIES", "1")),
+            "retry_delay_seconds": float(os.getenv("PROVIDER_RETRY_DELAY_SECONDS", "2")),
+            "schema_repairs": 1,
+            "semantic_repairs": 1,
+        },
+        "pricing": {
+            "status": "configured" if price else "unavailable",
+            "source": os.getenv("LLM_PRICING_SOURCE", "not configured"),
+            "input_usd_per_token": price["input"] if price else None,
+            "output_usd_per_token": price["output"] if price else None,
+        },
+    }
+
+
+def build_case_metadata(
+    base: dict[str, Any], name: str, case: dict[str, Any], schema: dict[str, Any], generation_schema: dict[str, Any],
+) -> dict[str, Any]:
+    """실행 메타데이터에 Case·Prompt·Schema 해시를 추가한다."""
+    messages = build_messages(name, case, schema if name == "nvidia_gemma" else generation_schema)
+    return {
+        **base,
+        "case_id": case["case_id"],
+        "case_hash": canonical_hash(case),
+        "prompt_hash": canonical_hash(messages),
+        "schema_hash": canonical_hash(schema),
+        "generation_schema_hash": canonical_hash(generation_schema),
+    }
+
+
 def check_nvidia_models_available(names: list[str], timeout: int) -> dict[str, ProviderError]:
     api_key = os.getenv("NVIDIA_API_KEY")
     if not api_key:
@@ -437,20 +550,12 @@ def call_model(name: str, messages: list[dict[str, str]], schema: dict[str, Any]
                 "type": "json_schema",
                 "json_schema": {"name": "workmate_result", "strict": True, "schema": schema},
             }
-        if name == "nvidia_llama":
-            payload.update({
-                "temperature": float(os.getenv("NVIDIA_TEMPERATURE", "0.2")),
-                "top_p": float(os.getenv("NVIDIA_TOP_P", "0.7")),
-                "max_tokens": int(os.getenv("NVIDIA_MAX_TOKENS", "1024")),
-                "stream": False,
-            })
+        if name in {"openai", "openai2", "nvidia_llama"}:
+            payload.update(generation_settings(name))
         elif name == "nvidia_gemma":
             payload.update({
                 "chat_template_kwargs": {"enable_thinking": False},
-                "temperature": float(os.getenv("NVIDIA_GEMMA_TEMPERATURE", "1.0")),
-                "top_p": float(os.getenv("NVIDIA_GEMMA_TOP_P", "0.95")),
-                "max_tokens": int(os.getenv("NVIDIA_GEMMA_MAX_TOKENS", "1024")),
-                "stream": False,
+                **generation_settings(name),
             })
         headers = {"Authorization": f"Bearer {api_key}", "Accept": "application/json"}
         response = (
@@ -742,23 +847,19 @@ def grade_output(case: dict[str, Any], output: dict[str, Any]) -> dict[str, Any]
     return {**checks, "average": average, "valid": not errors and average == 1.0, "errors": errors}
 
 
-def run_case(name: str, case: dict[str, Any], schema: dict[str, Any], timeout: int) -> dict[str, Any]:
-    system = SYSTEM_PROMPT.read_text(encoding="utf-8")
-    user = case["instruction"] + "\n\n입력:\n" + json.dumps(case["input"], ensure_ascii=False, indent=2)
-    if name == "nvidia_gemma":
-        user += "\n\n반드시 다음 JSON Schema를 만족하는 JSON 객체만 반환하라:\n" + json.dumps(
-            schema, ensure_ascii=False, separators=(",", ":")
-        )
-        messages = [{"role": "user", "content": system + "\n\n" + user}]
-    else:
-        messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
+def run_case(
+    name: str, case: dict[str, Any], schema: dict[str, Any], timeout: int,
+    run_metadata: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    generation_schema = build_generation_schema(schema)
+    messages = build_messages(name, case, schema if name == "nvidia_gemma" else generation_schema)
+    metadata = build_case_metadata(run_metadata or {}, name, case, schema, generation_schema)
     started = time.perf_counter()
     parsed: dict[str, Any] = {}
     errors: list[str] = []
     provider_error: dict[str, str] | None = None
     evaluation: dict[str, Any] | None = None
     attempt_details: list[dict[str, Any]] = []
-    generation_schema = build_generation_schema(schema)
     ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
     request_timeout = int(os.getenv("NVIDIA_TIMEOUT", str(timeout))) if name in NVIDIA_MODELS else timeout
     provider_retries = int(os.getenv("PROVIDER_RETRIES", "1"))
@@ -869,6 +970,7 @@ def run_case(name: str, case: dict[str, Any], schema: dict[str, Any], timeout: i
         "skill_id": case["skill_id"],
         "model_group": name,
         "model": model_config(name)["model"],
+        "run_metadata": metadata,
         "attempts": len(attempt_details),
         "attempt_details": attempt_details,
         "schema_valid": schema_valid,
@@ -891,13 +993,17 @@ def run_case(name: str, case: dict[str, Any], schema: dict[str, Any], timeout: i
     }
 
 
-def write_results(results: list[dict[str, Any]]) -> tuple[Path, Path]:
-    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+def write_results(results: list[dict[str, Any]], run_id: str | None = None) -> tuple[Path, Path]:
+    """JSONL 원본과 CSV 요약에 실행 메타데이터를 보존한다."""
+    stamp = run_id or datetime.now().strftime("%Y%m%d-%H%M%S")
+    (ROOT / "results").mkdir(parents=True, exist_ok=True)
     jsonl_path = ROOT / "results" / f"run-{stamp}.jsonl"
     csv_path = ROOT / "results" / f"summary-{stamp}.csv"
     jsonl_path.write_text("\n".join(json.dumps(row, ensure_ascii=False) for row in results) + "\n", encoding="utf-8")
     fields = [
-        "model_group", "model", "case_id", "skill_id", "execution_status", "provider_error_type",
+        "run_id", "evaluator_version", "evaluator_commit", "case_file_hash", "case_hash",
+        "prompt_hash", "schema_hash", "generation_schema_hash", "model_group", "model", "case_id", "skill_id", "execution_status", "provider_error_type",
+        "temperature", "top_p", "max_tokens", "timeout_seconds", "provider_retries", "retry_delay_seconds", "pricing_status",
         "schema_valid", "semantic_valid",
         "final_score", "attempts", "latency_ms", "input_tokens", "output_tokens",
         "estimated_cost_usd", "tokens_per_second", "ollama_model_size_mb", "ollama_vram_mb",
@@ -907,8 +1013,27 @@ def write_results(results: list[dict[str, Any]]) -> tuple[Path, Path]:
         writer = csv.DictWriter(file, fieldnames=fields)
         writer.writeheader()
         for row in results:
+            metadata = row.get("run_metadata") or {}
+            settings = metadata.get("generation_settings") or {}
+            retry_policy = metadata.get("retry_policy") or {}
+            pricing = metadata.get("pricing") or {}
             writer.writerow({
                 **{key: row.get(key) for key in fields},
+                "run_id": metadata.get("run_id"),
+                "evaluator_version": metadata.get("evaluator_version"),
+                "evaluator_commit": metadata.get("evaluator_commit"),
+                "case_file_hash": metadata.get("case_file_hash"),
+                "case_hash": metadata.get("case_hash"),
+                "prompt_hash": metadata.get("prompt_hash"),
+                "schema_hash": metadata.get("schema_hash"),
+                "generation_schema_hash": metadata.get("generation_schema_hash"),
+                "temperature": settings.get("temperature"),
+                "top_p": settings.get("top_p"),
+                "max_tokens": settings.get("max_tokens"),
+                "timeout_seconds": metadata.get("timeout_seconds"),
+                "provider_retries": retry_policy.get("provider_retries"),
+                "retry_delay_seconds": retry_policy.get("retry_delay_seconds"),
+                "pricing_status": pricing.get("status"),
                 "provider_error_type": (row.get("provider_error") or {}).get("type"),
                 "expectation_average": (row.get("expectation") or {}).get("average"),
             })
@@ -954,19 +1079,36 @@ def main() -> None:
             preflight_errors.update({name: exc for name in selected_nvidia})
         except Exception as exc:
             preflight_errors.update({name: ProviderError("preflight", str(exc)) for name in selected_nvidia})
+    run_id = datetime.now().strftime("%Y%m%d-%H%M%S")
     results = []
     for repeat_no in range(1, args.repeat + 1):
         for name in models:
             for case in cases:
                 print(f"[{repeat_no}/{args.repeat}] {name} / {case['case_id']}")
+                target_schema = schemas[case["schema_def"]]
+                generation_schema = build_generation_schema(target_schema)
+                metadata = build_case_metadata(
+                    build_run_metadata(
+                        run_id=run_id,
+                        name=name,
+                        cases_path=args.cases,
+                        repeat_no=repeat_no,
+                        timeout=args.timeout,
+                    ),
+                    name,
+                    case,
+                    target_schema,
+                    generation_schema,
+                )
                 try:
                     if name in preflight_errors:
                         raise RuntimeError(preflight_errors[name])
-                    result = run_case(name, case, schemas[case["schema_def"]], args.timeout)
+                    result = run_case(name, case, target_schema, args.timeout, metadata)
                 except ProviderError as exc:
                     result = {
                         "timestamp": datetime.now(timezone.utc).isoformat(), "case_id": case["case_id"],
                         "skill_id": case["skill_id"], "model_group": name, "model": model_config(name)["model"],
+                        "run_metadata": metadata,
                         "execution_status": "provider_failed", "provider_error": {"type": exc.error_type, "message": str(exc)},
                         "schema_valid": None, "semantic_valid": None, "final_score": None,
                         "attempts": 0, "attempt_details": [], "schema_errors": [],
@@ -976,13 +1118,14 @@ def main() -> None:
                     result = {
                         "timestamp": datetime.now(timezone.utc).isoformat(), "case_id": case["case_id"],
                         "skill_id": case["skill_id"], "model_group": name, "model": model_config(name)["model"],
+                        "run_metadata": metadata,
                         "execution_status": "execution_failed", "provider_error": None,
                         "schema_valid": None, "semantic_valid": None, "final_score": None,
                         "attempts": 0, "attempt_details": [], "schema_errors": [str(exc)],
                         "semantic_errors": [], "output": {},
                     }
                 results.append(result)
-    jsonl_path, csv_path = write_results(results)
+    jsonl_path, csv_path = write_results(results, run_id)
     print(f"원본 결과: {jsonl_path}")
     print(f"요약 결과: {csv_path}")
     print(f"실행 환경: {platform.system()} / Python {platform.python_version()}")
