@@ -53,10 +53,12 @@
 ## 커밋·Push 규칙
 
 - 구현 착수 전에 `C:\dev\workmate`를 문서·증빙용 Superproject로 구성하고 기존 `workmate-agent` Git 이력은 Submodule로 보존한다. Superproject와 Submodule의 기준 브랜치·Commit을 `HANDOFF.md`에 기록하며 기존 하위 저장소를 병합하거나 이력을 다시 만들지 않는다. `workmate-ui-demo`는 폐기된 로컬 샘플이므로 Submodule·구현·검수 대상에 포함하지 않는다.
-- 작업 브랜치는 백로그 단위로 만든다. 권장 형식은 `feat/M1.2-04-gmail-watch`, `fix/M1.2-04-watch-renewal`, `docs/a2a-contract-clarification`이다.
+- 작업 브랜치는 기본적으로 하위 마일스톤 단위로 만든다. 권장 형식은 `feat/M0.1-a2a-contract`, `feat/M1.2-external-sources`이며, 독립 배포나 긴급 수정처럼 분리가 필요한 경우에만 `fix/M1.2-04-watch-renewal` 같은 백로그 브랜치를 사용한다.
 - `main` 또는 기준 브랜치에 직접 Push하지 않는다. 작업 브랜치를 Push하고 Pull Request로 검토받는다.
 - 하나의 커밋에는 하나의 논리적 변경만 넣는다. 구현, 테스트, 증빙은 가능한 한 별도 커밋으로 분리한다.
 - 커밋 메시지는 `<type>(<backlog-id>): <change>` 형식을 사용한다. 예: `feat(M1.2-04): implement Gmail watch renewal`.
+- 백로그 완료 시에는 구현·테스트·증빙을 로컬 커밋으로만 남기고 원격 Push하지 않는다. 하위 마일스톤의 모든 백로그와 통합 완료 기준이 승인된 시점에 관련 로컬 커밋을 한 번에 Push한다.
+- 중간 Push는 다른 작업자에게 인수인계하거나 원격 협업이 필요할 때, 장기간 작업의 원격 백업이 필요할 때, 또는 사용자가 명시적으로 요청한 경우에만 허용한다. Push 승인 질문도 실제 Push 조건에 도달했을 때 한 번만 한다.
 - Push 전에 변경 범위의 테스트, `git diff --check`, Schema·Contract Test 확인, Secret 검사, 증빙 경로와 `HANDOFF.md` 갱신을 완료한다.
 - 구현 결과가 생기기 전에는 빈 `result.md`를 만들지 않는다. 테스트 결과가 생긴 뒤 `runs/{run_id}/result.md`를 작성한다.
 - 마일스톤 완료와 Merge는 명시 승인 또는 완료 규칙에 따른 묵시 승인으로 `latest_approved_run_id`가 확정된 뒤에만 수행한다.
