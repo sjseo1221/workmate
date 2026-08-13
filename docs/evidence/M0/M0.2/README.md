@@ -30,6 +30,7 @@ LLM·Embedding·STT 모델과 Gmail·Calendar OAuth Scope의 선택 근거, 평�
 - M0.2-05 실패 재검수: [`runs/20260813-130230/result.md`](runs/20260813-130230/result.md)
 - M0.2-05 최신 승인 실행: [`runs/20260813-131903/result.md`](runs/20260813-131903/result.md)
 - M0.2 통합 최신 실행: [`runs/20260813-133446/result.md`](runs/20260813-133446/result.md)
+- M0.2 통합 차단 해소 계획: [`remediation-plan.md`](remediation-plan.md)
 - 코드·메타데이터 검증 실행: [`runs/20260813-082016/result.md`](runs/20260813-082016/result.md)
 - 평가 계획: [`docs/11-llm-evaluation-plan.md`](../../../11-llm-evaluation-plan.md)
 - 평가 원본: [`llm-evaluation/README.md`](../../../../llm-evaluation/README.md)
