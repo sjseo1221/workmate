@@ -37,7 +37,7 @@
 | ---- | ----------------- | --------------------------------------------------------------------------- | ---------------------------- | ---- | ----------- | -------------------------------------------------------------------------- | ---- | ------------------------ |
 | M0.1 | A2A·Artifact 계약 | Agent Card, Message/Task/Artifact Schema·A2A 인프라 Task Store              | 없음                         | 미정 | 미정        | SDK REST Route·AgentExecutor·Contract Test·Streaming·재시작 복구 검증 결과 | 완료 | M0.2 모델·OAuth 확정 |
 | M0.2 | 모델·OAuth 확정   | LLM·Embedding·STT·OAuth 설정과 평가 이력                                    | 없음                         | 미정 | 미정        | 기존 평가 승인·OAuth HISTORY·미검증 위험 기록                              | 완료 | M0.3 내부 챗봇 API |
-| M0.3 | 내부 챗봇 API     | Skill 목록·메시지·장기 Task 조회 API                                        | M0.1                         | 미정 | 미정        | 5개 Skill·인증·장기 Task·부분 실패 API 검증                                | 진행 | M0.3-03 장기 Task API     |
+| M0.3 | 내부 챗봇 API     | Skill 목록·메시지·장기 Task 조회 API                                        | M0.1                         | 미정 | 미정        | 5개 Skill·인증·장기 Task·부분 실패 API 검증                                | 진행 | M0.3-04 인증·Schema       |
 | M0.4 | 내부 챗봇 UI      | `workmate-agent` 최소 개발자 페이지의 Skill 선택·자연어/JSON 입력·결과 화면 | M0.3                         | 미정 | 미정        | 5개 Skill·Artifact·상태·오류 화면 검수                                     | 대기 | M0.4-01 입력 UI          |
 | M1.1 | 업무 DB 기반      | Task·Gmail·Calendar PostgreSQL Migration·Repository·샘플 데이터             | M0.1                         | 미정 | 미정        | 업무 Migration·Repository 테스트                                           | 대기 | 백로그 정의 필요         |
 | M1.2 | 외부 소스 연동    | Gmail·Calendar Adapter·정규화·동기화 Cursor                                 | M1.1                         | 미정 | 미정        | Gmail/Calendar 테스트 결과                                                 | 대기 | 백로그 정의 필요         |
@@ -120,7 +120,7 @@ M0.3과 M0.4는 다음 최소 백로그만 미리 고정한다. 상세 구현 �
 | ------- | --------------------- | ------------------------------------------------------- | -------------- | ---- |
 | M0.3-01 | Skill·입력 API        | 5개 Skill 목록과 자연어/JSON 입력 검증                  | M0.3-02        | 완료 |
 | M0.3-02 | 공통 Workflow 호출    | A2A와 같은 Workflow·Repository·Domain 경계 사용         | M0.3-03        | 완료 |
-| M0.3-03 | 장기 Task API         | Task 조회·Polling·취소와 Terminal 상태 검증             | M0.3-04        | 대기 |
+| M0.3-03 | 장기 Task API         | Task 조회·Polling·취소와 Terminal 상태 검증             | M0.3-04        | 완료 |
 | M0.3-04 | 인증·Schema·부분 실패 | Session/OIDC, `user_id`, 승인 Artifact, `warnings` 검증 | M0.3 통합 검수 | 대기 |
 | M0.4-01 | Skill·입력 UI         | 5개 Skill 선택과 자연어/JSON 입력                       | M0.4-02        | 대기 |
 | M0.4-02 | 결과·상태 UI          | Artifact, 최신성, 경고, 오류, 장기 Task 상태 표시       | M0.4-03        | 대기 |
