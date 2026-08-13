@@ -36,7 +36,7 @@
 | ID   | 하위 목표         | 주요 산출물                                                                 | 선행                         | 담당 | 완료 예정일 | 완료 기준·증빙                                                             | 상태 | 다음 착수 항목           |
 | ---- | ----------------- | --------------------------------------------------------------------------- | ---------------------------- | ---- | ----------- | -------------------------------------------------------------------------- | ---- | ------------------------ |
 | M0.1 | A2A·Artifact 계약 | Agent Card, Message/Task/Artifact Schema·A2A 인프라 Task Store              | 없음                         | 미정 | 미정        | SDK REST Route·AgentExecutor·Contract Test·Streaming·재시작 복구 검증 결과 | 완료 | M0.2 모델·OAuth 확정 |
-| M0.2 | 모델·OAuth 확정   | LLM·Embedding·STT·OAuth 설정과 평가 이력                                    | 없음                         | 미정 | 미정        | 기존 평가 승인·OAuth HISTORY·미검증 위험 기록                              | 진행 | M0.2 통합 검수 |
+| M0.2 | 모델·OAuth 확정   | LLM·Embedding·STT·OAuth 설정과 평가 이력                                    | 없음                         | 미정 | 미정        | 기존 평가 승인·OAuth HISTORY·미검증 위험 기록                              | 재작업 | M0.2-02·03·04 차단 항목 해소 |
 | M0.3 | 내부 챗봇 API     | Skill 목록·메시지·장기 Task 조회 API                                        | M0.1                         | 미정 | 미정        | 5개 Skill·인증·장기 Task·부분 실패 API 검증                                | 대기 | M0.3-01 입력 API         |
 | M0.4 | 내부 챗봇 UI      | `workmate-agent` 최소 개발자 페이지의 Skill 선택·자연어/JSON 입력·결과 화면 | M0.3                         | 미정 | 미정        | 5개 Skill·Artifact·상태·오류 화면 검수                                     | 대기 | M0.4-01 입력 UI          |
 | M1.1 | 업무 DB 기반      | Task·Gmail·Calendar PostgreSQL Migration·Repository·샘플 데이터             | M0.1                         | 미정 | 미정        | 업무 Migration·Repository 테스트                                           | 대기 | 백로그 정의 필요         |
@@ -87,6 +87,8 @@ M0.2-05 실행 `20260813-122321`에서 Calendar readonly Scope·설정·단위 �
 후속 재검수 `20260813-130230`에서 사용자 로컬 비교 결과를 바탕으로 `httplib2` IPv6 fallback 실패를 확정하고 테스트 하네스를 `AuthorizedSession` REST 전송으로 교체했다. 회귀 테스트 3건·dry-run·구문 검사는 PASS였으나 Codex 관리형 실행 환경의 실제 OAuth 호출이 timeout이고 Watch가 미실행이므로 자동 승인하지 않는다. M0.2-05를 `재작업`으로 되돌리고 사용자 로컬 실제 API·Watch PASS 전까지 다음 작업을 중단한다. 상세 결과는 [`M0.2-05 재검수 결과`](evidence/M0/M0.2/runs/20260813-130230/result.md)에 기록한다.
 
 사용자 로컬 실행 `20260813-131903`에서 `smoke_test.py`와 `smoke_test.py --watch`의 Gmail profile/messages/history, Calendar events, Gmail·Calendar Watch 검사가 모두 정확히 `pass`였고 미실행·경고·보류·차단 항목이 없었다. 따라서 자동 승인 규칙을 적용해 M0.2-05를 `완료`로 전환한다. 이전 실패 실행 `20260813-130230`은 보존하며, 상세 결과는 [`M0.2-05 최신 승인 결과`](evidence/M0/M0.2/runs/20260813-131903/result.md)에 기록한다. M0.2 상위 항목은 통합 검수 전까지 `진행`으로 유지한다.
+
+M0.2 통합 검수 `20260813-133446`에서 M0.2-02의 `PASS_WITH_CAVEAT`·권장 기준 FAIL, M0.2-03의 실제 회의 음성 평가 보류, M0.2-04의 실제 API 재현 보류가 확인됐다. 통합 자동 승인 규칙에 따라 검수를 즉시 중단하고 M0.2를 `재작업`으로 전환한다. 개별 승인 증빙은 보존하며, 상세 결과는 [`M0.2 통합 검수 결과`](evidence/M0/M0.2/runs/20260813-133446/result.md)에 기록한다.
 
 답변 가능성은 `Dense + Trigram RRF Top-K → metadata·직접 근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence`로 분리한다. 단일 Cosine 임계값은 운영 거절 조건으로 사용하지 않으며, 실제 검색 Workflow·출처 검증·RRF fallback은 M4.4에서 구현한다.
 
