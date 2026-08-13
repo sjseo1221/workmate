@@ -5,13 +5,22 @@ import json
 import os
 import uuid
 from datetime import datetime, timezone
+from urllib.parse import quote
 
-from googleapiclient.discovery import build
+from google.auth.transport.requests import AuthorizedSession
 
 from auth_flow import SCOPES, authenticate, load_config
 
 
+def request_json(session: AuthorizedSession, method: str, url: str, **kwargs) -> dict:
+    """Google REST API를 호출하고 성공한 JSON 응답을 반환한다."""
+    response = session.request(method, url, timeout=30, **kwargs)
+    response.raise_for_status()
+    return response.json()
+
+
 def run(*, dry_run: bool, watch: bool) -> dict:
+    """OAuth 설정 또는 Gmail·Calendar readonly API 계약을 검증한다."""
     secret_path, token_path = load_config()
     result = {
         "scopes": SCOPES,
@@ -32,17 +41,29 @@ def run(*, dry_run: bool, watch: bool) -> dict:
             "GOOGLE_CALENDAR_WATCH_ADDRESS(공개 HTTPS)가 필요합니다."
         )
 
-    credentials = authenticate()
-    gmail = build("gmail", "v1", credentials=credentials, cache_discovery=False)
-    calendar = build("calendar", "v3", credentials=credentials, cache_discovery=False)
-
-    profile = gmail.users().getProfile(userId="me").execute()
-    messages = gmail.users().messages().list(userId="me", maxResults=1).execute()
-    history = gmail.users().history().list(
-        userId="me", startHistoryId=profile["historyId"], maxResults=1
-    ).execute()
+    session = AuthorizedSession(authenticate())
+    gmail_base = "https://gmail.googleapis.com/gmail/v1/users/me"
+    profile = request_json(session, "GET", f"{gmail_base}/profile")
+    messages = request_json(
+        session, "GET", f"{gmail_base}/messages", params={"maxResults": 1}
+    )
+    history = request_json(
+        session,
+        "GET",
+        f"{gmail_base}/history",
+        params={"startHistoryId": profile["historyId"], "maxResults": 1},
+    )
     calendar_id = os.getenv("GOOGLE_CALENDAR_ID", "primary")
-    events = calendar.events().list(calendarId=calendar_id, maxResults=1, singleEvents=True).execute()
+    calendar_url = (
+        "https://www.googleapis.com/calendar/v3/calendars/"
+        f"{quote(calendar_id, safe='')}/events"
+    )
+    events = request_json(
+        session,
+        "GET",
+        calendar_url,
+        params={"maxResults": 1, "singleEvents": "true"},
+    )
 
     result["checks"] = {
         "gmail_profile": "pass",
@@ -58,19 +79,27 @@ def run(*, dry_run: bool, watch: bool) -> dict:
     result["calendar"] = {"event_count": len(events.get("items", []))}
 
     if watch:
-        gmail_watch = gmail.users().watch(
-            userId="me",
-            body={"topicName": topic, "labelIds": ["INBOX"], "labelFilterBehavior": "INCLUDE"},
-        ).execute()
-        channel = calendar.events().watch(
-            calendarId=calendar_id,
-            body={
+        gmail_watch = request_json(
+            session,
+            "POST",
+            f"{gmail_base}/watch",
+            json={
+                "topicName": topic,
+                "labelIds": ["INBOX"],
+                "labelFilterBehavior": "INCLUDE",
+            },
+        )
+        channel = request_json(
+            session,
+            "POST",
+            f"{calendar_url}/watch",
+            json={
                 "id": str(uuid.uuid4()),
                 "type": "web_hook",
                 "address": address,
                 "token": os.getenv("GOOGLE_CALENDAR_WATCH_TOKEN", "oauth-test"),
             },
-        ).execute()
+        )
         result["watch"] = {
             "gmail_history_id_present": bool(gmail_watch.get("historyId")),
             "gmail_expiration_present": bool(gmail_watch.get("expiration")),
@@ -83,6 +112,7 @@ def run(*, dry_run: bool, watch: bool) -> dict:
 
 
 def main() -> None:
+    """명령행 옵션을 읽어 OAuth 검증 결과를 JSON으로 출력한다."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--watch", action="store_true")
