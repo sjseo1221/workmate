@@ -80,7 +80,7 @@ M0.2-02 실행 `20260813-114046`에서 실제 64 Chunk·60 Case 평가 원본을
 
 M0.2-03 실행 `20260813-121052`에서 `gpt-4o-transcribe` 합성 파일 20 Case 중 19건(95%), Realtime 2 Case 중 2건, Chunk 재연결·최종 STT E2E 2건 중 2건을 통과했다. Provider 오류는 0건이다. 실제 회의 음성 WER/CER·화자 분리·잡음·겹침 발화는 M3.3 완료 조건으로 이관하는 것으로 사용자 승인해 M0.2-03을 `완료`로 전환했다. 상세 결과는 [`M0.2-03 검수 결과`](evidence/M0/M0.2/runs/20260813-121052/result.md)에 기록한다.
 
-M0.2-04 실행 `20260813-122007`에서 readonly Scope·설정·단위 테스트 2건·구문 검사는 통과했다. 기존 `google-oauth-test/HISTORY.md`에는 Gmail Profile·Message·History 조회와 Gmail Watch `historyId`·`expiration` 등록 성공이 기록돼 있다. 현재 환경에서 Google API 재실행은 소켓 권한 및 연결 timeout으로 보류되어 사용자 확인 전까지 M0.2-04는 `검수 중`으로 유지한다. 상세 결과는 [`M0.2-04 검수 결과`](evidence/M0/M0.2/runs/20260813-122007/result.md)에 기록한다.
+M0.2-04 실행 `20260813-122007`에서 readonly Scope·설정·단위 테스트 2건·구문 검사는 통과했다. 기존 `google-oauth-test/HISTORY.md`에는 Gmail Profile·Message·History 조회와 Gmail Watch `historyId`·`expiration` 등록 성공이 기록돼 있다. 현재 환경에서 Google API 재실행은 소켓 권한 및 연결 timeout으로 보류됐으나, 사용자가 기존 성공 이력을 승인해 M0.2-04를 `완료`로 전환했다. 상세 결과는 [`M0.2-04 검수 결과`](evidence/M0/M0.2/runs/20260813-122007/result.md)에 기록한다.
 
 답변 가능성은 `Dense + Trigram RRF Top-K → metadata·직접 근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence`로 분리한다. 단일 Cosine 임계값은 운영 거절 조건으로 사용하지 않으며, 실제 검색 Workflow·출처 검증·RRF fallback은 M4.4에서 구현한다.
 
@@ -93,7 +93,7 @@ M0.1의 PostgreSQL 범위는 A2A Task·Message 멱등성·Artifact·`task_id ↔
 | M0.2-01 | LLM 평가 승인       | `llm-evaluation/`, `docs/11-llm-evaluation-plan.md`                   | 기본 모델·Schema 평가 이력 승인, 할당량 소진 시 재평가 Trigger 기록 | `docs/07-technical-specification.md` 9.1 | M0.2-02        | 완료 |
 | M0.2-02 | Embedding 평가 승인 | `embedding-evaluation/`, `docs/10-embedding-evaluation-plan.md`       | 모델·1536차원·Hybrid 지표·HNSW 결과 승인                            | `docs/06-delivery-plan.md` 5.1           | M0.2-03        | 완료 |
 | M0.2-03 | STT 평가 승인       | `stt-evaluation/`, `docs/12-implementation-verification-guide.md` 2.2 | 합성 평가 결과 승인, 실제 회의 음성 미평가를 M3.3 위험으로 연결     | `docs/07-technical-specification.md` 9.3 | M0.2-04        | 완료 |
-| M0.2-04 | Gmail OAuth 승인    | `google-oauth-test/`                                                  | readonly Scope·Profile/Message/History·Watch 이력 승인              | `docs/07-technical-specification.md` 10  | M0.2-05        | 대기 |
+| M0.2-04 | Gmail OAuth 승인    | `google-oauth-test/`                                                  | readonly Scope·Profile/Message/History·Watch 이력 승인              | `docs/07-technical-specification.md` 10  | M0.2-05        | 완료 |
 | M0.2-05 | Calendar OAuth 승인 | `google-oauth-test/`                                                  | readonly Scope·Events/Watch 이력 승인, 테스트 사용자 차단 여부 기록 | `docs/07-technical-specification.md` 10  | M0.2 통합 검수 | 대기 |
 
 M0.3과 M0.4는 다음 최소 백로그만 미리 고정한다. 상세 구현 경로와 실행 명령은 해당 백로그 착수 시 실제 저장소 구조를 확인해 채운다.
