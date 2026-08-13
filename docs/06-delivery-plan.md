@@ -78,6 +78,8 @@ M0.2-01 실행 `20260813-093322`에서 메타데이터 보완 평가기로 실�
 
 M0.2-02 실행 `20260813-114046`에서 실제 64 Chunk·60 Case 평가 원본을 재검토했다. Hybrid Hit@3 98.21%, HNSW Recall@5 100%, Hybrid DB p95 66.3ms, Query Embedding p95 893.1ms로 기준을 통과했다. Cosine 0.45 답변 가능성 판정의 정상 질문 거절률 41.07%는 운영 최종 판정에서 제외하는 정책으로 사용자 승인했으며, M0.2-02를 `완료`로 전환했다. 상세 결과는 [`M0.2-02 검수 결과`](evidence/M0/M0.2/runs/20260813-114046/result.md)에 기록한다.
 
+M0.2-03 실행 `20260813-121052`에서 `gpt-4o-transcribe` 합성 파일 20 Case 중 19건(95%), Realtime 2 Case 중 2건, Chunk 재연결·최종 STT E2E 2건 중 2건을 통과했다. Provider 오류는 0건이다. 실제 회의 음성 WER/CER·화자 분리·잡음·겹침 발화는 M3.3 완료 조건으로 이관하고, 사용자 승인 전까지 M0.2-03은 `검수 중`으로 유지한다. 상세 결과는 [`M0.2-03 검수 결과`](evidence/M0/M0.2/runs/20260813-121052/result.md)에 기록한다.
+
 답변 가능성은 `Dense + Trigram RRF Top-K → metadata·직접 근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence`로 분리한다. 단일 Cosine 임계값은 운영 거절 조건으로 사용하지 않으며, 실제 검색 Workflow·출처 검증·RRF fallback은 M4.4에서 구현한다.
 
 M0.2는 기존 평가를 무조건 다시 실행하지 않는다. **설계 확정**은 모델·Scope가 선택된 상태이고, **검수 완료**는 평가 원본·버전·제약·미검증 위험을 M0.2 증빙에서 승인한 상태다. 합성 STT 평가는 M0.2에서 승인하되 실제 회의 음성 평가는 M3.3 검수 조건으로 넘긴다.
@@ -88,7 +90,7 @@ M0.1의 PostgreSQL 범위는 A2A Task·Message 멱등성·Artifact·`task_id ↔
 | ------- | ------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------- | -------------- | ---- |
 | M0.2-01 | LLM 평가 승인       | `llm-evaluation/`, `docs/11-llm-evaluation-plan.md`                   | 기본 모델·Schema 평가 이력 승인, 할당량 소진 시 재평가 Trigger 기록 | `docs/07-technical-specification.md` 9.1 | M0.2-02        | 완료 |
 | M0.2-02 | Embedding 평가 승인 | `embedding-evaluation/`, `docs/10-embedding-evaluation-plan.md`       | 모델·1536차원·Hybrid 지표·HNSW 결과 승인                            | `docs/06-delivery-plan.md` 5.1           | M0.2-03        | 완료 |
-| M0.2-03 | STT 평가 승인       | `stt-evaluation/`, `docs/12-implementation-verification-guide.md` 2.2 | 합성 평가 결과 승인, 실제 회의 음성 미평가를 M3.3 위험으로 연결     | `docs/07-technical-specification.md` 9.3 | M0.2-04        | 대기 |
+| M0.2-03 | STT 평가 승인       | `stt-evaluation/`, `docs/12-implementation-verification-guide.md` 2.2 | 합성 평가 결과 승인, 실제 회의 음성 미평가를 M3.3 위험으로 연결     | `docs/07-technical-specification.md` 9.3 | M0.2-04        | 검수 중 |
 | M0.2-04 | Gmail OAuth 승인    | `google-oauth-test/`                                                  | readonly Scope·Profile/Message/History·Watch 이력 승인              | `docs/07-technical-specification.md` 10  | M0.2-05        | 대기 |
 | M0.2-05 | Calendar OAuth 승인 | `google-oauth-test/`                                                  | readonly Scope·Events/Watch 이력 승인, 테스트 사용자 차단 여부 기록 | `docs/07-technical-specification.md` 10  | M0.2 통합 검수 | 대기 |
 
