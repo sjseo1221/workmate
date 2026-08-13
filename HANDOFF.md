@@ -6,11 +6,11 @@
 
 - 현재 마일스톤: M0 계약·검증 기반
 - 진행 중 하위 마일스톤: M0.3 내부 챗봇 API
-- 현재 스프린트: Sprint 1 — M0.3-03 완료·M0.3-04 보안·계약 결정 대기
-- 상태: 진행
-- 마지막 갱신: 2026-08-13 15:01 Asia/Seoul
+- 현재 스프린트: Sprint 1 — M0.3-04 로컬 검증 완료·운영 OIDC 재검수 대기
+- 상태: 검수 중
+- 마지막 갱신: 2026-08-13 15:19 Asia/Seoul
 - 마지막 작업자: Codex
-- 기준 Git Commit: `8243e93` (`workmate-agent`)
+- 기준 Git Commit: `9a9bb55` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
 
 ## 2. 완료된 항목
@@ -38,19 +38,19 @@
 - 백로그 ID: M0.3-04
 - 작업: 내부 챗봇 인증·Schema·부분 실패
 - 담당자: Codex
-- 구현 중인 파일: 해당 없음(M0.3-04는 Session/OIDC·Schema 결정 후 착수)
+- 구현 중인 파일: `workmate-agent/app/internal_chat.py`, `workmate-agent/tests/test_internal_chat.py`, `workmate-agent/pyproject.toml`, `workmate-agent/uv.lock`
 - 완료된 부분: M0.1-01 SDK 런타임, M0.1-02 공개 전송 타입·Contract Test 승인, M0.1-03 Registry·SQLite/PostgreSQL 영속 경계·Migration·최종 Docker 검증, M0.1-04 통합 A2A Contract Test·Docker 검증
-- 남은 부분: M0.3-04 인증·Schema·부분 실패
-- 현재 테스트 결과: M0.3-03 정의 검증 명령 22개 테스트·diff check PASS
-- 마지막 실행 명령: `.\.venv\Scripts\python.exe -m unittest tests/test_internal_chat.py tests/test_runtime_boot.py tests/test_contract.py tests/test_persistence.py -v`, `git diff --check`
-- 최신 실행 ID: `20260813-150133`
+- 남은 부분: 운영 OIDC issuer·audience·JWKS 기반 JWT Contract Test와 실제 Provider 부분 실패 검증
+- 현재 테스트 결과: M0.3-04 로컬 인증·Schema·사용자 범위 22개 테스트, compileall, diff check PASS; 운영 OIDC 검증 미실행
+- 마지막 실행 명령: `.\.venv\Scripts\python.exe -m unittest tests/test_internal_chat.py tests/test_persistence.py tests/test_contract.py`, `.\.venv\Scripts\python.exe -m compileall -q app`, `git diff --check`
+- 최신 실행 ID: `20260813-151936`
 - 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-212244` (M0.1-02), `20260813-093322` (M0.2-01), `20260813-134129` (M0.2-02 재검수), `20260813-134542` (M0.2-03 재검수), `20260813-134915` (M0.2-04 재검수), `20260813-131903` (M0.2-05), `20260813-135158` (M0.2 통합), `20260813-144226` (M0.3-01), `20260813-145421` (M0.3-02), `20260813-150133` (M0.3-03)
 
 ## 4. 다음 작업
 
-1. M0.3-04 인증·Schema·부분 실패
+1. OIDC JWT Contract Test 환경 준비 후 M0.3-04 재검수
 
-M0.3-03 실행 `20260813-150133`에서 정의된 검증 명령이 모두 정확히 PASS하여 자동 승인·완료 처리했다. 자동 진행 규칙에 따라 다음 착수 항목은 M0.3-04다.
+M0.3-03 실행 `20260813-150133`은 자동 승인·완료 처리했다. M0.3-04 실행 `20260813-151936`은 로컬 검증은 PASS했지만 운영 OIDC 검증이 미실행되어 `검수 중`으로 유지하고 M0.4를 착수하지 않는다.
 
 ## 5. 차단 사항
 
@@ -59,7 +59,7 @@ M0.3-03 실행 `20260813-150133`에서 정의된 검증 명령이 모두 정확�
 | Docker Compose 검증 환경 | Dockerfile의 지원되지 않는 `uv sync --system` 옵션 | `--system` 제거, `.venv` PATH 연결 후 이미지 빌드·기동·Health·Agent Card 재검수 PASS | 해소 |
 | 루트 문서 Git 추적 | Superproject·Submodule·원격 기준선 필요 | `origin/main`에 기준 Commit Push 완료 | 해소 |
 | PostgreSQL·최종 Docker 재검수 | Docker CLI 응답 지연으로 최초 검증 보류 | 격리 PostgreSQL 연결·최종 이미지 build/Health/Agent Card 재검증 PASS | 해소 |
-| M0.3-04 보안·계약 결정 | Session/OIDC 인증과 내부 입력 Schema·부분 실패 응답은 명시적 설계 판단 필요 | 인증 경계·Schema 검증 범위·warnings 계약 승인 후 착수 | 대기 |
+| M0.3-04 운영 OIDC 검증 | issuer·audience·JWKS가 현재 실행 환경에 없음 | 테스트 OIDC 키로 유효·만료·서명·audience 오류 JWT Contract Test 실행 | 대기 |
 
 실제 회의 음성 평가, R2 Lifecycle, 운영 부하·복구, 실제 Orchestrator 종단 간 검증은 현재 M0.1의 차단 사항이 아니다. 각각 M3.3, M3.6, M5.2~M5.4 완료 조건으로 추적한다.
 

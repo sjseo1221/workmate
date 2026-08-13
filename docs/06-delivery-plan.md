@@ -121,10 +121,12 @@ M0.3과 M0.4는 다음 최소 백로그만 미리 고정한다. 상세 구현 �
 | M0.3-01 | Skill·입력 API        | 5개 Skill 목록과 자연어/JSON 입력 검증                  | M0.3-02        | 완료 |
 | M0.3-02 | 공통 Workflow 호출    | A2A와 같은 Workflow·Repository·Domain 경계 사용         | M0.3-03        | 완료 |
 | M0.3-03 | 장기 Task API         | Task 조회·Polling·취소와 Terminal 상태 검증             | M0.3-04        | 완료 |
-| M0.3-04 | 인증·Schema·부분 실패 | Session/OIDC, `user_id`, 승인 Artifact, `warnings` 검증 | M0.3 통합 검수 | 대기 |
+| M0.3-04 | 인증·Schema·부분 실패 | Session/OIDC, `user_id`, 승인 Artifact, `warnings` 검증 | M0.3 통합 검수 | 검수 중 |
 | M0.4-01 | Skill·입력 UI         | 5개 Skill 선택과 자연어/JSON 입력                       | M0.4-02        | 대기 |
 | M0.4-02 | 결과·상태 UI          | Artifact, 최신성, 경고, 오류, 장기 Task 상태 표시       | M0.4-03        | 대기 |
 | M0.4-03 | UI 통합 검수          | 5개 Skill 화면, Polling·취소·권한 차단 검수             | M0.4 통합 검수 | 대기 |
+
+M0.3-04 실행 `20260813-151936`은 로컬 인증·사용자 범위·승인 Schema 검증 명령 22건과 구문·diff 검사를 모두 PASS했다. 운영 OIDC issuer·audience·JWKS를 사용한 실제 JWT 검증은 미실행이므로 자동 승인하지 않고 `검수 중`으로 유지한다. OIDC 유효·만료·서명·audience 오류 Contract Test까지 정확히 PASS한 실행이 생기면 그 실행을 다시 판정한다. 상세 결과는 [`M0.3-04 검수 결과`](evidence/M0/M0.3/runs/20260813-151936/result.md)에 기록한다.
 
 담당자·완료 예정일·다음 착수 항목은 계획 수립용 필드이며, 작업 시작 시 실제 백로그 ID로 갱신한다. 아직 세부 작업을 정하지 않은 항목은 `백로그 정의 필요`로 표시한다. 실제 완료 여부는 반드시 테스트 결과나 화면·API 증빙으로 갱신한다. M1~M5의 상세 백로그는 해당 하위 마일스톤 착수 직전에만 분해하며, 구현하지 않을 미래 작업을 미리 상세 설계하지 않는다.
 
