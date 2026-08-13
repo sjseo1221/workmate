@@ -1,6 +1,6 @@
-status: 완료
-latest_run_id: 20260813-161223
-latest_run_status: PASS
+status: 재작업
+latest_run_id: 20260813-162027
+latest_run_status: BLOCKED/FAIL
 latest_approved_run_id: 20260813-161223
 approved_at: 2026-08-13 16:12 Asia/Seoul
 reviewer: 사용자 확인
@@ -15,8 +15,10 @@ Token을 저장하지 않고 현재 브라우저 요청에만 사용하며, Skil
 - 승인된 백로그: M0.4-01 Skill·입력 UI
 - 승인된 백로그: M0.4-02 결과·상태 UI
 - 최신 승인 결과: [`20260813-161223/result.md`](runs/20260813-161223/result.md)
-- 다음 착수 항목: M0.4-03 UI 통합 검수
+- 검수 중 백로그: M0.4-03 UI 통합 검수
+- 최신 검수 결과: [`20260813-162027/result.md`](runs/20260813-162027/result.md)
+- 다음 착수 항목: Polling·취소 UI 구현 후 M0.4-03 재검수
 
 현재 runtime bootstrap 응답은 내부 Artifact에 `mock: true`, `business_result: false`로 표시한다. 이 응답은 API 경계 테스트에만 사용하며 실제 업무 결과·완료 증빙으로 승인하지 않는다.
 
-M0.4-02는 자동 검증과 사용자 UI 육안 검수가 모두 PASS하여 완료 처리했다.
+M0.4-02는 자동 검증과 사용자 UI 육안 검수가 모두 PASS하여 완료 처리했다. M0.4-03 통합 검수에서는 Polling·취소 컨트롤 부재로 FAIL이 발생해 재작업으로 전환했다.
