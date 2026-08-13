@@ -36,7 +36,7 @@
 | ID   | 하위 목표         | 주요 산출물                                                                 | 선행                         | 담당 | 완료 예정일 | 완료 기준·증빙                                                             | 상태 | 다음 착수 항목           |
 | ---- | ----------------- | --------------------------------------------------------------------------- | ---------------------------- | ---- | ----------- | -------------------------------------------------------------------------- | ---- | ------------------------ |
 | M0.1 | A2A·Artifact 계약 | Agent Card, Message/Task/Artifact Schema·A2A 인프라 Task Store              | 없음                         | 미정 | 미정        | SDK REST Route·AgentExecutor·Contract Test·Streaming·재시작 복구 검증 결과 | 완료 | M0.2 모델·OAuth 확정 |
-| M0.2 | 모델·OAuth 확정   | LLM·Embedding·STT·OAuth 설정과 평가 이력                                    | 없음                         | 미정 | 미정        | 기존 평가 승인·OAuth HISTORY·미검증 위험 기록                              | 진행 | M0.2-01 LLM 평가 승인    |
+| M0.2 | 모델·OAuth 확정   | LLM·Embedding·STT·OAuth 설정과 평가 이력                                    | 없음                         | 미정 | 미정        | 기존 평가 승인·OAuth HISTORY·미검증 위험 기록                              | 진행 | M0.2-02 Embedding 평가 승인 |
 | M0.3 | 내부 챗봇 API     | Skill 목록·메시지·장기 Task 조회 API                                        | M0.1                         | 미정 | 미정        | 5개 Skill·인증·장기 Task·부분 실패 API 검증                                | 대기 | M0.3-01 입력 API         |
 | M0.4 | 내부 챗봇 UI      | `workmate-agent` 최소 개발자 페이지의 Skill 선택·자연어/JSON 입력·결과 화면 | M0.3                         | 미정 | 미정        | 5개 Skill·Artifact·상태·오류 화면 검수                                     | 대기 | M0.4-01 입력 UI          |
 | M1.1 | 업무 DB 기반      | Task·Gmail·Calendar PostgreSQL Migration·Repository·샘플 데이터             | M0.1                         | 미정 | 미정        | 업무 Migration·Repository 테스트                                           | 대기 | 백로그 정의 필요         |
@@ -76,6 +76,8 @@ M0.1 구현은 다음 네 백로그를 순서대로 검수한다. M0.1-01은 실
 
 M0.2-01 실행 `20260813-093322`에서 메타데이터 보완 평가기로 실제 Provider Pilot 4/4, Full Case 1 20/20, Full Case 2 20/20을 Schema·의미 기준 모두 통과했다. 생성 설정과 Hash는 기록됐고 Provider 실패는 없었다. 비용표 미설정과 모델 선택은 사람 확인 항목이었으나, 사용자가 기본 모델 `openai/gpt-4.1-mini`과 비용 미산정 사유를 승인해 `latest_approved_run_id=20260813-093322`로 확정했으며 M0.2-01은 `완료`다.
 
+M0.2-02 실행 `20260813-114046`에서 실제 64 Chunk·60 Case 평가 원본을 재검토했다. Hybrid Hit@3 98.21%, HNSW Recall@5 100%, Hybrid DB p95 66.3ms, Query Embedding p95 893.1ms로 기준을 통과했다. 다만 Cosine 0.45 답변 가능성 판정의 정상 질문 거절률은 41.07%로 권장 기준을 초과하므로 운영 최종 판정에서 제외하고, 모델·검색 조합은 사용자 승인 전까지 `검수 중`으로 유지한다. 상세 결과는 [`M0.2-02 검수 결과`](evidence/M0/M0.2/runs/20260813-114046/result.md)에 기록한다.
+
 M0.2는 기존 평가를 무조건 다시 실행하지 않는다. **설계 확정**은 모델·Scope가 선택된 상태이고, **검수 완료**는 평가 원본·버전·제약·미검증 위험을 M0.2 증빙에서 승인한 상태다. 합성 STT 평가는 M0.2에서 승인하되 실제 회의 음성 평가는 M3.3 검수 조건으로 넘긴다.
 
 M0.1의 PostgreSQL 범위는 A2A Task·Message 멱등성·Artifact·`task_id ↔ thread_id`·Checkpoint 복구에 필요한 인프라 Migration으로 제한한다. 공개 이벤트 전체 이력과 재생 Cursor는 MVP에서 저장하지 않고 Subscribe 연결 시 현재 Task 스냅샷 뒤에 신규 이벤트만 전송한다. M1.1은 Task·Gmail·Calendar 업무 데이터와 Repository·샘플 데이터를 추가하며 M0.1 Migration을 다시 만들거나 덮어쓰지 않는다.
@@ -83,7 +85,7 @@ M0.1의 PostgreSQL 범위는 A2A Task·Message 멱등성·Artifact·`task_id ↔
 | ID      | 작업명              | 평가·검증 원본                                                        | 완료 조건                                                           | 관련 의사결정                            | 다음 작업      | 상태 |
 | ------- | ------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------- | -------------- | ---- |
 | M0.2-01 | LLM 평가 승인       | `llm-evaluation/`, `docs/11-llm-evaluation-plan.md`                   | 기본 모델·Schema 평가 이력 승인, 할당량 소진 시 재평가 Trigger 기록 | `docs/07-technical-specification.md` 9.1 | M0.2-02        | 완료 |
-| M0.2-02 | Embedding 평가 승인 | `embedding-evaluation/`, `docs/10-embedding-evaluation-plan.md`       | 모델·1536차원·Hybrid 지표·HNSW 결과 승인                            | `docs/06-delivery-plan.md` 5.1           | M0.2-03        | 대기 |
+| M0.2-02 | Embedding 평가 승인 | `embedding-evaluation/`, `docs/10-embedding-evaluation-plan.md`       | 모델·1536차원·Hybrid 지표·HNSW 결과 승인                            | `docs/06-delivery-plan.md` 5.1           | M0.2-03        | 검수 중 |
 | M0.2-03 | STT 평가 승인       | `stt-evaluation/`, `docs/12-implementation-verification-guide.md` 2.2 | 합성 평가 결과 승인, 실제 회의 음성 미평가를 M3.3 위험으로 연결     | `docs/07-technical-specification.md` 9.3 | M0.2-04        | 대기 |
 | M0.2-04 | Gmail OAuth 승인    | `google-oauth-test/`                                                  | readonly Scope·Profile/Message/History·Watch 이력 승인              | `docs/07-technical-specification.md` 10  | M0.2-05        | 대기 |
 | M0.2-05 | Calendar OAuth 승인 | `google-oauth-test/`                                                  | readonly Scope·Events/Watch 이력 승인, 테스트 사용자 차단 여부 기록 | `docs/07-technical-specification.md` 10  | M0.2 통합 검수 | 대기 |

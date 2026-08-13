@@ -6,9 +6,9 @@
 
 - 현재 마일스톤: M0 계약·검증 기반
 - 진행 중 하위 마일스톤: M0.2 모델·OAuth 확정
-- 현재 스프린트: Sprint 1 — M0.2-02 Embedding 평가 승인 준비
+- 현재 스프린트: Sprint 1 — M0.2-02 Embedding 평가 승인 검수
 - 상태: 진행
-- 마지막 갱신: 2026-08-13 09:35 Asia/Seoul
+- 마지막 갱신: 2026-08-13 11:40 Asia/Seoul
 - 마지막 작업자: Codex
 - 기준 Git Commit: `d00a858` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
@@ -30,17 +30,17 @@
 - 백로그 ID: M0.2-02
 - 작업: Embedding 평가 승인
 - 담당자: Codex
-- 구현 중인 파일: Embedding 평가 원본·증빙 경로 확인 예정
+- 구현 중인 파일: Embedding 평가 원본·증빙 검수
 - 완료된 부분: M0.1-01 SDK 런타임, M0.1-02 공개 전송 타입·Contract Test 승인, M0.1-03 Registry·SQLite/PostgreSQL 영속 경계·Migration·최종 Docker 검증, M0.1-04 통합 A2A Contract Test·Docker 검증
 - 남은 부분: M0.2-02 Embedding 평가 승인, 이후 M0.2-03 STT·M0.2-04~05 OAuth 검수
-- 현재 테스트 결과: 실제 Provider Pilot 4/4, Full Case 1 20/20, Full Case 2 20/20 PASS; 메타데이터·단위 테스트 23 PASS
-- 마지막 실행 명령: Pilot `20260813-083705`, Full Case 1 `20260813-085733`, Full Case 2 `20260813-091405`
-- 최신 실행 ID: `20260813-093322`
+- 현재 테스트 결과: Embedding 단위 테스트 16 PASS, Python 구문 검사 PASS, 최신 실제 64 Chunk·60 Case Hybrid/HNSW 지표 검토 PASS_WITH_CAVEAT
+- 마지막 실행 명령: `python -m unittest discover -s embedding-evaluation/tests -v`, `python -m py_compile embedding-evaluation/run_eval.py embedding-evaluation/run_postgres_eval.py embedding-evaluation/run_reranker_eval.py`, `git diff --check`
+- 최신 실행 ID: `20260813-114046`
 - 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-212244` (M0.1-02), `20260813-093322` (M0.2-01)
 
 ## 4. 다음 작업
 
-1. M0.2-02 Embedding 평가 원본·1536차원·Hybrid 지표 승인
+1. 사용자 승인 후 M0.2-02 Embedding 평가 완료 처리
 2. M0.2-03 STT 평가 승인
 3. M0.2-04~05 Gmail·Calendar OAuth 이력 검수
 
@@ -98,9 +98,9 @@
 - UI 테스트: M0.4에서 생성 예정
 - Fixture/입력: M0.1-04에서 승인 Schema를 통과하는 5개 Skill Fixture 생성 예정
 - 모델 평가 Case: `llm-evaluation/cases/`의 Pilot·Full Case 1·2 연결 완료
-- 모델 평가 결과: `docs/evidence/M0/M0.2/runs/20260813-093322/result.md` (완료)
-- 최신 실행 로그: `docs/evidence/M0/M0.2/runs/20260813-093322/result.md`
-- 최신 실행 결과: 실제 Provider 품질 4/20/20 PASS, Schema·의미 44/44 PASS; `openai/gpt-4.1-mini`와 비용 미산정 사유 사용자 승인 완료
+- 모델 평가 결과: `docs/evidence/M0/M0.2/runs/20260813-093322/result.md` (M0.2-01 완료), `docs/evidence/M0/M0.2/runs/20260813-114046/result.md` (M0.2-02 검수 중)
+- 최신 실행 로그: `docs/evidence/M0/M0.2/runs/20260813-114046/result.md`
+- 최신 실행 결과: Embedding 단위 테스트 16 PASS, Hybrid Hit@3 98.21%, HNSW Recall@5 100%, Hybrid DB p95 66.3ms; 답변 가능성 거절률 권장 기준 초과를 운영 정책으로 격리
 - 최신 결과 문서: `docs/evidence/M0/M0.2/README.md`
 
 ## 9. 주의사항
@@ -156,3 +156,4 @@
 | 2026-08-13 | Codex | 실제 Provider Pilot·Full Case 1·2 실행 시 메타데이터는 기록됐으나 Windows 소켓 권한과 외부 egress 정책으로 응답 전 차단; M0.2-01 보류 | 실행 `20260813-082520` |
 | 2026-08-13 | Codex | 외부 전송 승인 후 실제 Provider 재평가 완료: Pilot 4/4, Full Case 1·2 각 20/20, Schema·의미 44/44 PASS; 비용 미산정·모델 선택 사용자 승인 대기 | 실행 `20260813-093322` |
 | 2026-08-13 | 사용자 | `openai/gpt-4.1-mini` 기본 모델과 비용 미산정 사유 승인, M0.2-01 완료; M0.2-02로 진행 | 실행 `20260813-093322` |
+| 2026-08-13 | Codex | M0.2-02 Embedding 64 Chunk·60 Case 결과와 평가기 16개 테스트 검수; Hybrid/HNSW 기준 PASS, 답변 가능성 거절률 권장 기준 초과를 운영 판정에서 제외하고 사용자 승인 대기 | 실행 `20260813-114046` |
