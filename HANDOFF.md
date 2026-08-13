@@ -6,9 +6,9 @@
 
 - 현재 마일스톤: M0 계약·검증 기반
 - 진행 중 하위 마일스톤: M0.2 모델·OAuth 확정
-- 현재 스프린트: Sprint 1 — M0.2 모델·OAuth 평가 이력 검수 준비
+- 현재 스프린트: Sprint 1 — M0.2-02 Embedding 평가 승인 준비
 - 상태: 진행
-- 마지막 갱신: 2026-08-12 23:04 Asia/Seoul
+- 마지막 갱신: 2026-08-13 09:35 Asia/Seoul
 - 마지막 작업자: Codex
 - 기준 Git Commit: `d00a858` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
@@ -21,26 +21,28 @@
 | M0.1-02 공개 A2A 전송 타입 Contract Test | 완료 | `docs/evidence/M0/M0.1/runs/20260812-204500/result.md` |
 | M0.1-03 Workflow·영속 Task 경계 구현 | 완료 | `docs/evidence/M0/M0.1/runs/20260812-224743/result.md` |
 | M0.1-04 통합 A2A 계약 검수 | 완료 | `docs/evidence/M0/M0.1/runs/20260812-230413/result.md` |
+| M0.2-01 LLM 평가 승인 | 완료 | `docs/evidence/M0/M0.2/runs/20260813-093322/result.md` |
 
 완료 항목은 명시 승인 또는 규칙에 따른 묵시 승인이 기록된 `result.md` 경로만 연결한다. 자동 승인 조건을 충족하지 않은 단순 구현 완료나 일부 테스트 실행만으로 완료 처리하지 않는다.
 
 ## 3. 현재 진행 중인 작업
 
-- 백로그 ID: M0.2-01
-- 작업: 모델·OAuth 평가 이력 검수
+- 백로그 ID: M0.2-02
+- 작업: Embedding 평가 승인
 - 담당자: Codex
-- 구현 중인 파일: M0.2 평가 원본·OAuth 이력 경로 확인 예정
+- 구현 중인 파일: Embedding 평가 원본·증빙 경로 확인 예정
 - 완료된 부분: M0.1-01 SDK 런타임, M0.1-02 공개 전송 타입·Contract Test 승인, M0.1-03 Registry·SQLite/PostgreSQL 영속 경계·Migration·최종 Docker 검증, M0.1-04 통합 A2A Contract Test·Docker 검증
-- 남은 부분: M0.2-01 모델 평가 승인·OAuth HISTORY 검수
-- 현재 테스트 결과: M0.1-04 전체 테스트 19 PASS, 실제 PostgreSQL 통합 PASS, 최종 Docker build·healthy·Health·Agent Card·Cache-Control PASS
-- 마지막 실행 명령: `uv lock --check`, `uv sync --frozen`, 테스트 19개, compileall, `git diff --check`, Docker build/compose 검증
-- 최신 실행 ID: `20260812-230413`
-- 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-212244` (M0.1-02)
+- 남은 부분: M0.2-02 Embedding 평가 승인, 이후 M0.2-03 STT·M0.2-04~05 OAuth 검수
+- 현재 테스트 결과: 실제 Provider Pilot 4/4, Full Case 1 20/20, Full Case 2 20/20 PASS; 메타데이터·단위 테스트 23 PASS
+- 마지막 실행 명령: Pilot `20260813-083705`, Full Case 1 `20260813-085733`, Full Case 2 `20260813-091405`
+- 최신 실행 ID: `20260813-093322`
+- 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-212244` (M0.1-02), `20260813-093322` (M0.2-01)
 
 ## 4. 다음 작업
 
-1. M0.2-01 모델 평가 원본·버전·제약·미검증 위험과 OAuth HISTORY 검수
-3. 담당자 배정 후 M0.2-01 기존 모델·OAuth 평가 이력 검수는 M0.1과 병행 가능
+1. M0.2-02 Embedding 평가 원본·1536차원·Hybrid 지표 승인
+2. M0.2-03 STT 평가 승인
+3. M0.2-04~05 Gmail·Calendar OAuth 이력 검수
 
 ## 5. 차단 사항
 
@@ -95,11 +97,11 @@
 - 통합 테스트: M0.1-04에서 생성 예정
 - UI 테스트: M0.4에서 생성 예정
 - Fixture/입력: M0.1-04에서 승인 Schema를 통과하는 5개 Skill Fixture 생성 예정
-- 모델 평가 Case: M0.2에서 기존 평가 원본 연결 예정
-- 모델 평가 결과: M0.2에서 기존 평가 원본 승인 예정
-- 최신 실행 로그: `docs/evidence/M0/M0.1/runs/20260812-230413/result.md`
-- 최신 실행 결과: 전체 테스트 19 PASS, 실제 PostgreSQL·통합 Docker Contract·Health·Agent Card 검증 PASS
-- 최신 결과 문서: `docs/evidence/M0/M0.1/README.md`
+- 모델 평가 Case: `llm-evaluation/cases/`의 Pilot·Full Case 1·2 연결 완료
+- 모델 평가 결과: `docs/evidence/M0/M0.2/runs/20260813-093322/result.md` (완료)
+- 최신 실행 로그: `docs/evidence/M0/M0.2/runs/20260813-093322/result.md`
+- 최신 실행 결과: 실제 Provider 품질 4/20/20 PASS, Schema·의미 44/44 PASS; `openai/gpt-4.1-mini`와 비용 미산정 사유 사용자 승인 완료
+- 최신 결과 문서: `docs/evidence/M0/M0.2/README.md`
 
 ## 9. 주의사항
 
@@ -149,3 +151,8 @@
 | 2026-08-12 | Codex | PostgreSQL 통합 테스트 경계 추가, 로컬 12 PASS·1 SKIP; Docker daemon 응답 지연으로 실제 PostgreSQL·최종 Docker 재검증 보류 | `85a4036`, 실행 `20260812-222254` |
 | 2026-08-12 | Codex | 실제 PostgreSQL Migration·Task 멱등성·삭제, 최종 Docker build·Migration 파일·Health·Agent Card 검증 PASS; M0.1-03 자동 승인 | `c17d4c2`, 실행 `20260812-224743` |
 | 2026-08-12 | Codex | M0.1-04 GET Subscribe 공개 불일치 수정, Cache-Control·활성/Terminal Subscribe·5 Skill·Streaming·Route allowlist Contract Test, 전체 19 PASS·최종 Docker 검증 PASS; M0.1 자동 승인 | `d00a858`, 실행 `20260812-230413` |
+| 2026-08-13 | Codex | M0.2-01 기존 LLM 평가 원본·Schema dry-run·평가기 21개 테스트 검수, Full Case 실제 결과와 재평가 Trigger·재현성 보완 위험 기록; 모델 평가는 사용자 승인 대기로 유지 | 실행 `20260813-075806` |
+| 2026-08-13 | Codex | M0.2-01 평가기 생성 설정·Prompt/Schema/Case Hash·Retry·비용 상태 메타데이터 보완, 단위 테스트 23개와 Pilot·Full Case dry-run PASS; 실제 Provider 재평가 대기 | 실행 `20260813-082016` |
+| 2026-08-13 | Codex | 실제 Provider Pilot·Full Case 1·2 실행 시 메타데이터는 기록됐으나 Windows 소켓 권한과 외부 egress 정책으로 응답 전 차단; M0.2-01 보류 | 실행 `20260813-082520` |
+| 2026-08-13 | Codex | 외부 전송 승인 후 실제 Provider 재평가 완료: Pilot 4/4, Full Case 1·2 각 20/20, Schema·의미 44/44 PASS; 비용 미산정·모델 선택 사용자 승인 대기 | 실행 `20260813-093322` |
+| 2026-08-13 | 사용자 | `openai/gpt-4.1-mini` 기본 모델과 비용 미산정 사유 승인, M0.2-01 완료; M0.2-02로 진행 | 실행 `20260813-093322` |
