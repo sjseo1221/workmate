@@ -6,11 +6,11 @@
 
 - 현재 마일스톤: M0 계약·검증 기반
 - 진행 중 하위 마일스톤: M0.4 내부 검증 UI
-- 현재 스프린트: Sprint 1 — M0.4-03 Polling·취소 UI 보완 후 통합 육안 검수 대기
+- 현재 스프린트: Sprint 1 — M0.4-03 Artifact metadata 보존 후 통합 육안 검수 대기
 - 상태: 검수 중
-- 마지막 갱신: 2026-08-13 16:25 Asia/Seoul
+- 마지막 갱신: 2026-08-13 16:31 Asia/Seoul
 - 마지막 작업자: Codex
-- 기준 Git Commit: `54a13b8` (`workmate-agent`)
+- 기준 Git Commit: `8a6e6d5` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
 
 ## 2. 완료된 항목
@@ -42,17 +42,17 @@
 - 담당자: Codex
 - 구현 중인 파일: `workmate-agent/app/internal_chat_ui.py`, `workmate-agent/app/main.py`, `workmate-agent/tests/test_internal_chat_ui.py`
 - 완료된 부분: M0.1-01 SDK 런타임, M0.1-02 공개 전송 타입·Contract Test 승인, M0.1-03 Registry·SQLite/PostgreSQL 영속 경계·Migration·최종 Docker 검증, M0.1-04 통합 A2A Contract Test·Docker 검증
-- 남은 부분: 유효 Token 기반 5개 Skill 실행, Polling·취소·사용자 범위 격리 육안 검수
+- 남은 부분: 유효 Token 기반 5개 Skill 실행, 실제 장기 Task Polling·취소·사용자 범위 격리 육안 검수
 - 현재 테스트 결과: M0.4-01 포함 전체 24개 테스트, compileall, diff check PASS; UI 육안 검수 PASS
 - 마지막 실행 명령: `.\.venv\Scripts\python.exe -m unittest tests/test_internal_chat.py tests/test_persistence.py tests/test_contract.py`, `.\.venv\Scripts\python.exe -m compileall -q app`, `git diff --check`
-- 최신 실행 ID: `20260813-162530`
+- 최신 실행 ID: `20260813-163114`
 - 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-212244` (M0.1-02), `20260813-093322` (M0.2-01), `20260813-134129` (M0.2-02 재검수), `20260813-134542` (M0.2-03 재검수), `20260813-134915` (M0.2-04 재검수), `20260813-131903` (M0.2-05), `20260813-135158` (M0.2 통합), `20260813-144226` (M0.3-01), `20260813-145421` (M0.3-02), `20260813-150133` (M0.3-03), `20260813-153001` (M0.3-04), `20260813-160540` (M0.4-01), `20260813-161223` (M0.4-02)
 
 ## 4. 다음 작업
 
 1. 유효 Token 기반 M0.4-03 통합 육안 검수
 
-M0.3-04 실행 `20260813-153001`, M0.4-01 실행 `20260813-160540`, M0.4-02 실행 `20260813-161223`은 완료 처리했다. M0.4-03 재검수 `20260813-162530`에서 Polling·취소 UI와 자동 검증은 PASS했지만 유효 Token 기반 통합 육안 검수가 남아 `검수 중`이다. Mock 응답은 실제 업무 완료 증빙으로 인정하지 않는다.
+M0.3-04 실행 `20260813-153001`, M0.4-01 실행 `20260813-160540`, M0.4-02 실행 `20260813-161223`은 완료 처리했다. M0.4-03 재검수 `20260813-163114`에서 Polling·취소 UI, Artifact metadata 보존과 자동 검증은 PASS했지만 유효 Token 기반 통합 육안 검수가 남아 `검수 중`이다. Mock 응답은 실제 업무 완료 증빙으로 인정하지 않는다.
 
 ## 5. 차단 사항
 
