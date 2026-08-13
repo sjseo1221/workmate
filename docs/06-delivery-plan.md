@@ -76,7 +76,7 @@ M0.1 구현은 다음 네 백로그를 순서대로 검수한다. M0.1-01은 실
 
 M0.2-01 실행 `20260813-093322`에서 메타데이터 보완 평가기로 실제 Provider Pilot 4/4, Full Case 1 20/20, Full Case 2 20/20을 Schema·의미 기준 모두 통과했다. 생성 설정과 Hash는 기록됐고 Provider 실패는 없었다. 비용표 미설정과 모델 선택은 사람 확인 항목이었으나, 사용자가 기본 모델 `openai/gpt-4.1-mini`과 비용 미산정 사유를 승인해 `latest_approved_run_id=20260813-093322`로 확정했으며 M0.2-01은 `완료`다.
 
-M0.2-02 실행 `20260813-114046`에서 실제 64 Chunk·60 Case 평가 원본을 재검토했다. Hybrid Hit@3 98.21%, HNSW Recall@5 100%, Hybrid DB p95 66.3ms, Query Embedding p95 893.1ms로 기준을 통과했다. 다만 Cosine 0.45 답변 가능성 판정의 정상 질문 거절률은 41.07%로 권장 기준을 초과하므로 운영 최종 판정에서 제외하고, 모델·검색 조합은 사용자 승인 전까지 `검수 중`으로 유지한다. 상세 결과는 [`M0.2-02 검수 결과`](evidence/M0/M0.2/runs/20260813-114046/result.md)에 기록한다.
+M0.2-02 실행 `20260813-114046`에서 실제 64 Chunk·60 Case 평가 원본을 재검토했다. Hybrid Hit@3 98.21%, HNSW Recall@5 100%, Hybrid DB p95 66.3ms, Query Embedding p95 893.1ms로 기준을 통과했다. Cosine 0.45 답변 가능성 판정의 정상 질문 거절률 41.07%는 운영 최종 판정에서 제외하는 정책으로 사용자 승인했으며, M0.2-02를 `완료`로 전환했다. 상세 결과는 [`M0.2-02 검수 결과`](evidence/M0/M0.2/runs/20260813-114046/result.md)에 기록한다.
 
 답변 가능성은 `Dense + Trigram RRF Top-K → metadata·직접 근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence`로 분리한다. 단일 Cosine 임계값은 운영 거절 조건으로 사용하지 않으며, 실제 검색 Workflow·출처 검증·RRF fallback은 M4.4에서 구현한다.
 
@@ -87,7 +87,7 @@ M0.1의 PostgreSQL 범위는 A2A Task·Message 멱등성·Artifact·`task_id ↔
 | ID      | 작업명              | 평가·검증 원본                                                        | 완료 조건                                                           | 관련 의사결정                            | 다음 작업      | 상태 |
 | ------- | ------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------- | -------------- | ---- |
 | M0.2-01 | LLM 평가 승인       | `llm-evaluation/`, `docs/11-llm-evaluation-plan.md`                   | 기본 모델·Schema 평가 이력 승인, 할당량 소진 시 재평가 Trigger 기록 | `docs/07-technical-specification.md` 9.1 | M0.2-02        | 완료 |
-| M0.2-02 | Embedding 평가 승인 | `embedding-evaluation/`, `docs/10-embedding-evaluation-plan.md`       | 모델·1536차원·Hybrid 지표·HNSW 결과 승인                            | `docs/06-delivery-plan.md` 5.1           | M0.2-03        | 검수 중 |
+| M0.2-02 | Embedding 평가 승인 | `embedding-evaluation/`, `docs/10-embedding-evaluation-plan.md`       | 모델·1536차원·Hybrid 지표·HNSW 결과 승인                            | `docs/06-delivery-plan.md` 5.1           | M0.2-03        | 완료 |
 | M0.2-03 | STT 평가 승인       | `stt-evaluation/`, `docs/12-implementation-verification-guide.md` 2.2 | 합성 평가 결과 승인, 실제 회의 음성 미평가를 M3.3 위험으로 연결     | `docs/07-technical-specification.md` 9.3 | M0.2-04        | 대기 |
 | M0.2-04 | Gmail OAuth 승인    | `google-oauth-test/`                                                  | readonly Scope·Profile/Message/History·Watch 이력 승인              | `docs/07-technical-specification.md` 10  | M0.2-05        | 대기 |
 | M0.2-05 | Calendar OAuth 승인 | `google-oauth-test/`                                                  | readonly Scope·Events/Watch 이력 승인, 테스트 사용자 차단 여부 기록 | `docs/07-technical-specification.md` 10  | M0.2 통합 검수 | 대기 |

@@ -5,8 +5,8 @@
 - 마일스톤: M0.2
 - 제목: Embedding 평가 승인
 - 담당자: Codex
-- 검수자: 사용자 확인 필요
-- 상태: 검수 중
+- 검수자: 사용자 승인
+- 상태: 완료
 - 실행일: 2026-08-13
 - 실행 ID: 20260813-114046
 - 코드 버전: `e2de4be`
@@ -15,16 +15,16 @@
 ## 2. 최신 실행과 승인
 
 - latest_run_id: 20260813-114046
-- latest_run_status: PASS_WITH_CAVEAT
-- latest_approved_run_id: null
-- approved_at: null
+- latest_run_status: PASS_WITH_CAVEAT (사용자 승인)
+- latest_approved_run_id: 20260813-114046
+- approved_at: 2026-08-13 11:53 Asia/Seoul
 
 ## 3. 목표와 완료 기준
 
 - 목표: Embedding 모델·1536차원·거리 함수·Dense+Trigram RRF·HNSW 결과를 검토하고 운영 검색 후보를 승인한다.
 - 완료 기준: Hybrid Hit@3 80% 이상, HNSW Recall@5 90% 이상 권장, DB 검색 p95 300ms 이하, 모델과 `vector(1536)` Migration 호환.
 - 백로그 범위: M0.2-02
-- 미완료·보류 백로그: 사용자 승인, 답변 가능성 거절률 운영 정책 확정
+- 미완료·보류 백로그: 없음. 답변 가능성 거절률은 승인된 운영 정책에 따라 최종 판정에서 제외
 
 ## 4. 구현 경로
 
@@ -65,17 +65,17 @@ git diff --check
 | Hybrid DB 검색 p95 300ms 이하 | PASS (66.3ms) | [metrics](../../../../../../embedding-evaluation/results/postgres-metrics-20260811-101253.json) |
 | Query Embedding p95 1초 권장 | PASS (893.1ms) | [metrics](../../../../../../embedding-evaluation/results/postgres-metrics-20260811-101253.json) |
 | 답변 가능성 잘못된 거절률 10% 이하 권장 | FAIL (41.07%) | 운영 답변 가능성 판정에는 사용하지 않음 |
-| 모델·검색 조합 운영 승인 | 사용자 승인 필요 | 이 결과와 `docs/06-delivery-plan.md` M0.2-02 |
+| 모델·검색 조합 운영 승인 | PASS (사용자 승인) | 이 결과와 `docs/06-delivery-plan.md` M0.2-02 |
 
 ## 8. 문제와 수정 이력
 
 - 발견된 문제: Cosine 0.45 단일 임계값에서 정상 질문 56건 중 23건을 거절했다.
 - 원인: Embedding 유사도 하나를 답변 가능성 판정으로 사용하면 정상적인 의미 재표현을 과도하게 거절한다.
 - 수정 내용: 운영 검색 후보는 Hybrid RRF로 사용하고, 단일 Cosine 임계값은 평가용 진단 지표로만 유지한다. `RRF Top-K → metadata·직접 근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence` Workflow와 Reranker 장애·Timeout 시 RRF fallback·`warnings` 정책을 문서에 반영했다. 실제 검색 코드와 Contract Test는 M4.4에서 구현한다.
-- 재검수 실행 ID: 사용자 승인 후 동일 결과에 승인 메타데이터를 추가한다.
+- 재검수 실행 ID: 20260813-114046 (사용자 승인 반영)
 
 ## 9. 최종 판단
 
-- 승인 여부: 미승인
-- 검수 의견: 모델·1536차원·Hybrid RRF·HNSW·지연 기준은 통과했다. 답변 가능성 거절률 권장 기준 초과는 운영 정책으로 격리했으며, Embedding 모델·검색 조합은 사용자 확인이 필요하다.
-- 다음 조치: 사용자가 `openai/text-embedding-3-small`, `vector(1536)`, Cosine, Dense+Trigram RRF+HNSW 조합과 답변 가능성 임계값 제외 방침을 승인하면 M0.2-02를 완료로 전환한다.
+- 승인 여부: 승인
+- 검수 의견: 사용자가 `openai/text-embedding-3-small`, `vector(1536)`, Cosine, Dense+Trigram RRF+HNSW 조합과 단일 Cosine 임계값을 운영 거절 조건으로 사용하지 않는 방침을 승인했다.
+- 다음 조치: M0.2-03 STT 평가 승인

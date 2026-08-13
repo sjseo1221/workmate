@@ -6,9 +6,9 @@
 
 - 현재 마일스톤: M0 계약·검증 기반
 - 진행 중 하위 마일스톤: M0.2 모델·OAuth 확정
-- 현재 스프린트: Sprint 1 — M0.2-02 Embedding 평가 승인 검수
+- 현재 스프린트: Sprint 1 — M0.2-03 STT 평가 승인 준비
 - 상태: 진행
-- 마지막 갱신: 2026-08-13 11:40 Asia/Seoul
+- 마지막 갱신: 2026-08-13 11:53 Asia/Seoul
 - 마지막 작업자: Codex
 - 기준 Git Commit: `d00a858` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
@@ -22,27 +22,27 @@
 | M0.1-03 Workflow·영속 Task 경계 구현 | 완료 | `docs/evidence/M0/M0.1/runs/20260812-224743/result.md` |
 | M0.1-04 통합 A2A 계약 검수 | 완료 | `docs/evidence/M0/M0.1/runs/20260812-230413/result.md` |
 | M0.2-01 LLM 평가 승인 | 완료 | `docs/evidence/M0/M0.2/runs/20260813-093322/result.md` |
+| M0.2-02 Embedding 평가 승인 | 완료 | `docs/evidence/M0/M0.2/runs/20260813-114046/result.md` |
 
 완료 항목은 명시 승인 또는 규칙에 따른 묵시 승인이 기록된 `result.md` 경로만 연결한다. 자동 승인 조건을 충족하지 않은 단순 구현 완료나 일부 테스트 실행만으로 완료 처리하지 않는다.
 
 ## 3. 현재 진행 중인 작업
 
-- 백로그 ID: M0.2-02
-- 작업: Embedding 평가 승인
+- 백로그 ID: M0.2-03
+- 작업: STT 평가 승인
 - 담당자: Codex
-- 구현 중인 파일: Embedding 평가 원본·증빙 검수
+- 구현 중인 파일: STT 평가 원본·증빙 확인 예정
 - 완료된 부분: M0.1-01 SDK 런타임, M0.1-02 공개 전송 타입·Contract Test 승인, M0.1-03 Registry·SQLite/PostgreSQL 영속 경계·Migration·최종 Docker 검증, M0.1-04 통합 A2A Contract Test·Docker 검증
-- 남은 부분: M0.2-02 Embedding 평가 승인, 이후 M0.2-03 STT·M0.2-04~05 OAuth 검수
-- 현재 테스트 결과: Embedding 단위 테스트 16 PASS, Python 구문 검사 PASS, 최신 실제 64 Chunk·60 Case Hybrid/HNSW 지표 검토 PASS_WITH_CAVEAT
+- 남은 부분: M0.2-03 STT 평가 승인, 이후 M0.2-04~05 OAuth 검수
+- 현재 테스트 결과: Embedding 단위 테스트 16 PASS, Python 구문 검사 PASS, 최신 실제 64 Chunk·60 Case Hybrid/HNSW 지표 검토 PASS_WITH_CAVEAT 및 사용자 승인
 - 마지막 실행 명령: `python -m unittest discover -s embedding-evaluation/tests -v`, `python -m py_compile embedding-evaluation/run_eval.py embedding-evaluation/run_postgres_eval.py embedding-evaluation/run_reranker_eval.py`, `git diff --check`
 - 최신 실행 ID: `20260813-114046`
-- 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-212244` (M0.1-02), `20260813-093322` (M0.2-01)
+- 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-212244` (M0.1-02), `20260813-093322` (M0.2-01), `20260813-114046` (M0.2-02)
 
 ## 4. 다음 작업
 
-1. 사용자 승인 후 M0.2-02 Embedding 평가 완료 처리
-2. M0.2-03 STT 평가 승인
-3. M0.2-04~05 Gmail·Calendar OAuth 이력 검수
+1. M0.2-03 STT 평가 승인
+2. M0.2-04~05 Gmail·Calendar OAuth 이력 검수
 
 ## 5. 차단 사항
 
@@ -98,7 +98,7 @@
 - UI 테스트: M0.4에서 생성 예정
 - Fixture/입력: M0.1-04에서 승인 Schema를 통과하는 5개 Skill Fixture 생성 예정
 - 모델 평가 Case: `llm-evaluation/cases/`의 Pilot·Full Case 1·2 연결 완료
-- 모델 평가 결과: `docs/evidence/M0/M0.2/runs/20260813-093322/result.md` (M0.2-01 완료), `docs/evidence/M0/M0.2/runs/20260813-114046/result.md` (M0.2-02 검수 중)
+- 모델 평가 결과: `docs/evidence/M0/M0.2/runs/20260813-093322/result.md` (M0.2-01 완료), `docs/evidence/M0/M0.2/runs/20260813-114046/result.md` (M0.2-02 완료)
 - 최신 실행 로그: `docs/evidence/M0/M0.2/runs/20260813-114046/result.md`
 - 최신 실행 결과: Embedding 단위 테스트 16 PASS, Hybrid Hit@3 98.21%, HNSW Recall@5 100%, Hybrid DB p95 66.3ms; 답변 가능성 거절률 권장 기준 초과를 운영 정책으로 격리
 - 최신 결과 문서: `docs/evidence/M0/M0.2/README.md`
@@ -158,3 +158,4 @@
 | 2026-08-13 | 사용자 | `openai/gpt-4.1-mini` 기본 모델과 비용 미산정 사유 승인, M0.2-01 완료; M0.2-02로 진행 | 실행 `20260813-093322` |
 | 2026-08-13 | Codex | M0.2-02 Embedding 64 Chunk·60 Case 결과와 평가기 16개 테스트 검수; Hybrid/HNSW 기준 PASS, 답변 가능성 거절률 권장 기준 초과를 운영 판정에서 제외하고 사용자 승인 대기 | 실행 `20260813-114046` |
 | 2026-08-13 | Codex | 단일 Cosine 답변 거절을 폐기하고 RRF Top-K·근거 검증·조건부 Reranker·insufficient_evidence·RRF fallback Workflow를 docs/07·10·12와 M0.2-02 증빙에 반영; 실제 구현은 M4.4로 이관 | 실행 `20260813-114046` |
+| 2026-08-13 | 사용자 | `openai/text-embedding-3-small`, `vector(1536)`, Cosine, Dense+Trigram RRF+HNSW와 단일 Cosine 운영 거절 제외 방침 승인; M0.2-02 완료 처리 | 실행 `20260813-114046` |
