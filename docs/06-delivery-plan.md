@@ -82,6 +82,8 @@ M0.2-03 실행 `20260813-121052`에서 `gpt-4o-transcribe` 합성 파일 20 Case
 
 M0.2-04 실행 `20260813-122007`에서 readonly Scope·설정·단위 테스트 2건·구문 검사는 통과했다. 기존 `google-oauth-test/HISTORY.md`에는 Gmail Profile·Message·History 조회와 Gmail Watch `historyId`·`expiration` 등록 성공이 기록돼 있다. 현재 환경에서 Google API 재실행은 소켓 권한 및 연결 timeout으로 보류됐으나, 사용자가 기존 성공 이력을 승인해 M0.2-04를 `완료`로 전환했다. 상세 결과는 [`M0.2-04 검수 결과`](evidence/M0/M0.2/runs/20260813-122007/result.md)에 기록한다.
 
+M0.2-05 실행 `20260813-122321`에서 Calendar readonly Scope·설정·단위 테스트 2건·구문 검사는 통과했다. 기존 `google-oauth-test/HISTORY.md`에는 Calendar Events 조회와 Calendar Watch `resourceId`·`expiration` 등록 성공이 기록돼 있다. 현재 환경에서 Google API 재실행은 네트워크 차단으로 보류되어 사용자 확인 전까지 M0.2-05는 `검수 중`으로 유지한다. 상세 결과는 [`M0.2-05 검수 결과`](evidence/M0/M0.2/runs/20260813-122321/result.md)에 기록한다.
+
 답변 가능성은 `Dense + Trigram RRF Top-K → metadata·직접 근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence`로 분리한다. 단일 Cosine 임계값은 운영 거절 조건으로 사용하지 않으며, 실제 검색 Workflow·출처 검증·RRF fallback은 M4.4에서 구현한다.
 
 M0.2는 기존 평가를 무조건 다시 실행하지 않는다. **설계 확정**은 모델·Scope가 선택된 상태이고, **검수 완료**는 평가 원본·버전·제약·미검증 위험을 M0.2 증빙에서 승인한 상태다. 합성 STT 평가는 M0.2에서 승인하되 실제 회의 음성 평가는 M3.3 검수 조건으로 넘긴다.
