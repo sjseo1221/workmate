@@ -313,6 +313,8 @@ R2_REGION                      ->    R2_REGION
 - Calendar Events Watch 등록 성공: resourceId·expiration 반환
 - 결과 이력: [google-oauth-test/HISTORY.md](../google-oauth-test/HISTORY.md)
 
+2026-08-13 사용자 로컬 검증에서 동일 Gmail URL이 `requests`에서는 HTTP 401을 반환하고 `httplib2`에서는 timeout이 발생했으며, IPv4 제한 시 `httplib2`도 HTTP 401을 반환했다. 테스트 하네스와 M1.2 Adapter의 Google API HTTP 전송은 `google-auth`의 `AuthorizedSession` 기반 REST 호출로 고정하고 `site-packages` 수정이나 전역 socket monkeypatch는 사용하지 않는다.
+
 구현 시 Access Token·Refresh Token은 Secret Store 또는 암호화 저장소에 보관하고, Watch 응답의 식별자와 만료 시각만 저장한다. Gmail 알림은 전달된 historyId로 History API를 다시 조회하고, Calendar 알림은 저장한 channel/resource 식별자를 검증한 뒤 events.list 증분 조회를 수행한다.
 
 실제 메일 수신·읽음 변경과 일정 변경의 Push 전달, Gmail History ID 만료 복구, Calendar syncToken 410 복구는 테스트 계정에서 수동 변경 이벤트를 발생시켜 추가 확인한다.

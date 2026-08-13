@@ -56,6 +56,15 @@
 - 실제 변경 이벤트를 발생시켜 Callback 수신까지 확인하는 단계는 readonly Scope 특성상 수동 변경 이벤트가 필요함
 - 상태: OAuth·Readonly API·Watch Channel 등록 통과; 실제 Push 전달과 증분 재동기화는 수동 이벤트로 추가 확인 필요
 
+## 2026-08-13 — `httplib2` IPv6 fallback 문제와 전송 경로 교체
+
+- 사용자 로컬 venv에서 같은 Gmail Profile URL을 `requests`로 호출하면 HTTP 401 응답을 받았으나 `httplib2`는 timeout이 발생함
+- `httplib2`의 주소 조회를 IPv4로 제한하면 같은 URL에서 HTTP 401 응답을 확인해 IPv6 timeout 뒤 IPv4 fallback 실패를 원인으로 확정함
+- `site-packages` 수정이나 전역 socket monkeypatch 대신 `google.auth.transport.requests.AuthorizedSession` 기반 REST 호출로 테스트 하네스를 교체함
+- 설정·readonly·Watch Fake 회귀 테스트 3건, dry-run, Python 구문 검사 통과
+- Codex 관리형 실행 환경의 실제 OAuth 재검증은 120초 timeout으로 미완료이며 사용자 로컬 재실행 필요
+- 상태: 전송 경로 수정 완료, 실제 OAuth·Watch 재검증 전까지 재작업
+
 ## 기록 양식
 
 ```text

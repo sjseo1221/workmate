@@ -36,7 +36,7 @@
 | ID   | 하위 목표         | 주요 산출물                                                                 | 선행                         | 담당 | 완료 예정일 | 완료 기준·증빙                                                             | 상태 | 다음 착수 항목           |
 | ---- | ----------------- | --------------------------------------------------------------------------- | ---------------------------- | ---- | ----------- | -------------------------------------------------------------------------- | ---- | ------------------------ |
 | M0.1 | A2A·Artifact 계약 | Agent Card, Message/Task/Artifact Schema·A2A 인프라 Task Store              | 없음                         | 미정 | 미정        | SDK REST Route·AgentExecutor·Contract Test·Streaming·재시작 복구 검증 결과 | 완료 | M0.2 모델·OAuth 확정 |
-| M0.2 | 모델·OAuth 확정   | LLM·Embedding·STT·OAuth 설정과 평가 이력                                    | 없음                         | 미정 | 미정        | 기존 평가 승인·OAuth HISTORY·미검증 위험 기록                              | 진행 | M0.2-02 Embedding 평가 승인 |
+| M0.2 | 모델·OAuth 확정   | LLM·Embedding·STT·OAuth 설정과 평가 이력                                    | 없음                         | 미정 | 미정        | 기존 평가 승인·OAuth HISTORY·미검증 위험 기록                              | 재작업 | M0.2-05 실제 OAuth·Watch 재검수 |
 | M0.3 | 내부 챗봇 API     | Skill 목록·메시지·장기 Task 조회 API                                        | M0.1                         | 미정 | 미정        | 5개 Skill·인증·장기 Task·부분 실패 API 검증                                | 대기 | M0.3-01 입력 API         |
 | M0.4 | 내부 챗봇 UI      | `workmate-agent` 최소 개발자 페이지의 Skill 선택·자연어/JSON 입력·결과 화면 | M0.3                         | 미정 | 미정        | 5개 Skill·Artifact·상태·오류 화면 검수                                     | 대기 | M0.4-01 입력 UI          |
 | M1.1 | 업무 DB 기반      | Task·Gmail·Calendar PostgreSQL Migration·Repository·샘플 데이터             | M0.1                         | 미정 | 미정        | 업무 Migration·Repository 테스트                                           | 대기 | 백로그 정의 필요         |
@@ -84,6 +84,8 @@ M0.2-04 실행 `20260813-122007`에서 readonly Scope·설정·단위 테스트 
 
 M0.2-05 실행 `20260813-122321`에서 Calendar readonly Scope·설정·단위 테스트 2건·구문 검사는 통과했다. 기존 `google-oauth-test/HISTORY.md`에는 Calendar Events 조회와 Calendar Watch `resourceId`·`expiration` 등록 성공이 기록돼 있다. 현재 환경에서 Google API 재실행은 네트워크 차단으로 보류됐으나, 사용자가 기존 성공 이력을 승인해 M0.2-05를 `완료`로 전환했다. 상세 결과는 [`M0.2-05 검수 결과`](evidence/M0/M0.2/runs/20260813-122321/result.md)에 기록한다.
 
+후속 재검수 `20260813-130230`에서 사용자 로컬 비교 결과를 바탕으로 `httplib2` IPv6 fallback 실패를 확정하고 테스트 하네스를 `AuthorizedSession` REST 전송으로 교체했다. 회귀 테스트 3건·dry-run·구문 검사는 PASS였으나 Codex 관리형 실행 환경의 실제 OAuth 호출이 timeout이고 Watch가 미실행이므로 자동 승인하지 않는다. M0.2-05를 `재작업`으로 되돌리고 사용자 로컬 실제 API·Watch PASS 전까지 다음 작업을 중단한다. 상세 결과는 [`M0.2-05 재검수 결과`](evidence/M0/M0.2/runs/20260813-130230/result.md)에 기록한다.
+
 답변 가능성은 `Dense + Trigram RRF Top-K → metadata·직접 근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence`로 분리한다. 단일 Cosine 임계값은 운영 거절 조건으로 사용하지 않으며, 실제 검색 Workflow·출처 검증·RRF fallback은 M4.4에서 구현한다.
 
 M0.2는 기존 평가를 무조건 다시 실행하지 않는다. **설계 확정**은 모델·Scope가 선택된 상태이고, **검수 완료**는 평가 원본·버전·제약·미검증 위험을 M0.2 증빙에서 승인한 상태다. 합성 STT 평가는 M0.2에서 승인하되 실제 회의 음성 평가는 M3.3 검수 조건으로 넘긴다.
@@ -96,7 +98,7 @@ M0.1의 PostgreSQL 범위는 A2A Task·Message 멱등성·Artifact·`task_id ↔
 | M0.2-02 | Embedding 평가 승인 | `embedding-evaluation/`, `docs/10-embedding-evaluation-plan.md`       | 모델·1536차원·Hybrid 지표·HNSW 결과 승인                            | `docs/06-delivery-plan.md` 5.1           | M0.2-03        | 완료 |
 | M0.2-03 | STT 평가 승인       | `stt-evaluation/`, `docs/12-implementation-verification-guide.md` 2.2 | 합성 평가 결과 승인, 실제 회의 음성 미평가를 M3.3 위험으로 연결     | `docs/07-technical-specification.md` 9.3 | M0.2-04        | 완료 |
 | M0.2-04 | Gmail OAuth 승인    | `google-oauth-test/`                                                  | readonly Scope·Profile/Message/History·Watch 이력 승인              | `docs/07-technical-specification.md` 10  | M0.2-05        | 완료 |
-| M0.2-05 | Calendar OAuth 승인 | `google-oauth-test/`                                                  | readonly Scope·Events/Watch 이력 승인, 테스트 사용자 차단 여부 기록 | `docs/07-technical-specification.md` 10  | M0.2 통합 검수 | 완료 |
+| M0.2-05 | Calendar OAuth 승인 | `google-oauth-test/`                                                  | readonly Scope·Events/Watch 이력 승인, 테스트 사용자 차단 여부 기록 | `docs/07-technical-specification.md` 10  | M0.2 통합 검수 | 재작업 |
 
 M0.3과 M0.4는 다음 최소 백로그만 미리 고정한다. 상세 구현 경로와 실행 명령은 해당 백로그 착수 시 실제 저장소 구조를 확인해 채운다.
 

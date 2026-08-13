@@ -603,6 +603,7 @@ Provider Client는 LLM, Embedding, STT 각각 하나만 구현한다. 공통 Int
 - 메일 발송·삭제와 일정 수정은 MVP에서 지원하지 않으므로 전체 수정 권한을 요청하지 않음
 - 필요한 최소 Scope만 요청
 - 검증: `google-oauth-test`에서 OAuth·Gmail Profile/Message/History·Calendar Events·Watch 등록 성공
+- Google API HTTP 전송은 `google-auth`의 `AuthorizedSession` 기반 REST 호출을 사용한다. `httplib2` 전송은 IPv6 timeout 뒤 IPv4 fallback이 되지 않는 환경 차이가 확인돼 테스트와 M1.2 Adapter에서 사용하지 않는다.
 - Access Token과 Refresh Token은 암호화 저장
 - Gmail `users.watch`와 Google Cloud Pub/Sub로 메일함 변경 알림 수신
 - `source_type=gmail`인 `SourceSyncState.sync_cursor`의 `historyId`를 `users.history.list`에 전달해 이후 변경 조회

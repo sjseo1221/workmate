@@ -14,6 +14,8 @@ Copy-Item .env.example .env
 
 Google Cloud에서 Gmail API, Google Calendar API를 활성화하고 Desktop OAuth Client JSON을 내려받아 `.env`의 `GOOGLE_CLIENT_SECRET_FILE` 경로에 둔다. 테스트 계정은 별도로 사용한다.
 
+Google API 호출은 `google-auth`의 `AuthorizedSession`과 REST endpoint를 사용한다. `google-api-python-client`의 `httplib2` 전송은 IPv6 연결 timeout 뒤 IPv4로 fallback하지 않는 환경 차이가 확인돼 사용하지 않는다.
+
 `GOOGLE_REDIRECT_PORT=0`이면 운영체제가 비어 있는 localhost 포트를 자동 선택한다. 특정 포트를 써야 할 때만 값으로 변경한다. 고정 포트가 Windows 정책이나 다른 프로세스에 의해 차단되면 `WinError 10013`이 발생할 수 있다.
 
 ## Scope
