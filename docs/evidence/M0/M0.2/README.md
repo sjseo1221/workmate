@@ -1,11 +1,11 @@
 # M0.2 모델·OAuth 확정 증빙
 
 status: 재작업
-latest_run_id: 20260813-133446
-latest_run_status: BLOCKED (M0.2 통합 검수에서 PASS_WITH_CAVEAT·FAIL·보류 발견)
-latest_approved_run_id: 20260813-131903 (M0.2-05 개별 승인; M0.2 통합 미승인)
-approved_at: 2026-08-13 13:19 Asia/Seoul (M0.2-05)
-reviewer: 자동 검수 중단(통합 승인 불가)
+latest_run_id: 20260813-134129
+latest_run_status: PASS (M0.2-02 재검수; M0.2 통합은 재작업)
+latest_approved_run_id: 20260813-134129 (M0.2-02 개별 승인; M0.2 통합 미승인)
+approved_at: 2026-08-13 13:41 Asia/Seoul (M0.2-02)
+reviewer: 자동 승인(M0.2-02); 통합은 자동 검수 중단
 
 ## 목표
 
@@ -22,8 +22,9 @@ LLM·Embedding·STT 모델과 Gmail·Calendar OAuth Scope의 선택 근거, 평�
 
 ## 실행
 
-- 최신 실행: [`runs/20260813-131903/result.md`](runs/20260813-131903/result.md)
+- 최신 실행: [`runs/20260813-134129/result.md`](runs/20260813-134129/result.md)
 - M0.2-02 최신 실행: [`runs/20260813-114046/result.md`](runs/20260813-114046/result.md)
+- M0.2-02 재검수 승인 실행: [`runs/20260813-134129/result.md`](runs/20260813-134129/result.md)
 - M0.2-03 최신 실행: [`runs/20260813-121052/result.md`](runs/20260813-121052/result.md)
 - M0.2-04 최신 실행: [`runs/20260813-122007/result.md`](runs/20260813-122007/result.md)
 - M0.2-05 이전 승인 실행: [`runs/20260813-122321/result.md`](runs/20260813-122321/result.md)
