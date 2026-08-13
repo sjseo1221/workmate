@@ -6,11 +6,11 @@
 
 - 현재 마일스톤: M0 계약·검증 기반
 - 진행 중 하위 마일스톤: M0.3 내부 챗봇 API
-- 현재 스프린트: Sprint 1 — M0.2 완료·M0.3 착수 준비
-- 상태: 완료
-- 마지막 갱신: 2026-08-13 13:52 Asia/Seoul
+- 현재 스프린트: Sprint 1 — M0.3-01 완료·M0.3-02 착수 대기
+- 상태: 진행
+- 마지막 갱신: 2026-08-13 14:42 Asia/Seoul
 - 마지막 작업자: Codex
-- 기준 Git Commit: `d00a858` (`workmate-agent`)
+- 기준 Git Commit: `847e485` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
 
 ## 2. 완료된 항목
@@ -27,6 +27,7 @@
 | M0.2-04 Gmail OAuth 승인 | 완료 | `docs/evidence/M0/M0.2/runs/20260813-134915/result.md` |
 | M0.2 통합 검수 | 완료 | `docs/evidence/M0/M0.2/runs/20260813-135158/result.md` |
 | M0.2-05 Calendar OAuth 승인 | 완료 | `docs/evidence/M0/M0.2/runs/20260813-131903/result.md` |
+| M0.3-01 Skill·입력 API | 완료 | `docs/evidence/M0/M0.3/runs/20260813-144226/result.md` |
 
 완료 항목은 명시 승인 또는 규칙에 따른 묵시 승인이 기록된 `result.md` 경로만 연결한다. 자동 승인 조건을 충족하지 않은 단순 구현 완료나 일부 테스트 실행만으로 완료 처리하지 않는다.
 
@@ -35,19 +36,19 @@
 - 백로그 ID: M0.3-01
 - 작업: 내부 챗봇 Skill 입력 API
 - 담당자: Codex
-- 구현 중인 파일: 해당 없음(통합 검수 결과 문서화 단계)
+- 구현 중인 파일: `workmate-agent/app/internal_chat.py`, `workmate-agent/app/main.py`, `workmate-agent/app/a2a/runtime.py`, `workmate-agent/tests/test_internal_chat.py`
 - 완료된 부분: M0.1-01 SDK 런타임, M0.1-02 공개 전송 타입·Contract Test 승인, M0.1-03 Registry·SQLite/PostgreSQL 영속 경계·Migration·최종 Docker 검증, M0.1-04 통합 A2A Contract Test·Docker 검증
-- 남은 부분: M0.3-01 구현 및 검수
-- 현재 테스트 결과: M0.2-01~05 최신 승인 실행과 통합 재검수가 모두 PASS
-- 마지막 실행 명령: `rg -n "상태:|latest_run_status|미완료|검수 항목|FAIL|보류|재작업|승인 여부|PASS_WITH_CAVEAT" docs/evidence/M0/M0.2/runs/*.md`, `git diff --check`
-- 최신 실행 ID: `20260813-135158`
+- 남은 부분: M0.3-02 공통 Workflow 호출
+- 현재 테스트 결과: M0.3-01 정의 검증 명령 4개 내부 API·3개 런타임 테스트·diff check PASS
+- 마지막 실행 명령: `.\.venv\Scripts\python.exe -m unittest tests/test_internal_chat.py -v`, `.\.venv\Scripts\python.exe -m unittest tests/test_runtime_boot.py -v`, `git diff --check`
+- 최신 실행 ID: `20260813-144226`
 - 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-212244` (M0.1-02), `20260813-093322` (M0.2-01), `20260813-134129` (M0.2-02 재검수), `20260813-134542` (M0.2-03 재검수), `20260813-134915` (M0.2-04 재검수), `20260813-131903` (M0.2-05), `20260813-135158` (M0.2 통합)
 
 ## 4. 다음 작업
 
-1. M0.3-01 내부 챗봇 입력 API 구현
+1. M0.3-02 공통 Workflow 호출
 
-M0.2-02·03·04 재검수 `20260813-134129`, `20260813-134542`, `20260813-134915`와 M0.2 통합 재검수 `20260813-135158`에서 정의된 검증 명령이 모두 PASS하여 M0.2를 완료 처리했다. 다음 착수 항목은 M0.3-01이다.
+M0.3-01 실행 `20260813-144226`에서 정의된 검증 명령이 모두 정확히 PASS하여 자동 승인·완료 처리했다. 다음 착수 항목은 M0.3-02다.
 
 ## 5. 차단 사항
 
@@ -96,17 +97,17 @@ M0.2-02·03·04 재검수 `20260813-134129`, `20260813-134542`, `20260813-134915
 
 ## 8. 검수·증빙 경로
 
-- 구현 코드: 구현 전
+- 구현 코드: [`workmate-agent/app/internal_chat.py`](workmate-agent/app/internal_chat.py), [`workmate-agent/app/main.py`](workmate-agent/app/main.py), [`workmate-agent/app/a2a/runtime.py`](workmate-agent/app/a2a/runtime.py)
 - Schema 또는 Migration: `docs/schemas/a2a-artifact.schema.json`, `docs/schemas/workmate-skill-schemas.schema.json`; A2A 인프라 Migration은 M0.1-03에서 생성 예정
-- 단위 테스트: 구현 전
+- 단위 테스트: [`workmate-agent/tests/test_internal_chat.py`](workmate-agent/tests/test_internal_chat.py), [`workmate-agent/tests/test_runtime_boot.py`](workmate-agent/tests/test_runtime_boot.py)
 - 통합 테스트: M0.1-04에서 생성 예정
 - UI 테스트: M0.4에서 생성 예정
 - Fixture/입력: M0.1-04에서 승인 Schema를 통과하는 5개 Skill Fixture 생성 예정
 - 모델 평가 Case: `llm-evaluation/cases/`의 Pilot·Full Case 1·2 연결 완료
 - 모델 평가 결과: `docs/evidence/M0/M0.2/runs/20260813-093322/result.md` (M0.2-01 완료), `docs/evidence/M0/M0.2/runs/20260813-114046/result.md` (M0.2-02 완료), `docs/evidence/M0/M0.2/runs/20260813-121052/result.md` (M0.2-03 완료)
-- 최신 실행 로그: `docs/evidence/M0/M0.2/runs/20260813-133446/result.md`
-- 최신 실행 결과: M0.2-02·03·04에 `PASS_WITH_CAVEAT`·FAIL·보류가 있어 통합 자동 승인 중단; M0.2는 재작업. M0.2-05 개별 PASS와 이전 실패 실행은 보존
-- 최신 결과 문서: `docs/evidence/M0/M0.2/README.md`
+- 최신 실행 로그: `docs/evidence/M0/M0.3/runs/20260813-144226/result.md`
+- 최신 실행 결과: M0.3-01의 정의 검증 명령과 검수 항목이 모두 정확히 PASS하여 자동 승인·완료 처리. 전체 PostgreSQL 테스트의 1개 SKIP은 M0.3-01 범위 밖이며 M0.3-02 이후 별도 검수한다.
+- 최신 결과 문서: `docs/evidence/M0/M0.3/README.md`
 
 ## 9. 주의사항
 
