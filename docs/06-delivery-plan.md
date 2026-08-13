@@ -122,11 +122,11 @@ M0.3과 M0.4는 다음 최소 백로그만 미리 고정한다. 상세 구현 �
 | M0.3-02 | 공통 Workflow 호출    | A2A와 같은 Workflow·Repository·Domain 경계 사용         | M0.3-03        | 완료 |
 | M0.3-03 | 장기 Task API         | Task 조회·Polling·취소와 Terminal 상태 검증             | M0.3-04        | 완료 |
 | M0.3-04 | 인증·Schema·부분 실패 | Session/OIDC, `user_id`, 승인 Artifact, `warnings` 검증 | M0.3 통합 검수 | 완료 |
-| M0.4-01 | Skill·입력 UI         | 5개 Skill 선택과 자연어/JSON 입력                       | M0.4-02        | 검수 중 |
+| M0.4-01 | Skill·입력 UI         | 5개 Skill 선택과 자연어/JSON 입력                       | M0.4-02        | 완료 |
 | M0.4-02 | 결과·상태 UI          | Artifact, 최신성, 경고, 오류, 장기 Task 상태 표시       | M0.4-03        | 대기 |
 | M0.4-03 | UI 통합 검수          | 5개 Skill 화면, Polling·취소·권한 차단 검수             | M0.4 통합 검수 | 대기 |
 
-M0.4-01 실행 `20260813-155933`은 Token 입력 후 Skill 목록 재조회와 Mock 응답 구분(`mock: true`, `business_result: false`)을 포함한 자동 검증 24건, 구문·diff 검사를 모두 PASS했다. Mock 응답은 실제 업무 완료나 증빙으로 인정하지 않으며, UI 육안 검수는 자동 승인 예외이므로 `검수 중`으로 유지하고 M0.4-02를 착수하지 않는다. 상세 결과는 [`M0.4-01 Mock 응답 구분 재검수`](evidence/M0/M0.4/runs/20260813-155933/result.md)에 기록한다.
+M0.4-01 실행 `20260813-160540`은 자동 검증과 사용자 UI 육안 검수를 모두 PASS하여 완료 처리했다. Token 입력 후 Skill 목록 재조회, `daily_briefing` 실행, `mock: true`·`business_result: false` 표시를 확인했다. Mock 응답은 실제 업무 완료 증빙으로 인정하지 않는다. 상세 결과는 [`M0.4-01 UI 육안 검수 결과`](evidence/M0/M0.4/runs/20260813-160540/result.md)에 기록한다.
 
 M0.3-04 실행 `20260813-153001`은 개발 인증 우회 없이 운영 OIDC JWT 코드 경로를 로컬 JWKS Fixture로 검증했다. 유효·만료·서명·audience 오류, 사용자 범위 격리, 승인 Schema, 부분 실패 Warning 보존을 포함한 22건 테스트와 구문·diff 검사가 모두 정확히 PASS하여 자동 승인하고 `완료`로 전환했다. 상세 결과는 [`M0.3-04 검수 결과`](evidence/M0/M0.3/runs/20260813-153001/result.md)에 기록한다.
 
