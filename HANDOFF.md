@@ -6,9 +6,9 @@
 
 - 현재 마일스톤: M0 계약·검증 기반
 - 진행 중 하위 마일스톤: M0.2 모델·OAuth 확정
-- 현재 스프린트: Sprint 1 — M0.2-05 Calendar OAuth 재검수
-- 상태: 재작업
-- 마지막 갱신: 2026-08-13 13:02 Asia/Seoul
+- 현재 스프린트: Sprint 1 — M0.2 통합 검수 준비
+- 상태: 진행
+- 마지막 갱신: 2026-08-13 13:19 Asia/Seoul
 - 마지막 작업자: Codex
 - 기준 Git Commit: `d00a858` (`workmate-agent`)
 - 기준 브랜치: `feat/M0.1-01-sdk-runtime`
@@ -25,12 +25,13 @@
 | M0.2-02 Embedding 평가 승인 | 완료 | `docs/evidence/M0/M0.2/runs/20260813-114046/result.md` |
 | M0.2-03 STT 평가 승인 | 완료 | `docs/evidence/M0/M0.2/runs/20260813-121052/result.md` |
 | M0.2-04 Gmail OAuth 승인 | 완료 | `docs/evidence/M0/M0.2/runs/20260813-122007/result.md` |
+| M0.2-05 Calendar OAuth 승인 | 완료 | `docs/evidence/M0/M0.2/runs/20260813-131903/result.md` |
 
 완료 항목은 명시 승인 또는 규칙에 따른 묵시 승인이 기록된 `result.md` 경로만 연결한다. 자동 승인 조건을 충족하지 않은 단순 구현 완료나 일부 테스트 실행만으로 완료 처리하지 않는다.
 
 ## 3. 현재 진행 중인 작업
 
-- 백로그 ID: M0.2-05
+- 백로그 ID: M0.2 통합 검수
 - 작업: Calendar OAuth `AuthorizedSession` 실제 API·Watch 재검수
 - 담당자: Codex
 - 구현 중인 파일: `google-oauth-test/smoke_test.py`, `requirements.txt`, `tests/test_config.py`
@@ -38,14 +39,16 @@
 - 남은 부분: 사용자 로컬 실제 OAuth·Gmail·Calendar 조회와 Watch PASS, 이후 M0.2 통합 검수
 - 현재 테스트 결과: `AuthorizedSession` 전환 후 회귀 테스트 3건·dry-run·구문 검사 PASS, Codex 관리형 실행 환경 실제 OAuth 호출 timeout FAIL, Watch 미실행
 - 마지막 실행 명령: `venv\Scripts\python.exe smoke_test.py --dry-run`, `venv\Scripts\python.exe -m unittest discover -s tests -v`, `venv\Scripts\python.exe -m py_compile auth_flow.py smoke_test.py`, `git diff --check`
-- 최신 실행 ID: `20260813-130230`
-- 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-212244` (M0.1-02), `20260813-093322` (M0.2-01), `20260813-114046` (M0.2-02), `20260813-121052` (M0.2-03), `20260813-122007` (M0.2-04), `20260813-122321` (M0.2-05 이전 승인; 최신 재검수 FAIL)
+- 최신 실행 ID: `20260813-131903`
+- 최신 승인 실행 ID: `20260812-210001` (M0.1-01), `20260812-212244` (M0.1-02), `20260813-093322` (M0.2-01), `20260813-114046` (M0.2-02), `20260813-121052` (M0.2-03), `20260813-122007` (M0.2-04), `20260813-131903` (M0.2-05 자동 승인)
 
 ## 4. 다음 작업
 
 1. 사용자 로컬 `smoke_test.py` 실제 OAuth 조회 재검증
 2. 사용자 로컬 `smoke_test.py --watch` Watch 재검증
 3. 모든 항목 PASS 시 M0.2 통합 검수
+
+M0.2-05 사용자 로컬 실제 OAuth·Watch 검증이 모두 PASS하여 자동 승인되었으므로, 다음 착수 항목은 M0.2 통합 검수이다. 위의 이전 재검수 안내는 실행 `20260813-130230`에 대한 이력으로 보존한다.
 
 ## 5. 차단 사항
 
@@ -102,8 +105,8 @@
 - Fixture/입력: M0.1-04에서 승인 Schema를 통과하는 5개 Skill Fixture 생성 예정
 - 모델 평가 Case: `llm-evaluation/cases/`의 Pilot·Full Case 1·2 연결 완료
 - 모델 평가 결과: `docs/evidence/M0/M0.2/runs/20260813-093322/result.md` (M0.2-01 완료), `docs/evidence/M0/M0.2/runs/20260813-114046/result.md` (M0.2-02 완료), `docs/evidence/M0/M0.2/runs/20260813-121052/result.md` (M0.2-03 완료)
-- 최신 실행 로그: `docs/evidence/M0/M0.2/runs/20260813-130230/result.md`
-- 최신 실행 결과: `AuthorizedSession` 전환·회귀 테스트 PASS, 실제 OAuth API timeout FAIL, Watch 미실행으로 자동 승인 중단
+- 최신 실행 로그: `docs/evidence/M0/M0.2/runs/20260813-131903/result.md`
+- 최신 실행 결과: 사용자 로컬 실제 Gmail·Calendar 조회와 Watch 검사가 모두 정확히 PASS; 자동 승인 완료. 이전 실패 실행 `20260813-130230`은 보존
 - 최신 결과 문서: `docs/evidence/M0/M0.2/README.md`
 
 ## 9. 주의사항
@@ -168,4 +171,5 @@
 | 2026-08-13 | Codex | M0.2-05 Calendar OAuth 검수: readonly Scope·dry-run·2개 단위 테스트·구문 검사 PASS, 기존 Calendar Events·Watch 성공 이력 확인; 현재 외부 API 재실행은 네트워크 차단으로 사용자 확인 대기 | 실행 `20260813-122321` |
 | 2026-08-13 | 사용자 | 기존 Calendar OAuth·Watch 성공 이력 승인, M0.2-05 완료 처리; 이후 하위 마일스톤은 모든 결과가 정확히 PASS일 때만 자동 승인하고 PASS 이외 결과 발생 시 중단 | 실행 `20260813-122321` |
 | 2026-08-13 | Codex | `httplib2` IPv6 fallback 실패를 확인해 `AuthorizedSession` REST 전송으로 교체하고 회귀 테스트 3건 PASS; 실제 OAuth timeout·Watch 미실행으로 M0.2-05 재작업 및 다음 작업 중단 | 실행 `20260813-130230` |
+| 2026-08-13 | 사용자 로컬 실행 결과 | Gmail·Calendar 실제 조회와 Watch가 모두 정확히 PASS하여 M0.2-05 자동 승인; 이전 실패 실행은 보존 | 실행 `20260813-131903` |
 | 2026-08-13 | 사용자 | 기존 Gmail OAuth·Watch 성공 이력 승인, M0.2-04 완료 처리; 외부 API 재실행 보류는 증빙에 유지 | 실행 `20260813-122007` |
