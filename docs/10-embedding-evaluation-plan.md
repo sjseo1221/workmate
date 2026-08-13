@@ -104,7 +104,7 @@ Pilot에서는 Python Cosine 정확 검색으로 모델 자체의 품질을 먼�
 3. pgvector Dense 정확 검색과 HNSW 검색
 4. HNSW와 Trigram 순위를 합친 RRF 검색
 
-원시 Vector 점수와 Keyword 점수를 직접 가중 합산하지 않는다. RRF 점수가 같으면 의미 검색 결과를 보존하기 위해 HNSW 순위를 우선한다. 별도 Reranker는 하이브리드 Top-3 기준을 통과하지 못했을 때만 평가한다.
+원시 Vector 점수와 Keyword 점수를 직접 가중 합산하지 않는다. RRF 점수가 같으면 의미 검색 결과를 보존하기 위해 HNSW 순위를 우선한다. 별도 Reranker는 기본 경로에 상시 넣지 않고, 하이브리드 품질·지연을 확인한 뒤 모호한 질의에 대한 조건부 호출로 평가한다.
 
 ### 5.4 HNSW와 운영 성능
 
@@ -548,3 +548,25 @@ HNSW가 정확 검색보다 약 30ms 빠르지만 Recall 손실이 10.4%p라 품
 - Dense+Trigram RRF와 HNSW는 품질(Hit@3 98.21%)·지연 기준을 통과했다.
 - Reranker는 답변 가능성 판정 정확도 95%지만 순위 품질과 지연이 RRF보다 낮아 기본 경로로 채택하지 않는다.
 - 운영 전 필수 후속: 지속 연결 방식의 실제 DB p95 재측정, 더 다양한 회의·질의로 회귀 평가, Reranker 조건부 호출 기준 확정, 모니터링과 실패 시 RRF fallback 구현.
+
+### 15.5 답변 가능성 운영 Workflow
+
+단일 Cosine 임계값으로 답변 가능 여부를 판정하지 않는다. 검색과 근거 충분성 판정을 다음처럼 분리한다.
+
+```text
+요청 범위·Metadata 필터
+→ Dense + Trigram 후보 검색
+→ RRF Top-K
+→ 필터·Chunk ID·직접 근거 검증
+→ 필요할 때만 Reranker/groundedness
+→ 근거 답변 또는 insufficient_evidence
+```
+
+- RRF는 후보 검색과 기본 순위에 사용한다.
+- Reranker는 점수 차이가 작거나 다중 Chunk·Metadata 질문일 때만 호출한다.
+- Reranker는 검색 후보 ID만 재정렬하며 새 근거·출처를 생성하지 않는다.
+- Reranker 장애·Timeout 시 RRF 결과와 `warnings`를 반환한다.
+- 답변은 검증된 Chunk에서만 생성하고, 근거가 부족하면 답변을 추정하지 않는다.
+- `abstain_score=0.45`는 평가용 진단 지표로만 유지하며 운영 답변 거절 조건으로 사용하지 않는다.
+
+이 Workflow의 실제 구현·출처 검증·부분 실패 Contract Test는 M4.4에서 완료한다.

@@ -78,6 +78,8 @@ M0.2-01 실행 `20260813-093322`에서 메타데이터 보완 평가기로 실�
 
 M0.2-02 실행 `20260813-114046`에서 실제 64 Chunk·60 Case 평가 원본을 재검토했다. Hybrid Hit@3 98.21%, HNSW Recall@5 100%, Hybrid DB p95 66.3ms, Query Embedding p95 893.1ms로 기준을 통과했다. 다만 Cosine 0.45 답변 가능성 판정의 정상 질문 거절률은 41.07%로 권장 기준을 초과하므로 운영 최종 판정에서 제외하고, 모델·검색 조합은 사용자 승인 전까지 `검수 중`으로 유지한다. 상세 결과는 [`M0.2-02 검수 결과`](evidence/M0/M0.2/runs/20260813-114046/result.md)에 기록한다.
 
+답변 가능성은 `Dense + Trigram RRF Top-K → metadata·직접 근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence`로 분리한다. 단일 Cosine 임계값은 운영 거절 조건으로 사용하지 않으며, 실제 검색 Workflow·출처 검증·RRF fallback은 M4.4에서 구현한다.
+
 M0.2는 기존 평가를 무조건 다시 실행하지 않는다. **설계 확정**은 모델·Scope가 선택된 상태이고, **검수 완료**는 평가 원본·버전·제약·미검증 위험을 M0.2 증빙에서 승인한 상태다. 합성 STT 평가는 M0.2에서 승인하되 실제 회의 음성 평가는 M3.3 검수 조건으로 넘긴다.
 
 M0.1의 PostgreSQL 범위는 A2A Task·Message 멱등성·Artifact·`task_id ↔ thread_id`·Checkpoint 복구에 필요한 인프라 Migration으로 제한한다. 공개 이벤트 전체 이력과 재생 Cursor는 MVP에서 저장하지 않고 Subscribe 연결 시 현재 Task 스냅샷 뒤에 신규 이벤트만 전송한다. M1.1은 Task·Gmail·Calendar 업무 데이터와 Repository·샘플 데이터를 추가하며 M0.1 Migration을 다시 만들거나 덮어쓰지 않는다.

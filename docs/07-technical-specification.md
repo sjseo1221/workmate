@@ -446,7 +446,21 @@ RRF(document) = 1 / (60 + vector_rank)
               + 1 / (60 + keyword_rank)
 ```
 
-Trigram 검색은 한국어 형태소 분석을 전제로 하지 않고 문자열 유사도를 사용한다. 별도 Reranker는 평가 질문 20개 이상의 Top-3 정확도가 80%에 미달할 때만 조건부로 추가한다.
+Trigram 검색은 한국어 형태소 분석을 전제로 하지 않고 문자열 유사도를 사용한다. 별도 Reranker는 기본 검색 경로에 상시 추가하지 않고, 평가된 조건부 호출 기준을 만족하는 질의에만 사용한다.
+
+### 8.2.1 답변 가능성·근거 충분성 판정
+
+Embedding Cosine 점수는 후보 검색의 순위 신호로만 사용한다. `top_dense_score >= 0.45` 같은 단일 임계값으로 답변 가능 여부를 확정하지 않는다. 실제 평가에서 답변 가능 질문과 답변 불가 질문의 점수 범위가 겹쳐 정상 질문을 과도하게 거절하기 때문이다.
+
+운영 Workflow는 다음 순서를 따른다.
+
+1. `user_id`·날짜·회의·참여자 필터를 적용한다.
+2. Dense와 Trigram 후보를 각각 조회하고 RRF Top-K를 만든다.
+3. 후보 Chunk의 필터 일치, 실제 `chunk_id`, 직접 근거 문장 존재 여부를 서버가 검증한다.
+4. Top-1/Top-2 점수 차이가 작거나 다중 Chunk·Metadata 질문이면 조건부 Reranker를 호출한다. Reranker는 기존 후보 ID만 재정렬하고 새 근거를 만들지 않는다.
+5. 근거가 충분하면 답변·출처를 생성하고, 부족하면 `insufficient_evidence`와 `warnings`를 반환한다.
+
+Reranker 장애·Timeout 시에는 RRF 결과를 보존하고 `warnings`를 추가한다. 이 정책의 실제 구현과 Contract Test는 M4.4에서 수행한다.
 
 ### 8.3 Migration과 DB 접근
 

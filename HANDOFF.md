@@ -157,3 +157,4 @@
 | 2026-08-13 | Codex | 외부 전송 승인 후 실제 Provider 재평가 완료: Pilot 4/4, Full Case 1·2 각 20/20, Schema·의미 44/44 PASS; 비용 미산정·모델 선택 사용자 승인 대기 | 실행 `20260813-093322` |
 | 2026-08-13 | 사용자 | `openai/gpt-4.1-mini` 기본 모델과 비용 미산정 사유 승인, M0.2-01 완료; M0.2-02로 진행 | 실행 `20260813-093322` |
 | 2026-08-13 | Codex | M0.2-02 Embedding 64 Chunk·60 Case 결과와 평가기 16개 테스트 검수; Hybrid/HNSW 기준 PASS, 답변 가능성 거절률 권장 기준 초과를 운영 판정에서 제외하고 사용자 승인 대기 | 실행 `20260813-114046` |
+| 2026-08-13 | Codex | 단일 Cosine 답변 거절을 폐기하고 RRF Top-K·근거 검증·조건부 Reranker·insufficient_evidence·RRF fallback Workflow를 docs/07·10·12와 M0.2-02 증빙에 반영; 실제 구현은 M4.4로 이관 | 실행 `20260813-114046` |

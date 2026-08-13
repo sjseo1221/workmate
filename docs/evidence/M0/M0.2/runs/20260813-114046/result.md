@@ -71,7 +71,7 @@ git diff --check
 
 - 발견된 문제: Cosine 0.45 단일 임계값에서 정상 질문 56건 중 23건을 거절했다.
 - 원인: Embedding 유사도 하나를 답변 가능성 판정으로 사용하면 정상적인 의미 재표현을 과도하게 거절한다.
-- 수정 내용: 운영 검색 후보는 Hybrid RRF로 사용하고, 단일 Cosine 임계값은 답변 가능성 최종 판정에 사용하지 않는다. Reranker는 기본 경로가 아닌 조건부 호출·RRF fallback으로 유지한다.
+- 수정 내용: 운영 검색 후보는 Hybrid RRF로 사용하고, 단일 Cosine 임계값은 평가용 진단 지표로만 유지한다. `RRF Top-K → metadata·직접 근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence` Workflow와 Reranker 장애·Timeout 시 RRF fallback·`warnings` 정책을 문서에 반영했다. 실제 검색 코드와 Contract Test는 M4.4에서 구현한다.
 - 재검수 실행 ID: 사용자 승인 후 동일 결과에 승인 메타데이터를 추가한다.
 
 ## 9. 최종 판단

@@ -61,6 +61,8 @@
 6. date_to는 미만(Exclusive)이다. 하루 조회는 다음 날짜를 date_to로 전달한다.
 7. Cosine 0.45 단독 답변 가능성 판정은 정상 질문 오탐이 높아 운영 기본값으로 사용하지 않는다.
 
+답변 가능성 판정은 검색 점수와 분리한다. 운영 Workflow는 `Dense + Trigram RRF Top-K → metadata·근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence` 순서를 사용한다. Reranker는 후보 Chunk ID 밖의 근거를 반환할 수 없고, 실패·Timeout이면 RRF 결과와 `warnings`를 반환한다. 단일 Cosine 임계값은 평가용 진단 지표로만 기록한다.
+
 Reranker 재평가 결과는 Hit@1·3·5 94.64%, p95 1,406.7ms였고 일부 순위 악화가 있어 조건부 경로로 보류한다.
 
 ### 2.2 STT
