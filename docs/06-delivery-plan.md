@@ -96,6 +96,8 @@ M0.2-02 재검수 `20260813-134129`에서 모델 차원·Hybrid 품질·HNSW·�
 
 M0.2-03 재검수 `20260813-134542`에서 합성 파일·Realtime Streaming·Chunk 재연결·최종 STT E2E와 단위 테스트·dry-run·구문 검사·문서 diff가 모두 정확히 `PASS`가 됐다. 실제 회의 음성 품질은 M3.3 후속 범위로 명시적으로 분리했으며, 이전 평가 원본은 보존한다. M0.2-03은 완료로 유지하고 다음 재검수는 M0.2-04이다. M0.2 상위 상태는 M0.2-04 재검수와 통합 검수 전까지 `재작업`으로 유지한다. 상세 결과는 [`M0.2-03 재검수 결과`](evidence/M0/M0.2/runs/20260813-134542/result.md)에 기록한다.
 
+M0.2-04 재검수 `20260813-134915`에서 Gmail readonly Scope·AuthorizedSession·Profile/Message/History·Watch와 단위 테스트·구문 검사·문서 diff가 모두 정확히 `PASS`가 됐다. 사용자가 제공한 로컬 실제 OAuth 결과를 Gmail 전용 증빙으로 분리했고, 이전 결과는 보존한다. M0.2-04는 완료로 유지하며 M0.2-01~05의 재검수 결과가 모두 정확히 `PASS`가 되었으므로 M0.2 통합 재검수를 실행할 수 있다. 상세 결과는 [`M0.2-04 재검수 결과`](evidence/M0/M0.2/runs/20260813-134915/result.md)에 기록한다.
+
 답변 가능성은 `Dense + Trigram RRF Top-K → metadata·직접 근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence`로 분리한다. 단일 Cosine 임계값은 운영 거절 조건으로 사용하지 않으며, 실제 검색 Workflow·출처 검증·RRF fallback은 M4.4에서 구현한다.
 
 M0.2는 기존 평가를 무조건 다시 실행하지 않는다. **설계 확정**은 모델·Scope가 선택된 상태이고, **검수 완료**는 평가 원본·버전·제약·미검증 위험을 M0.2 증빙에서 승인한 상태다. 합성 STT 평가는 M0.2에서 승인하되 실제 회의 음성 평가는 M3.3 검수 조건으로 넘긴다.
