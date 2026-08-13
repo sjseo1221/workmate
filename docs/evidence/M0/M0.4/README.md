@@ -1,5 +1,5 @@
 status: 검수 중
-latest_run_id: 20260813-163631
+latest_run_id: 20260813-163927
 latest_run_status: PASS (유효 Token 기반 통합 육안 검수 대기)
 latest_approved_run_id: 20260813-161223
 approved_at: 2026-08-13 16:12 Asia/Seoul
@@ -16,9 +16,9 @@ Token을 저장하지 않고 현재 브라우저 요청에만 사용하며, Skil
 - 승인된 백로그: M0.4-02 결과·상태 UI
 - 최신 승인 결과: [`20260813-161223/result.md`](runs/20260813-161223/result.md)
 - 검수 중 백로그: M0.4-03 UI 통합 검수
-- 최신 검수 결과: [`20260813-163631/result.md`](runs/20260813-163631/result.md)
-- 다음 착수 항목: 유효 Token 기반 M0.4-03 통합 육안 검수
+- 최신 검수 결과: [`20260813-163927/result.md`](runs/20260813-163927/result.md)
+- 다음 착수 항목: 실제 장기 Workflow 연결 후 취소 UI 육안 검수
 
 현재 runtime bootstrap 응답은 내부 Artifact에 `mock: true`, `business_result: false`로 표시한다. 이 응답은 API 경계 테스트에만 사용하며 실제 업무 결과·완료 증빙으로 승인하지 않는다.
 
-M0.4-02는 자동 검증과 사용자 UI 육안 검수가 모두 PASS하여 완료 처리했다. M0.4-03은 5개 Skill의 상태·Artifact metadata 표시까지 PASS했지만, 실제 장기 Task 취소와 사용자 범위 격리가 남아 `검수 중`이다.
+M0.4-02는 자동 검증과 사용자 UI 육안 검수가 모두 PASS하여 완료 처리했다. M0.4-03은 5개 Skill metadata, 취소 Fixture와 사용자 범위 격리 테스트까지 PASS했지만, 실제 취소 버튼 활성화의 육안 확인이 남아 `검수 중`이다.
