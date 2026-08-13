@@ -2,10 +2,10 @@
 
 status: 진행
 latest_run_id: 20260813-122321
-latest_run_status: PASS_WITH_CAVEAT (M0.2-05 Calendar OAuth 검수)
-latest_approved_run_id: 20260813-122007 (M0.2-04)
-approved_at: 2026-08-13 12:22 Asia/Seoul (M0.2-04)
-reviewer: 사용자 승인 (M0.2-04)
+latest_run_status: PASS_WITH_CAVEAT (M0.2-05 Calendar OAuth 사용자 승인)
+latest_approved_run_id: 20260813-122321 (M0.2-05)
+approved_at: 2026-08-13 12:27 Asia/Seoul (M0.2-05)
+reviewer: 사용자 승인 (M0.2-05)
 
 ## 목표
 
@@ -17,7 +17,7 @@ LLM·Embedding·STT 모델과 Gmail·Calendar OAuth Scope의 선택 근거, 평�
 - M0.2-02 Embedding 평가: 완료
 - M0.2-03 STT 평가: 완료
 - M0.2-04 Gmail OAuth: 완료
-- M0.2-05 Calendar OAuth: 검수 중, 기존 성공 이력 사용자 확인 필요
+- M0.2-05 Calendar OAuth: 완료
 - OAuth Client Secret·Access Token·Refresh Token은 읽거나 증빙에 기록하지 않는다.
 
 ## 실행
@@ -33,4 +33,4 @@ LLM·Embedding·STT 모델과 Gmail·Calendar OAuth Scope의 선택 근거, 평�
 
 ## 승인 조건
 
-모델 평가와 외부 OAuth는 사람의 판단이 필요한 항목이므로 자동 승인하지 않는다. M0.2-01~04는 각각 사용자 승인을 완료했다. M0.2-05는 기존 Calendar API·Watch 성공 이력이 있으나 현재 환경의 외부 재실행이 네트워크 차단으로 보류되어 사용자 확인 전까지 `검수 중`으로 유지한다. M0.2 전체 상태는 `진행`이다.
+모델 평가와 외부 OAuth는 사람의 판단이 필요한 항목이므로 자동 승인하지 않는다. M0.2-01~05는 각각 사용자 승인을 완료했다. M0.2-05의 현재 환경 외부 API 재실행 보류는 증빙에 남겼다. M0.2 하위 백로그는 모두 완료됐으며 통합 검수로 이동한다.

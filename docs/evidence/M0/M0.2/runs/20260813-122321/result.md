@@ -5,8 +5,8 @@
 - 마일스톤: M0.2
 - 제목: Calendar OAuth 승인
 - 담당자: Codex
-- 검수자: 사용자 확인 필요
-- 상태: 검수 중
+- 검수자: 사용자 승인
+- 상태: 완료
 - 실행일: 2026-08-13
 - 실행 ID: 20260813-122321
 - 코드 버전: `e7afb01`
@@ -15,16 +15,16 @@
 ## 2. 최신 실행과 승인
 
 - latest_run_id: 20260813-122321
-- latest_run_status: PASS_WITH_CAVEAT
-- latest_approved_run_id: null
-- approved_at: null
+- latest_run_status: PASS_WITH_CAVEAT (사용자 승인)
+- latest_approved_run_id: 20260813-122321
+- approved_at: 2026-08-13 12:27 Asia/Seoul
 
 ## 3. 목표와 완료 기준
 
 - 목표: Google Calendar readonly OAuth Scope와 Events 조회 및 Calendar Watch 등록 이력을 검수한다.
 - 완료 기준: readonly Scope가 유지되고, OAuth·Refresh Token 갱신·Calendar Events·Calendar Watch의 성공 이력이 민감정보 없이 확인되며 테스트 사용자 차단 여부를 기록한다.
 - 백로그 범위: M0.2-05
-- 미완료·보류 백로그: 현재 환경에서 실제 Google API 재실행은 네트워크 차단으로 보류. 기존 성공 이력의 사용자 승인 필요.
+- 미완료·보류 백로그: 없음. 현재 환경에서 실제 Google API 재실행은 네트워크 차단으로 보류됐으나 기존 성공 이력을 사용자 승인함.
 
 ## 4. 구현 경로
 
@@ -70,17 +70,17 @@ git diff --check
 | Calendar Watch `resourceId`·`expiration` 등록 | PASS (기존 성공 이력) | [`HISTORY.md`](../../../../../../google-oauth-test/HISTORY.md) |
 | 테스트 사용자 차단 여부 기록 | PASS | [`README.md`](../../../../../../google-oauth-test/README.md) |
 | 현재 환경에서 실제 API 재현 | 보류 | 실행 `20260813-122321`, 네트워크 차단 |
-| 사용자 승인 | 대기 | 이 결과와 `docs/06-delivery-plan.md` M0.2-05 |
+| 사용자 승인 | PASS | 이 결과와 `docs/06-delivery-plan.md` M0.2-05 |
 
 ## 8. 문제와 수정 이력
 
 - 발견된 문제: 현재 환경에서 Google API 실시간 재현이 불가능하다.
 - 원인: Google API 연결 시 Windows 소켓 권한 오류 또는 연결 timeout이 발생했다.
 - 수정 내용: 실제 Secret·Token을 출력하지 않고 dry-run·단위 테스트·구문 검사와 기존 Calendar 성공 이력을 분리해 기록했다.
-- 재검수 실행 ID: 사용자 승인 후 동일 이력 또는 네트워크가 허용된 환경에서 `smoke_test.py` 재실행
+- 재검수 실행 ID: 20260813-122321 (기존 성공 이력 사용자 승인 반영)
 
 ## 9. 최종 판단
 
-- 승인 여부: 미승인
-- 검수 의견: Calendar readonly Scope와 기존 Events·Watch 성공 이력은 완료 기준을 충족하지만, 현재 실행에서 외부 API 재현이 되지 않아 사용자 확인이 필요하다.
-- 다음 조치: 사용자가 기존 Calendar OAuth·Watch 성공 이력을 승인하면 M0.2-05를 완료 처리하고 M0.2 통합 검수로 이동한다.
+- 승인 여부: 승인
+- 검수 의견: Calendar readonly Scope와 기존 Events·Watch 성공 이력을 사용자가 승인했다. 현재 환경의 외부 API 재실행 보류는 증빙에 남겼다.
+- 다음 조치: M0.2 통합 검수

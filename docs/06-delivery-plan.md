@@ -82,7 +82,7 @@ M0.2-03 실행 `20260813-121052`에서 `gpt-4o-transcribe` 합성 파일 20 Case
 
 M0.2-04 실행 `20260813-122007`에서 readonly Scope·설정·단위 테스트 2건·구문 검사는 통과했다. 기존 `google-oauth-test/HISTORY.md`에는 Gmail Profile·Message·History 조회와 Gmail Watch `historyId`·`expiration` 등록 성공이 기록돼 있다. 현재 환경에서 Google API 재실행은 소켓 권한 및 연결 timeout으로 보류됐으나, 사용자가 기존 성공 이력을 승인해 M0.2-04를 `완료`로 전환했다. 상세 결과는 [`M0.2-04 검수 결과`](evidence/M0/M0.2/runs/20260813-122007/result.md)에 기록한다.
 
-M0.2-05 실행 `20260813-122321`에서 Calendar readonly Scope·설정·단위 테스트 2건·구문 검사는 통과했다. 기존 `google-oauth-test/HISTORY.md`에는 Calendar Events 조회와 Calendar Watch `resourceId`·`expiration` 등록 성공이 기록돼 있다. 현재 환경에서 Google API 재실행은 네트워크 차단으로 보류되어 사용자 확인 전까지 M0.2-05는 `검수 중`으로 유지한다. 상세 결과는 [`M0.2-05 검수 결과`](evidence/M0/M0.2/runs/20260813-122321/result.md)에 기록한다.
+M0.2-05 실행 `20260813-122321`에서 Calendar readonly Scope·설정·단위 테스트 2건·구문 검사는 통과했다. 기존 `google-oauth-test/HISTORY.md`에는 Calendar Events 조회와 Calendar Watch `resourceId`·`expiration` 등록 성공이 기록돼 있다. 현재 환경에서 Google API 재실행은 네트워크 차단으로 보류됐으나, 사용자가 기존 성공 이력을 승인해 M0.2-05를 `완료`로 전환했다. 상세 결과는 [`M0.2-05 검수 결과`](evidence/M0/M0.2/runs/20260813-122321/result.md)에 기록한다.
 
 답변 가능성은 `Dense + Trigram RRF Top-K → metadata·직접 근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence`로 분리한다. 단일 Cosine 임계값은 운영 거절 조건으로 사용하지 않으며, 실제 검색 Workflow·출처 검증·RRF fallback은 M4.4에서 구현한다.
 
@@ -96,7 +96,7 @@ M0.1의 PostgreSQL 범위는 A2A Task·Message 멱등성·Artifact·`task_id ↔
 | M0.2-02 | Embedding 평가 승인 | `embedding-evaluation/`, `docs/10-embedding-evaluation-plan.md`       | 모델·1536차원·Hybrid 지표·HNSW 결과 승인                            | `docs/06-delivery-plan.md` 5.1           | M0.2-03        | 완료 |
 | M0.2-03 | STT 평가 승인       | `stt-evaluation/`, `docs/12-implementation-verification-guide.md` 2.2 | 합성 평가 결과 승인, 실제 회의 음성 미평가를 M3.3 위험으로 연결     | `docs/07-technical-specification.md` 9.3 | M0.2-04        | 완료 |
 | M0.2-04 | Gmail OAuth 승인    | `google-oauth-test/`                                                  | readonly Scope·Profile/Message/History·Watch 이력 승인              | `docs/07-technical-specification.md` 10  | M0.2-05        | 완료 |
-| M0.2-05 | Calendar OAuth 승인 | `google-oauth-test/`                                                  | readonly Scope·Events/Watch 이력 승인, 테스트 사용자 차단 여부 기록 | `docs/07-technical-specification.md` 10  | M0.2 통합 검수 | 대기 |
+| M0.2-05 | Calendar OAuth 승인 | `google-oauth-test/`                                                  | readonly Scope·Events/Watch 이력 승인, 테스트 사용자 차단 여부 기록 | `docs/07-technical-specification.md` 10  | M0.2 통합 검수 | 완료 |
 
 M0.3과 M0.4는 다음 최소 백로그만 미리 고정한다. 상세 구현 경로와 실행 명령은 해당 백로그 착수 시 실제 저장소 구조를 확인해 채운다.
 
@@ -232,8 +232,9 @@ reviewer: 승인자 또는 null
 
 - 새 실행이 실패하면 `latest_run_id`만 갱신하고 `latest_approved_run_id`는 이전 승인 결과를 유지한다. 상태는 `재작업`으로 표시한다.
 - 새 실행이 통과하고 검수자가 명시 승인하거나 아래 묵시 승인 조건을 충족하면 승인 ID를 해당 실행으로 갱신하고 상태를 `완료`로 표시한다.
-- 실행 결과에 정의된 검증 명령이 모두 PASS이고 미실행·수동 검수·차단 항목이 없으면 별도 승인 질문 없이 `reviewer: 자동 승인(검증 명령)`으로 묵시 승인한다. `latest_approved_run_id`와 `approved_at`을 기록하고 이 문서의 백로그 상태 및 `HANDOFF.md`를 같은 작업에서 `완료`로 갱신한다.
+- 실행 결과의 모든 검수 항목과 정의된 검증 명령이 정확히 `PASS`이고 미실행·수동 검수·차단 항목이 없으면 별도 승인 질문 없이 `reviewer: 자동 승인(검증 명령)`으로 묵시 승인한다. `PASS_WITH_CAVEAT`, `보류`, `경고`, `FAIL`, `미실행`, `사용자 승인 필요`가 하나라도 있으면 자동 승인하지 않고 즉시 작업을 중단해 `검수 중` 또는 `재작업`으로 유지한다. 자동 승인 시 `latest_approved_run_id`와 `approved_at`을 기록하고 이 문서의 백로그 상태 및 `HANDOFF.md`를 같은 작업에서 `완료`로 갱신한다.
 - 공개 A2A Schema·데이터 모델 변경, 외부 OAuth·실제 Provider 검증, UI 육안 검수, 모델 평가처럼 사람의 판단이나 별도 권한이 필요한 항목은 묵시 승인 대상에서 제외한다. 검증 명령을 하나라도 실행하지 않았거나 결과에 완료 조건에 영향을 주는 경고·보류·미해소 차단이 있으면 `검수 중` 또는 `재작업`을 유지한다.
+- 이후 하위 마일스톤 검수는 이 규칙을 우선 적용한다. `PASS`가 아닌 결과가 하나라도 나오면 다음 백로그를 착수하지 않고 사용자에게 상태와 재개 조건을 보고한다.
 - 백로그의 묵시 승인은 하위 마일스톤 전체 승인을 뜻하지 않는다. 모든 백로그와 하위 마일스톤 통합 완료 기준을 충족한 뒤에만 하위 마일스톤을 `완료`로 표시한다.
 - M5.5 최종 인수는 각 하위 마일스톤 `README.md`의 `latest_approved_run_id`를 기준으로 판단한다.
 - `README.md`에는 실행 명령, 코드/데이터 버전, 결과 경로와 수정 이력을 함께 기록한다.
