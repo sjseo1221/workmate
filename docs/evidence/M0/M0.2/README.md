@@ -1,11 +1,11 @@
 # M0.2 모델·OAuth 확정 증빙
 
-status: 재작업
-latest_run_id: 20260813-134915
-latest_run_status: PASS (M0.2-04 재검수; M0.2 통합은 재작업)
-latest_approved_run_id: 20260813-134915 (M0.2-04 개별 승인; M0.2 통합 미승인)
-approved_at: 2026-08-13 13:49 Asia/Seoul (M0.2-04)
-reviewer: 자동 승인(M0.2-04); 통합은 자동 검수 중단
+status: 완료
+latest_run_id: 20260813-135158
+latest_run_status: PASS (M0.2 통합 재검수)
+latest_approved_run_id: 20260813-135158
+approved_at: 2026-08-13 13:52 Asia/Seoul
+reviewer: 자동 승인(검증 명령)
 
 ## 목표
 
@@ -29,6 +29,7 @@ LLM·Embedding·STT 모델과 Gmail·Calendar OAuth Scope의 선택 근거, 평�
 - M0.2-03 재검수 승인 실행: [`runs/20260813-134542/result.md`](runs/20260813-134542/result.md)
 - M0.2-04 최신 실행: [`runs/20260813-122007/result.md`](runs/20260813-122007/result.md)
 - M0.2-04 재검수 승인 실행: [`runs/20260813-134915/result.md`](runs/20260813-134915/result.md)
+- M0.2 통합 재검수 승인 실행: [`runs/20260813-135158/result.md`](runs/20260813-135158/result.md)
 - M0.2-05 이전 승인 실행: [`runs/20260813-122321/result.md`](runs/20260813-122321/result.md)
 - M0.2-05 실패 재검수: [`runs/20260813-130230/result.md`](runs/20260813-130230/result.md)
 - M0.2-05 최신 승인 실행: [`runs/20260813-131903/result.md`](runs/20260813-131903/result.md)
@@ -40,4 +41,4 @@ LLM·Embedding·STT 모델과 Gmail·Calendar OAuth Scope의 선택 근거, 평�
 
 ## 승인 조건
 
-M0.2-05 개별 실행은 모든 결과가 정확히 `PASS`여서 자동 승인됐다. 그러나 M0.2 통합 검수 `20260813-133446`에서 M0.2-02·03·04의 `PASS_WITH_CAVEAT`, `FAIL`, `보류`가 확인되어 통합 자동 승인 규칙에 따라 즉시 중단했다. M0.2 상위 상태는 `재작업`이며, M0.2-02·03·04의 차단 항목을 해소하기 전에는 전체 완료로 표시하지 않는다.
+M0.2 통합 재검수 `20260813-135158`에서 M0.2-01~05의 최신 승인 실행이 모두 정확히 `PASS`임을 확인했다. 이전 `PASS_WITH_CAVEAT`, `FAIL`, `보류`는 새 개별 재검수로 해소됐고, 이전 실행은 모두 보존된다. M0.2는 `완료`로 전환한다.

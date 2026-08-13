@@ -36,7 +36,7 @@
 | ID   | 하위 목표         | 주요 산출물                                                                 | 선행                         | 담당 | 완료 예정일 | 완료 기준·증빙                                                             | 상태 | 다음 착수 항목           |
 | ---- | ----------------- | --------------------------------------------------------------------------- | ---------------------------- | ---- | ----------- | -------------------------------------------------------------------------- | ---- | ------------------------ |
 | M0.1 | A2A·Artifact 계약 | Agent Card, Message/Task/Artifact Schema·A2A 인프라 Task Store              | 없음                         | 미정 | 미정        | SDK REST Route·AgentExecutor·Contract Test·Streaming·재시작 복구 검증 결과 | 완료 | M0.2 모델·OAuth 확정 |
-| M0.2 | 모델·OAuth 확정   | LLM·Embedding·STT·OAuth 설정과 평가 이력                                    | 없음                         | 미정 | 미정        | 기존 평가 승인·OAuth HISTORY·미검증 위험 기록                              | 재작업 | M0.2-02·03·04 차단 항목 해소 |
+| M0.2 | 모델·OAuth 확정   | LLM·Embedding·STT·OAuth 설정과 평가 이력                                    | 없음                         | 미정 | 미정        | 기존 평가 승인·OAuth HISTORY·미검증 위험 기록                              | 완료 | M0.3 내부 챗봇 API |
 | M0.3 | 내부 챗봇 API     | Skill 목록·메시지·장기 Task 조회 API                                        | M0.1                         | 미정 | 미정        | 5개 Skill·인증·장기 Task·부분 실패 API 검증                                | 대기 | M0.3-01 입력 API         |
 | M0.4 | 내부 챗봇 UI      | `workmate-agent` 최소 개발자 페이지의 Skill 선택·자연어/JSON 입력·결과 화면 | M0.3                         | 미정 | 미정        | 5개 Skill·Artifact·상태·오류 화면 검수                                     | 대기 | M0.4-01 입력 UI          |
 | M1.1 | 업무 DB 기반      | Task·Gmail·Calendar PostgreSQL Migration·Repository·샘플 데이터             | M0.1                         | 미정 | 미정        | 업무 Migration·Repository 테스트                                           | 대기 | 백로그 정의 필요         |
@@ -97,6 +97,8 @@ M0.2-02 재검수 `20260813-134129`에서 모델 차원·Hybrid 품질·HNSW·�
 M0.2-03 재검수 `20260813-134542`에서 합성 파일·Realtime Streaming·Chunk 재연결·최종 STT E2E와 단위 테스트·dry-run·구문 검사·문서 diff가 모두 정확히 `PASS`가 됐다. 실제 회의 음성 품질은 M3.3 후속 범위로 명시적으로 분리했으며, 이전 평가 원본은 보존한다. M0.2-03은 완료로 유지하고 다음 재검수는 M0.2-04이다. M0.2 상위 상태는 M0.2-04 재검수와 통합 검수 전까지 `재작업`으로 유지한다. 상세 결과는 [`M0.2-03 재검수 결과`](evidence/M0/M0.2/runs/20260813-134542/result.md)에 기록한다.
 
 M0.2-04 재검수 `20260813-134915`에서 Gmail readonly Scope·AuthorizedSession·Profile/Message/History·Watch와 단위 테스트·구문 검사·문서 diff가 모두 정확히 `PASS`가 됐다. 사용자가 제공한 로컬 실제 OAuth 결과를 Gmail 전용 증빙으로 분리했고, 이전 결과는 보존한다. M0.2-04는 완료로 유지하며 M0.2-01~05의 재검수 결과가 모두 정확히 `PASS`가 되었으므로 M0.2 통합 재검수를 실행할 수 있다. 상세 결과는 [`M0.2-04 재검수 결과`](evidence/M0/M0.2/runs/20260813-134915/result.md)에 기록한다.
+
+M0.2 통합 재검수 `20260813-135158`에서 M0.2-01~05 최신 승인 실행이 모두 정확히 `PASS`임을 확인했다. 이전 통합 차단은 새 개별 재검수로 해소됐고, M0.2를 `완료`로 전환한다. 상세 결과는 [`M0.2 통합 재검수 결과`](evidence/M0/M0.2/runs/20260813-135158/result.md)에 기록한다. 다음 착수 항목은 M0.3 내부 챗봇 API다.
 
 답변 가능성은 `Dense + Trigram RRF Top-K → metadata·직접 근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence`로 분리한다. 단일 Cosine 임계값은 운영 거절 조건으로 사용하지 않으며, 실제 검색 Workflow·출처 검증·RRF fallback은 M4.4에서 구현한다.
 
