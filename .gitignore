@@ -8,6 +8,7 @@
 **/client_secret*.json
 **/credentials*.json
 **/token.json
+**/token.json.*
 **/*.pem
 **/*.key
 
@@ -22,6 +23,7 @@
 **/*.tar
 **/results/*.db
 **/.runtime/
+/main_agent.db
 
 # Git에 저장하지 않는 원본 미디어
 **/*.wav

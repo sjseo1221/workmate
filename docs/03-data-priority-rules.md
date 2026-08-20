@@ -275,7 +275,15 @@ score = deadline(0~40)
 | 중요도     | 긴급 20, 높음 15, 보통 8, 낮음/없음 0                       |
 | 지연/차단  | 차단 및 타 업무 영향 15, 지연 10, 나머지 0                  |
 | 회의 약속  | 승인된 Action Item 10, 그 외 0                              |
-| 일정 연관  | 24시간 내 관련 회의 10, 3일 내 5                            |
+| 일정 연관  | Calendar 제안에서 승인된 Task 대상, 일정 시각과의 거리(절댓값)가 24시간 내 10, 3일 내 5, 그 외 0 |
+
+**정정(2026-08-17)**: "일정 연관"의 대상을 "관련 회의"로 적었던 이전 판은 "회의 약속"(Action Item
+승인 Task)과 구분이 모호했다 — 실제 구현(`app/domain/priority.py`의 `_calendar_relevance_score`)은
+`source_type="calendar"`(Calendar 제안을 승인해 만든 Task)만 대상으로 하고, `due_at`(승인 시 저장된
+일정 시작 시각)이 `as_of`와 얼마나 가까운지로 점수를 매긴다 — "회의 약속"(`source_type="action_item"`)과
+겹치지 않는다. 이 구분이 실제로 계산되기 시작한 것도 이번 정정과 같은 날인데, `rank_tasks()`가
+`calendar_relevance`를 아예 넘기지 않아(항상 기본값 0) 이전까지는 Calendar에서 승인된 Task라도
+이 점수가 절대 0을 벗어나지 못했다(2026-08-17 실사용 중 "일정 연관 0"이 이상하다는 문의로 발견).
 
 완료와 취소 Task는 제외한다. 동점은 `due_at 빠른 순 → updated_at 최근 순 → task_id 오름차순`으로 결정한다.
 

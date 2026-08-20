@@ -5,8 +5,8 @@
 - 마일스톤: M0.4 내부 검증 UI
 - 제목: 장기 Task 취소 Fixture·사용자 범위 검수
 - 담당자: Codex
-- 검수자: 검수 중
-- 상태: 검수 중
+- 검수자: 보류(선행 M1.3 대기)
+- 상태: 보류
 - 실행일: 2026-08-13
 - 실행 ID: `20260813-163927`
 - 코드 버전: `workmate-agent@1ae46d8`
@@ -15,7 +15,7 @@
 ## 2. 최신 실행과 승인
 
 - latest_run_id: `20260813-163927`
-- latest_run_status: PASS (취소·권한 UI 육안 확인 대기)
+- latest_run_status: PASS (선행 M1.3 완료 후 취소 UI 육안 확인 대기)
 - latest_approved_run_id: `20260813-161223`
 - approved_at: 2026-08-13 16:12 Asia/Seoul
 - reviewer: null
@@ -73,5 +73,5 @@
 ## 9. 최종 판단
 
 - 승인 여부: 미승인
-- 검수 의견: 취소 Endpoint·사용자 범위·5개 Skill metadata는 PASS다. 실제 취소 버튼 활성화의 육안 확인 전까지 `검수 중`으로 유지한다.
-- 다음 조치: 실제 장기 Workflow 연결 후 취소 버튼 활성화·클릭 육안 검수
+- 검수 의견: 취소 Endpoint·사용자 범위·5개 Skill metadata는 PASS다. 실제 장기 Workflow가 없어 취소 버튼 활성화 육안 검수를 수행할 수 없으므로 `보류(선행 M1.3 대기)`로 기록한다. M1.3 완료만으로 자동 승인하지 않는다.
+- 다음 조치: M1.3 완료 후 실제 `WORKING` Task의 취소 버튼 활성화·클릭 육안 검수 여부를 사용자에게 확인

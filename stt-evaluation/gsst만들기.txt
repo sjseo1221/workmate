@@ -1,0 +1,11 @@
+# 1. 프로젝트 폴더로 이동
+cd C:\dev\workmate\stt-evaluation
+
+# 2. 가상환경 활성화 (이미 만들어두신 venv 사용)
+.\venv\Scripts\Activate.ps1
+
+# 3. 오디오 합성에 필요한 패키지 설치
+pip install gTTS pydub
+
+# 4. 테스트 음성 생성
+python generate_meeting_db_schema_audio.py

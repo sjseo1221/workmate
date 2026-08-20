@@ -600,13 +600,11 @@ Adapter Contract Test는 다음을 고정한다.
 | GET    | `/api/v1/meetings/{id}`                             | 회의 기본정보와 요약 조회     |
 | GET    | `/api/v1/meetings/{id}/transcript`                  | 전체 회의록 Chunk 조회        |
 | POST   | `/api/v1/meetings/{id}/recordings`                  | 녹음 파일 업로드              |
-| POST   | `/api/v1/meetings/{id}/recording-sessions`          | 실시간 녹음 세션 시작         |
-| WS     | `/api/v1/meetings/{id}/recording-stream`            | 음성 Chunk 전송과 임시 STT 수신 |
-| POST   | `/api/v1/meetings/{id}/recording-sessions/{session_id}:complete` | 실시간 녹음 종료와 원본 음성 확정 |
-| POST   | `/api/v1/meetings/{id}/analysis`                    | 회의 분석 시작                |
-| GET    | `/api/v1/meetings/{id}/analysis`                    | 분석 Task 상태와 결과 조회    |
+| WS     | `/api/v1/meetings/{id}/recording-stream`            | 음성 Chunk 전송·임시 STT 수신·세션 시작과 종료(원본 음성 확정)까지 겸함[^recording-session] |
+| POST   | `/api/v1/meetings/{id}/analysis`                    | 회의 분석 시작[^analysis-route] |
+| GET    | `/api/v1/meetings/{id}/analysis`                    | 분석 Task 상태와 결과 조회[^analysis-route] |
 | POST   | `/api/v1/meetings/{id}/actions:review`              | Action Item 승인·수정·거절 반영 |
-| POST   | `/api/v1/meetings/search`                           | Workmate UI의 회의 검색       |
+| POST   | `/api/v1/meetings/search`                           | Workmate UI의 회의 검색[^search-route] |
 | GET    | `/api/v1/tasks`                                     | 할 일 목록 조회와 조건 검색   |
 | POST   | `/api/v1/tasks`                                     | 사용자가 할 일 직접 등록      |
 | GET    | `/api/v1/tasks/{id}`                                | 할 일 상세 조회               |
@@ -625,7 +623,27 @@ Adapter Contract Test는 다음을 고정한다.
 
 내부 검증 챗봇 API는 `WORKMATE_INTERNAL_CHAT_ENABLED=true`일 때만 노출한다. `skills` 조회는 Agent Card의 공개 Skill 목록과 동일한 5개를 반환하며, 메시지 요청은 선택한 `skill_id`와 자연어 또는 Schema JSON 입력을 받아 같은 Workflow를 호출한다. 응답은 Markdown·구조화 JSON·Task 상태를 함께 제공하고, 장기 Task는 전용 조회 경로로 Polling한다. 이 경로는 A2A Service Token을 사용하지 않고 UI Session/OIDC 인증을 사용한다.
 
-할 일 등록은 `title`, `assignee_user_id`를 필수로 받고 `due_at`, `priority_hint`를 선택적으로 받는다. 서버는 `status=todo`, `source_type=manual`, `source_id=null`을 설정한다. 수정은 전달된 필드만 변경하며, 삭제는 `deleted_at`을 기록한다. 삭제된 Task는 기본 목록·브리핑·보고서·우선순위에서 제외한다.
+[^recording-session]: 별도 REST `recording-sessions`/`:complete` Route는 두지 않는다. WebSocket 연결 자체가 세션 시작이고, 연결 종료(정상 종료 또는 접속 끊김)가 세션 완료 신호다 — 서버가 그 시점에 수신한 Chunk를 병합해 원본 음성을 확정한다. "녹음 중간에 끊겼다가 이어서 재개" 같은 요구가 생기면 그때 명시적 세션 재개 Route를 추가한다(2026-08-15 결정, `workmate-ui-integration-gaps.md` #8).
+
+[^analysis-route]: 분석 시작(`POST`)은 여전히 이 전용 Route 대신 `/api/v1/internal/skill-chat/messages`(`skill_id=analyze_meeting`)로 한다 — 결과 수신도 이제 같은 요청의 동기 응답이 아니라 `TASK_STATE_SUBMITTED`로 먼저 반환하고 `GET /api/v1/internal/skill-chat/tasks/{id}`로 Polling한다(2026-08-15 결정 `workmate-ui-integration-gaps.md` #24, 2026-08-16 비동기 전환 `17-workmate-ui-gap-analysis.md` #7). 결과 조회(`GET /api/v1/meetings/{id}/analysis`)는 이 표가 이미 정의한 대로 실제 전용 Route로 구현했다 — 저장된 요약·Action Item을 재조회할 뿐 `analyze_meeting`을 다시 실행하지 않는다(2026-08-16 결정, `17-workmate-ui-gap-analysis.md` #10). 회의 화면 전용 UX가 더 필요해지면(예: 분석 시작에도 전용 Route가 필요해지면) 그때 분리한다.
+
+[^search-route]: 현재 구현은 이 전용 Route 대신 `/api/v1/internal/skill-chat/messages`(`skill_id=search_meetings`)로
+회의 검색을 실행한다 — `analyze_meeting`(각주 [^analysis-route] 참고)과 같은 이유로, 같은 공용 Workflow를
+호출해 기능적으로 동일하고 회의 화면 전용 UX가 더 필요해지기 전까지는 REST 경로를 분리할 이유가 없다고
+판단했다(2026-08-15 결정, `14-workmate-ui-integration-gaps.md` #30).
+
+[^task-assignee]: `assignee_user_id`를 요청 필드로 받지 않는다. Workmate MVP에는 팀원 목록·초대·권한
+관리 기능이 없고 모든 API가 인증된 본인 범위로만 동작해, "담당자에게 배정"은 실제로 존재하지 않는
+개념이었다 — 이전 버전 문서는 이 필드를 필수 입력으로 요구했지만 서버 코드는 처음부터 항상 요청
+사용자 본인으로 강제 설정해왔다(2026-08-15 결정, `14-workmate-ui-integration-gaps.md` #6). 실사용에서
+팀 배정이 필요해지면 그때 별도 기능으로 설계한다.
+
+[^meeting-idempotency]: 별도 `Idempotency-Key` Header·응답 캐시는 두지 않는다. 클라이언트(`Meeting.tsx`)가 `crypto.randomUUID()`로 `meeting_id`를 미리 만들어 `POST /api/v1/meetings` 요청에 실어 보내고, 서버는 `INSERT OR IGNORE`로 같은 `meeting_id` 재시도를 멱등 처리한다 — Meeting은 PK 자체가 자연스러운 멱등 Key라 별도 Header 계층을 추가할 필요가 없었다. 다만 같은 Key에 다른 Payload(예: 다른 제목)가 들어와도 `409 Conflict`를 반환하지 않고 최초 값을 그대로 유지한다 — 이 부분은 문서가 원래 약속한 "동일 Key·다른 Payload → 409" 계약과 다르다(2026-08-15 결정, `workmate-ui-integration-gaps.md` #7). 실사용에서 문제가 되면 그때 Header 기반 계층을 추가한다.
+
+할 일 등록은 `title`을 필수로 받고 `due_at`, `priority_hint`를 선택적으로 받는다. 서버는
+`status=todo`, `source_type=manual`, `source_id=null`, `assignee_user_id=요청 사용자 본인`을
+설정한다[^task-assignee]. 수정은 전달된 필드만 변경하며, 삭제는 `deleted_at`을 기록한다. 삭제된 Task는
+기본 목록·브리핑·보고서·우선순위에서 제외한다.
 
 메일 제안은 DB에 저장하지 않는다. SSE Event는 Gmail `message_id`와 LLM이 제안한 Task 필드를 전달한다. 검토 요청은 `message_id`, `decision`, 수정된 `task`를 받으며 `decision`은 `approve`, `ignore` 중 하나다. 승인 시 `source_type=email`, `source_id=message_id`인 Task를 생성하고 무시 시 아무 데이터도 저장하지 않는다.
 
@@ -795,7 +813,7 @@ Orchestrator와 Workmate가 중복으로 재시도하지 않도록, A2A HTTP 요
 | 작업             | 멱등성 Key                        | 동작                                          |
 | ---------------- | --------------------------------- | --------------------------------------------- |
 | A2A Message 처리 | `messageId`                       | 같은 ID 재수신 시 기존 Message 처리 결과 반환 |
-| 회의 생성        | `Idempotency-Key` Header          | 같은 Key로 Meeting 중복 생성 금지             |
+| 회의 생성        | 클라이언트가 생성한 `meeting_id`[^meeting-idempotency] | 같은 `meeting_id`로 재시도해도 Meeting 중복 생성 금지 |
 | 녹음 업로드      | `meeting_id + file_hash`          | 동일 파일 중복 저장·STT 방지                  |
 | 실시간 음성 Chunk | `recording_session_id + chunk_no` | 재연결·재전송 시 동일 Chunk 중복 저장 방지    |
 | 회의 분석 시작   | `meeting_id + transcript_version` | 같은 입력의 활성 Task 재사용                  |

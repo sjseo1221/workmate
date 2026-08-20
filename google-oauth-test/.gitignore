@@ -3,5 +3,6 @@ venv/
 client_secret*.json
 token*.json
 credentials*.json
+.pkce_verifier
 results/
 __pycache__/

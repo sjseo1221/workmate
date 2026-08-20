@@ -1,0 +1,118 @@
+"""
+generate_meeting_concurrency_transaction_audio.py
+백엔드팀 회의(경매장·재화 시스템 동시성 이슈, 트랜잭션/락 설계) 샘플 음성 생성 스크립트
+
+Workmate AI의 회의 분석(M3)·회의 검색(M4) 테스트용 샘플 데이터입니다.
+Race Condition, Deadlock, Ordered Locking, Pessimistic Lock 등
+동시성 제어 전문 용어가 밀도 높게 등장하고, 문제 발견 → 원인 분석 →
+해결책 적용 → 검증까지 논리적 흐름이 뚜렷해서 회의 요약 품질
+테스트에도 적합합니다.
+
+⚠️ 등장하는 인물명(서선정/박민우/이동현), 수치(500건 입찰 등)는
+   전부 가상의 샘플 데이터입니다.
+
+⚠️ gTTS는 단일 목소리만 지원합니다. 화자 3명의 대사를 한 목소리로
+   순서대로 이어 읽습니다 — 화자 분리(diarization) 검증에는 쓸 수 없고,
+   STT 인식률·회의 요약·Action Item 추출 테스트에만 사용하세요.
+
+사용법:
+    pip install gTTS pydub
+    python generate_meeting_concurrency_transaction_audio.py
+"""
+
+from pathlib import Path
+
+from gtts import gTTS
+from pydub import AudioSegment
+
+OUTPUT_DIR = Path("audio/samples")
+OUT_NAME = "meeting-concurrency-transaction"
+
+# 화자별 대사. 코드/기호 표기는 gTTS가 자연스럽게 읽도록 한글 음차로 풀었습니다.
+# 예: Race Condition -> 레이스 컨디션, SELECT ... FOR UPDATE -> 셀렉트 포 업데이트
+DIALOGUE = [
+    ("서선정", "안녕하세요. 오늘 미팅은 인게임 경매장이랑 재화 시스템에서 발생할 수 있는 동시성 이슈 점검 결과 공유하고, 트랜잭션 보완 로직 확정하려고 모였습니다."),
+    ("박민우", "네, 선정 님. 경매장 시스템은 동일한 아이템에 대해 동시 입찰이나 즉시 구매 요청이 몰릴 때 정합성 깨지는 문제가 제일 크잖아요. 부하 테스트 때 이슈 없었나요?"),
+    ("서선정", "맞습니다. 기존 로직으로 동시성 부하 테스트를 진행했을 때 두 가지 큰 문제가 발견됐습니다. 첫째는 동일 아이템에 대해 수십 명이 동시에 구매를 눌렀을 때 재화는 차감되는데 아이템 지급이 누락되는 레이스 컨디션 현상이었고, 둘째는 유저 간 거래 처리 중 디비 데드락이 빈번하게 발생하는 점이었습니다."),
+    ("이동현", "데드락 문제는 자원 접근 순서가 달라서 발생한 건가요?"),
+    ("서선정", "네, 동현 님. A 유저가 B 유저에게 재화를 송금하거나 경매장에서 입찰할 때, 계정 A와 계정 B의 잔액 테이블을 업데이트하는 락 획득 순서가 비동기적으로 엇갈리면서 발생했습니다. A에서 B로 업데이트하는 거랑 B에서 A로 업데이트하는 게 동시에 터지면 바로 데드락으로 빠지더라고요."),
+    ("박민우", "그러면 데드락 방지랑 정합성 보장을 위해서 로직을 어떻게 수정하셨나요?"),
+    ("서선정",
+     "우선 데드락 방지를 위해 유저 아이디 기준 정렬 락, 오더드 락킹을 적용했습니다. "
+     "어떤 트랜잭션이든 상관없이 계정 간 재화 이동이 일어날 때는 유저 아이디 값이 작은 쪽의 레코드를 먼저 "
+     "셀렉트 포 업데이트로 락을 잡고, 그 다음 큰 쪽을 잡도록 통일했습니다. "
+     "이렇게 자원 접근 순서를 고정하니까 데드락이 완전히 사라졌습니다."),
+    ("이동현", "경매장 아이템 구매, 입찰 쪽 동시성은 비관적 락으로 처리하신 건가요? 퍼포먼스 영향은 괜찮나요?"),
+    ("서선정",
+     "경매장 상찰, 낙찰처럼 연산 정확도가 절대적인 구간은 셀렉트 포 업데이트 기반의 비관적 락을 걸되, "
+     "트랜잭션 범위를 최소화했습니다. 구매 가능 여부 검증과 재화 차감, 소유권 이전이 하나의 짧은 트랜잭션 안에서 "
+     "아토믹하게 처리되도록 재설계해서, 동시 500건 입찰 요청 기준 성능 지연 없이 정합성이 100퍼센트 보장되는 것을 확인했습니다."),
+    ("박민우", "재화 복사나 중복 차감 같은 유저 재화 민감 이슈는 깔끔하게 정리된 것 같네요. 예외 처리나 실패 시 롤백 로직도 검증됐나요?"),
+    ("서선정", "네, 잔액 부족, 아이템 상태 변경, 이미 판매됨, 네트워크 타임아웃 등 모든 예외 상황 발생 시 트랜잭셔널 롤백이 정상 동작하여 재화나 아이템이 공중에 뜨는 현상은 없도록 검증 마쳤습니다."),
+    ("이동현", "수정된 트랜잭션 로직이랑 락 순서 가이드라인 코드 베이스에 반영해서 피알 올려주시면 클라이언트에 영향 줄 만한 예외 코드 상호 체크하겠습니다."),
+    ("서선정", "네, 오늘 퇴근 전까지 피알 올리고 노션에 정리된 재화, 경매장 트랜잭션 처리 가이드 링크 공유해 드리겠습니다."),
+    ("박민우", "좋습니다. 다들 수고 많으셨습니다. 이것으로 미팅 마치겠습니다!"),
+]
+
+
+def synthesize() -> Path:
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    tmp_mp3 = OUTPUT_DIR / f"{OUT_NAME}.mp3"
+    out_wav = OUTPUT_DIR / f"{OUT_NAME}.wav"
+
+    full_text = " ".join(line for _, line in DIALOGUE)
+
+    print("음성 합성 중...")
+    tts = gTTS(text=full_text, lang="ko")
+    tts.save(str(tmp_mp3))
+
+    print("WAV로 변환 중 (16kHz, mono)...")
+    audio = AudioSegment.from_mp3(str(tmp_mp3))
+    audio = audio.set_frame_rate(16000).set_channels(1)
+    audio.export(str(out_wav), format="wav")
+
+    tmp_mp3.unlink()
+    print(f"✅ 저장 완료: {out_wav}")
+    return out_wav
+
+
+def save_ground_truth() -> Path:
+    """화자 라벨 포함 원본 대사 + Action Item 정답을 별도 텍스트로 저장."""
+    gt_path = OUTPUT_DIR / f"{OUT_NAME}.ground_truth.txt"
+    with open(gt_path, "w", encoding="utf-8") as f:
+        f.write("=== 대사 (화자 라벨 포함) ===\n")
+        for speaker, line in DIALOGUE:
+            f.write(f"[{speaker}] {line}\n")
+
+        f.write("\n=== 기대 Action Item (정답) ===\n")
+        f.write("1. 담당자: 서선정 / 내용: 트랜잭션·락 순서 로직 반영한 PR 등록, "
+                 "재화/경매장 트랜잭션 처리 가이드 링크 공유 (기한: 오늘 퇴근 전)\n")
+        f.write("2. 담당자: 이동현 / 내용: PR 리뷰 및 클라이언트 영향 예외 코드 상호 체크\n")
+
+        f.write("\n=== 회의 핵심 요약 (근거 검색 테스트용 키워드) ===\n")
+        f.write("- 문제1: 재화 차감되나 아이템 지급 누락 (Race Condition)\n")
+        f.write("- 문제2: 계정 간 재화 이동 시 Lock 순서 엇갈림으로 인한 Deadlock\n")
+        f.write("- 해결1: 유저 ID 기준 Ordered Locking 적용 → 데드락 해소\n")
+        f.write("- 해결2: 경매 입찰/구매에 짧은 범위의 Pessimistic Lock 적용 → "
+                 "동시 500건 기준 정합성 100% 확인\n")
+    print(f"✅ 정답 텍스트(화자 라벨 + Action Item + 요약) 저장: {gt_path}")
+    return gt_path
+
+
+def main():
+    print("경매장/재화 시스템 동시성 이슈 회의 샘플 생성 시작\n")
+    wav_path = synthesize()
+    gt_path = save_ground_truth()
+
+    print("\n포함된 기술 용어 (STT 인식률 확인용):")
+    print("  Race Condition, Deadlock, Ordered Locking, SELECT FOR UPDATE,")
+    print("  Pessimistic Lock, Atomic, @Transactional")
+    print("\n포함된 Action Item (추출 정확도 확인용):")
+    print("  - 서선정: PR 등록 + 가이드 링크 공유 (오늘 퇴근 전)")
+    print("  - 이동현: PR 리뷰 및 예외 코드 상호 체크")
+    print(f"\n생성된 파일:\n  오디오: {wav_path}\n  정답 텍스트: {gt_path}")
+    print("\n주의: 단일 목소리 합성이라 화자 분리 테스트에는 쓸 수 없습니다.")
+
+
+if __name__ == "__main__":
+    main()

@@ -20,6 +20,18 @@ Workmate AI는 메일, 캘린더, 회의록, Task DB 정보를 통합해 브리�
 | 10 | [Embedding 모델 평가 계획](10-embedding-evaluation-plan.md) | 후보, 평가 데이터, 검색 지표, 선정 기준과 이력 관리 |
 | 11 | [LLM 모델 평가 계획과 이력](11-llm-evaluation-plan.md) | 평가 Case, 품질 기준, 모델 선정과 기존 개선 이력 |
 | 12 | [구현·검증 가이드](12-implementation-verification-guide.md) | 회의 녹음·Embedding·STT 평가 결과를 실제 구현에 적용하는 기준 |
+| 13 | [사용자 수동 검수 목록](13-manual-verification-guide.md) | 나중에 수행할 UI 육안 검수의 작업명·확인 방법·판정 기준 |
+| 14 | [workmate-ui 백엔드 연동 갭 분석 및 구현 계획](14-workmate-ui-integration-gaps.md) | `workmate-ui`와 설계 문서 대조로 찾은 갭 목록, 화면별 구현 계획 |
+| 15 | [workmate-ui 화면별 기능·데이터 참조](15-workmate-ui-screens-reference.md) | 02·03·04·07·09를 종합한 화면별 목표 기능·조회값 정의(Source of Truth), 14번 갭 분석의 1차 기준 |
+| 16 | [LLM 프롬프트 목록](16-llm-prompts.md) | 코드가 실제로 호출하는 모든 System Prompt 원문(회의 분석·Gmail 할 일 추출·주간 보고서 요약) |
+| 17 | [workmate-ui 갭 분석 v2](17-workmate-ui-gap-analysis.md) | 15번 문서 기준 `workmate-ui` 재분석, 갭 목록 |
+| 18 | [Workmate 어시스턴트(Drawer) 구현 계획 및 완료 보고](18-workmate-assistant-implementation-plan.md) | `workmate-ui` 내부 Drawer 챗봇 설계·구현 결과 |
+| 19 | [workmate-ui → 오케스트레이터 이식 작업 계획](19-workmate-ui-orchestrator-port-plan.md) | `workmate-ui`가 구현한 7개 화면을 `AI-agent_game_platform`(오케스트레이터)로 이식하는 단계별 계획·결정·구현 완료 기록 |
+| 20 | [오케스트레이터 AI Chat → Workmate Skill 라우팅 구현 계획](20-orchestrator-ai-chat-skill-routing-plan.md) | "Workmate AI" 채팅이 5개 Skill로 라우팅되는 구현 계획 |
+| 21 | [오케스트레이터 Workmate 화면 수동 검수 체크리스트](21-orchestrator-workmate-manual-verification-checklist.md) | 19번 문서로 이식한 7개 화면의 화면별 수동 검수 항목(13번 문서 형식) |
+| 22 | [오늘 브리핑·주간 업무보고 재이식 계획](22-today-briefing-weekly-report-port-plan.md) | 19번 문서 3단계 롤백 후, `workmate-ui` 원본과 대조해 빠진 필드(경고 배너·소스 상태·배점 내역) 없이 다시 이식하는 계획·구현 완료 기록 |
+| 23 | [오케스트레이터 vs workmate-ui "제안함" 로직 차이 분석](23-proposals-orchestrator-vs-workmate-ui-diff.md) | 인증 방식·SSE Provider 마운트 범위·개발 서버 동작 등 두 구현의 실제 코드 차이를 항목별로 정리(분석·기록용, 구현 항목 아님) |
+| 24 | [오케스트레이터 vs workmate-ui "제안함" UI(시각) 차이 분석](24-proposals-orchestrator-vs-workmate-ui-ui-diff.md) | 23번 문서의 로직 분석과 짝을 이루는 화면 표현 차이 — 버튼 시각 위계·상태 색 표시·Toast 구성·안 읽은 배지·카드 스니펫/추천 이유 노출 여부를 JSX·CSS 대조로 정리(분석·기록용, 구현 항목 아님) |
 
 문서 번호 8은 기존 통합 초안과의 링크 충돌을 피하기 위해 예약 번호로 남기며 새 문서에 재사용하지 않는다.
 
@@ -27,8 +39,8 @@ Workmate AI는 메일, 캘린더, 회의록, Task DB 정보를 통합해 브리�
 
 - 팀 전체: 1 → 2 → 6 → 12
 - 백엔드 담당: 2 → 3 → 4 → 5 → 7 → 12
-- AI/RAG 담당: 4 → 5 → 7 → 10 → 11 → 12
-- 프론트 담당: 2 → 4 → 6 → 9
+- AI/RAG 담당: 4 → 5 → 7 → 10 → 11 → 12 → 16
+- 프론트 담당: 2 → 4 → 6 → 9 → 14 → 15
 
 ## 현재 결정 요약
 

@@ -105,6 +105,6 @@ Gmail과 Google Calendar 변경 알림은 Workmate가 직접 수신하고 브라
 
 메일은 Gmail API, 캘린더는 Google Calendar API 하나만 구현한다.
 
-M0.4의 Skill·Schema·Workflow 검증은 `workmate-agent`가 제공하는 최소 개발자 페이지에서 수행한다. 사용자가 실제로 이용하는 다섯 개 제품 화면은 팀 공통 Orchestrator UI에 M5에서 통합한다. 내부 검증 페이지와 제품 UI 모두 업무 데이터를 자체 저장하지 않고 Workmate API와 Workflow 결과를 사용한다. 기존 `workmate-ui-demo`는 폐기된 샘플이며 구현·검수 대상이 아니다.
+M0.4의 Skill·Schema·Workflow 검증은 `workmate-agent`가 제공하는 최소 개발자 페이지에서 수행한다. 사용자가 실제로 이용하는 다섯 개 제품 화면은 팀 공통 Orchestrator UI에 M5에서 통합한다. 내부 검증 페이지와 제품 UI 모두 업무 데이터를 자체 저장하지 않고 Workmate API와 Workflow 결과를 사용한다. `workmate-ui`는 1차로 완성해 개인용으로 보관하고, 2차로 팀 공통 Orchestrator UI 양식에 맞게 조정해 이식하는 대상이다 — 폐기된 샘플이 아니며 구현·검수에 계속 사용한다.
 
 버전 정책, LangGraph State, A2A Binding, DB·검색, 인증과 환경변수는 [기술 상세 설계](07-technical-specification.md)를 따른다.

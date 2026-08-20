@@ -239,7 +239,7 @@ cancelled  → TASK_STATE_CANCELED
 
 ### 5.4 내부 Skill 검증 챗봇
 
-Workmate는 Orchestrator 연동 전에 5개 공개 Skill을 직접 확인할 수 있는 최소 내부 검증 페이지를 `workmate-agent`에 제공한다. 이 페이지는 M0.4 검증 전용이며 별도 업무 데이터나 제품 상태를 저장하지 않는다. 제품 사용자가 쓰는 최종 화면은 팀 공통 UI에 통합한다. 기존 `workmate-ui-demo`는 폐기된 샘플이며 구현·검수에 사용하지 않는다.
+Workmate는 Orchestrator 연동 전에 5개 공개 Skill을 직접 확인할 수 있는 최소 내부 검증 페이지를 `workmate-agent`에 제공한다. 이 페이지는 M0.4 검증 전용이며 별도 업무 데이터나 제품 상태를 저장하지 않는다. 제품 사용자가 쓰는 최종 화면은 팀 공통 UI에 통합한다. `workmate-ui`는 1차로 완성해 개인용으로 보관하고, 2차로 팀 공통 Orchestrator UI 양식에 맞게 조정해 이식하는 대상이다 — 폐기된 샘플이 아니며 구현·검수에 계속 사용한다.
 
 - 대상 Skill: `daily_briefing`, `weekly_report`, `analyze_meeting`, `search_meetings`, `rank_priorities`
 - 챗봇은 Orchestrator나 A2A Service Token을 호출하지 않고 같은 LangGraph Workflow·Repository·Domain 함수를 직접 호출한다.
@@ -511,11 +511,15 @@ MVP는 기본 LLM의 Provider Client 하나만 구현한다. 현재 API 할당�
 
 Provider Timeout·429·502·503·504는 한 번 재시도하고 최종 Provider 실패는 Schema 실패와 분리해 품질 통계에서 제외한다. 출처 평가는 최상위 `source_refs`만 요구하지 않고 Task·Meeting·Transcript·MeetingChunk 전용 ID 필드에서 결정적으로 수집하며, 입력에 없는 출처 ID 생성은 별도 실패로 처리한다. 주간 보고의 다음 주 계획과 회의 검색의 답변 본문·출처 인용문도 각각 검증한다.
 
-LLM 사용 위치:
+LLM 사용 위치(실제 호출하는 System Prompt 원문은 [16-llm-prompts.md](16-llm-prompts.md) 참고):
 
-- 브리핑과 주간 보고서 작성
 - 통합 회의 분석 Text와 Action Item 후보 추출
-- 검색 Context 기반 답변
+- Gmail 읽음 메일의 할 일 후보 추출
+- 주간 보고서 요약 문장 작성
+
+오늘 브리핑과 회의록 검색 답변은 LLM을 거치지 않는다 — 브리핑은 Provider 결과를 규칙대로 모아 보여줄
+뿐이고, 검색 답변은 근거 Chunk를 고정된 한국어 템플릿에 채우는 결정적 코드다(2026-08-15 정정 —
+이전 버전은 이 두 곳도 LLM을 쓴다고 잘못 적혀 있었다).
 
 Action Item 생성 시 LLM은 `evidence_span`만 지정한다. 서버가 최종 회의록의 해당 구간에서 원문을 추출해 `evidence_text`로 저장하며 LLM이 작성한 인용문을 원문으로 신뢰하지 않는다. 물리 모델의 `action_items` 테이블에는 `evidence_text text NOT NULL`을 둔다.
 
@@ -800,7 +804,11 @@ services:
 교육용 팀프로젝트이므로 개발·운영 버킷을 분리하지 않고 R2 `workmate` 버킷 하나를 사용한다. 실제 비밀값은 `.env` 또는 Secret Store에만 두고 문서·Git에는 기록하지 않는다.
 
 - 버킷은 Private으로 설정하고 Workmate 서버만 R2 S3 API를 호출한다.
-- 브라우저 업로드·다운로드는 Workmate가 발급한 단기 Presigned URL만 사용한다.
+- 브라우저는 R2 자격 증명이나 Presigned URL을 받지 않는다. 녹음 파일은 브라우저가
+  `multipart/form-data`로 Workmate 서버에 직접 올리고(`POST /api/v1/meetings/{id}/recordings`),
+  **서버가** 파일을 받아 R2에 PutObject한다 — 02-a2a-interface.md §5.2 API 계약과 실제 구현 모두 이
+  방식이다(2026-08-15 결정, `workmate-ui-integration-gaps.md` #14: 이미 프론트가 이 모양으로 파일을
+  보내고 있어 재작업이 가장 적음). Presigned URL 직접 업로드는 채택하지 않는다.
 - `Meeting.source_audio_uri`에는 만료되는 Presigned URL이 아니라 R2 Object Key를 저장한다.
 - Object Key 규칙: `users/{user_id}/meetings/{meeting_id}/source/{file_id}.{ext}`
 - 파일 업로드 완료 후 `HeadObject`로 MIME·크기·checksum을 확인한 뒤 `analyze_meeting` Task를 시작한다.
