@@ -68,7 +68,6 @@
 |                    | `title`            | 수행해야 할 후속업무 내용                                                                                         |
 |                    | `assignee_user_id` | 후속업무 담당자의 `User.user_id`                                                                                  |
 |                    | `due_at`           | 후속업무 마감 시각                                                                                                |
-|                    | `status`           | 후속업무의 진행 상태                                                                                              |
 |                    | `confidence`       | AI 추출 결과의 신뢰도                                                                                             |
 |                    | `evidence_span`    | 근거 Chunk ID 목록과 시작·종료 위치(`start_ms`, `end_ms`)                                                         |
 |                    | `evidence_text`    | 근거 구간에서 서버가 복사해 저장한 읽기 전용 회의록 원문                                                          |
@@ -77,7 +76,9 @@
 |                    | `recipient_user_id`| 우선순위를 제공받는 `User.user_id`                                                                                |
 |                    | `ranked_task_id`   | 평가 대상 `Task.task_id`                                                                                          |
 |                    | `calculated_at`    | 우선순위를 계산한 시각                                                                                            |
+|                    | `as_of`            | 점수 계산의 기준 시각. 같은 `user_id`·`as_of`로 재실행하면 같은 결과를 보장하는 데 사용(`calculated_at`과 별개) |
 |                    | `score`            | 우선순위 규칙으로 계산한 총점                                                                                     |
+|                    | `score_breakdown`  | 점수 구성 요소별 값(마감임박도·중요도·지연/차단·회의 약속·일정 연관, §6 공식과 대응)                              |
 |                    | `rank`             | 계산 시점의 순위                                                                                                  |
 |                    | `reasons`          | 점수와 순위가 산출된 근거 목록                                                                                    |
 | `SourceSyncState`  | `source_sync_state_id` | 동기화 상태를 식별하는 고유 ID                                                                                |
@@ -179,8 +180,11 @@ erDiagram
         uuid recipient_user_id FK
         uuid ranked_task_id FK
         datetime calculated_at
+        datetime as_of
         number score
+        json score_breakdown
         int rank
+        json reasons
     }
 
     SOURCE_SYNC_STATE {
@@ -250,8 +254,10 @@ erDiagram
 
 ## 5. 이번 주 조회 범위
 
-- ISO 주간: 월요일 00:00 이상, 다음 월요일 00:00 미만
-- `week_of`가 있으면 해당 날짜가 속한 ISO 주간
+- 기본(week_of 생략): 오늘 00:00 이상, 7일 뒤 00:00 미만
+- `week_of`가 있으면 **그 날짜가 속한 ISO 주간이 아니라, 그 날짜 00:00부터 7일 뒤 00:00 미만**
+  (`app/domain/weekly.py`의 실제 구현·2026-08-17 챗봇 자연어 Router 버그 수정 과정에서 확정 —
+  월요일 시작 ISO 주 anchor를 쓰지 않는다)
 - 완료 업무: `completed_at`이 조회 범위 안인 Task
 - 진행/지연 업무: 주간 종료 시점 상태 기준
 - 다음 주 계획: 다음 주 마감 Task, 미완료 Action Item, 명시된 예정 문장

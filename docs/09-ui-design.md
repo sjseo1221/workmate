@@ -15,7 +15,7 @@
 | 주간 보고서 | 기간별 보고서 조회와 Markdown 복사 |
 | 회의 관리 | 실시간 녹음·파일 업로드, 회의 목록, 전체 회의록과 선택 근거 강조 |
 | 회의 검색 | 질문 입력, 근거 기반 답변과 출처 확인 |
-| Skill 검증 챗봇 | `workmate-agent` 최소 개발자 페이지에서 5개 Workmate Skill 직접 실행, Markdown·JSON·Task 상태 확인 |
+| Skill 검증 챗봇 | `workmate-agent` 최소 개발자 페이지에서 Workmate Skill 직접 실행, Markdown·JSON·Task 상태 확인(2026-08-17 이전 5개 / 현재 11개, §6 참고) |
 
 ## 2. 할 일 관리 화면
 
@@ -68,8 +68,12 @@ DB 행은 Soft Delete로 보존하지만 복구와 삭제 목록 화면은 MVP�
 - 팝업에는 메일 제목, 제안된 Task 제목·담당자·마감일과 `할 일 추가`, `무시` 버튼을 표시한다.
 - 사용자는 승인 전에 Task 필드를 수정할 수 있다.
 - 승인은 `POST /api/v1/email-task-proposals:review`를 호출하고 같은 Gmail `message.id`로 생성된 Task가 있으면 기존 Task를 표시한다.
-- 무시한 제안은 저장하지 않는다.
-- 브라우저가 닫혀 있으면 팝업을 보내지 않으며 다음 브리핑에서 같은 후보가 다시 표시될 수 있다.
+- 무시한 제안의 본문(제목·스니펫 등)은 저장하지 않지만, "이미 무시했다"는 사실(ID·시각)은 별도
+  저장소(`ignored_proposals`)에 남겨 이후 동기화에서 다시 노출되지 않는다 — **영구 제외**된다
+  (2026-08-16 결정, 99번 문서 18번 항목 참고. 정정 전에는 이 문서가 "무시한 제안은 저장하지 않는다"
+  고만 적어, 다시 노출될 수 있다는 옛 동작을 암시하고 있었다).
+- 브라우저가 닫혀 있으면 팝업을 보내지 않는다 — 이건 **아직 검토하지 않은** 제안이 놓치는 경우라
+  위의 "무시(ignore)한 제안"과는 다르다. 놓친 제안은 다음 브리핑·제안함에서 다시 표시될 수 있다.
 - 브리핑에서는 기존 `important_signals`의 `related_task_ids`로 `이미 등록됨` 또는 `미등록`을 표시한다.
 
 ## 5. 회의 관리와 할 일 근거
@@ -102,11 +106,22 @@ DB 행은 Soft Delete로 보존하지만 복구와 삭제 목록 화면은 MVP�
 
 ## 6. Workmate 내부 Skill 검증 챗봇
 
-Orchestrator 연결 전에 Workmate의 모든 공개 Skill을 화면에서 직접 호출해 결과를 확인한다. 이 화면은 교육용 통합 환경의 검증·시연용이며 `WORKMATE_INTERNAL_CHAT_ENABLED`가 `true`일 때만 노출한다.
+Orchestrator 연결 전에 Workmate의 모든 공개 Skill을 화면에서 직접 호출해 결과를 확인한다. 이 화면은 `WORKMATE_INTERNAL_CHAT_ENABLED`가 `true`일 때만 노출한다.
+
+> **갱신(2026-08-24, 99번 문서 정합성 검증)**: "교육용 통합 환경의 검증·시연용"이라는 원래 성격
+> 규정은 2026-08-17 이후 더는 정확하지 않다 — `workmate-ui`의 💬 Workmate 어시스턴트(Drawer,
+> 15·18번 문서)가 이 절과 같은 백엔드 API(`/api/v1/internal/skill-chat/*`, 같은
+> `WORKMATE_INTERNAL_CHAT_ENABLED` 게이팅)를 최종 사용자 프로덕션 기능으로 재사용한다 — 자세한
+> 내용은 07 §5.4 갱신 각주 참고. 아래 §6.1 "Skill 선택"은 여전히 **이 문서가 정의하는 개발자용
+> 검증 화면**(`/internal/skill-chat`)만 가리킨다 — Drawer 자체는 2026-08-17 이후 Skill 선택
+> 드롭다운을 없애고 순수 채팅 UI로 바뀌었다(15번 문서 "💬 Workmate 어시스턴트" 절 참고). 대상
+> Skill 개수도 이 절 작성 시점엔 5개였지만 지금은 11개다(07 §5.4 참고).
 
 ### 6.1 입력
 
 - Skill 선택: `daily_briefing`, `weekly_report`, `analyze_meeting`, `search_meetings`, `rank_priorities`
+  (+ 2026-08-17 이후 `get_meeting_analysis`, `review_action_items`, `review_proposal`,
+  `manage_tasks`, `read_email`, `assistant_ask` — 총 11개, 07 §5.4 참고)
 - 자연어 질문 입력
 - 필요하면 Schema JSON 입력 모드로 전환해 정확한 Skill Payload를 전송
 - 전송 중 중복 제출 방지와 `request_id` 표시

@@ -23,7 +23,7 @@ Workmate AI는 메일, 캘린더, 회의록, Task DB에 흩어진 정보를 통�
 - Gmail 읽음 메일의 할 일 후보 판단과 사용자 승인
 - 회의록 검색과 출처 제공
 - 샘플 데이터와 Gmail Push 기반 시연
-- Workmate 내부 5개 Skill 검증 챗봇과 UI
+- Workmate 내부 Skill 검증 챗봇과 UI(2026-08-17 이전 5개 Skill → 현재 11개, 07 §5.4 참고)
 
 ### 제외
 
@@ -48,7 +48,7 @@ Workmate AI는 메일, 캘린더, 회의록, Task DB에 흩어진 정보를 통�
 flowchart LR
     U[사용자 UI] --> O[팀 Orchestrator]
     O -->|A2A| W[Workmate AI]
-    VC[Workmate 내부 검증 챗봇 UI] -.->|검증용 직접 호출| W
+    VC[Workmate 내부 챗봇 UI 검증 페이지+어시스턴트] -.->|직접 호출| W
     G[Gmail Pub/Sub] --> W
     GC[Google Calendar Webhook] --> W
     W -->|SSE 할 일 제안| U
@@ -72,7 +72,13 @@ flowchart LR
 
 Workmate AI는 하나의 배포 단위다. 내부 Service는 코드 모듈이며 별도 A2A Agent가 아니다. 외부 시스템별 데이터 차이는 Adapter와 Normalizer에서 공통 업무 형식으로 변환한다.
 
-Workmate 내부 검증 챗봇은 Orchestrator를 거치지 않고 같은 Skill Workflow와 Domain 함수를 직접 호출한다. A2A 전송 계층만 생략하며, 결과 Artifact·Task 상태·오류 규약은 Orchestrator 경로와 동일하게 사용한다.
+Workmate 내부 챗봇 경로는 Orchestrator를 거치지 않고 같은 Skill Workflow와 Domain 함수를 직접 호출한다. A2A 전송 계층만 생략하며, 결과 Artifact·Task 상태·오류 규약은 Orchestrator 경로와 동일하게 사용한다.
+
+> **정정(2026-08-24, 99번 문서 정합성 검증 31번 항목)**: 이 경로를 "검증용"으로만 부르던 서술은
+> 낡았다 — 2026-08-17 이후 같은 API(`/api/v1/internal/skill-chat/*`)를 개발자 전용 검증 페이지
+> (`/internal/skill-chat`)뿐 아니라 💬 Workmate 어시스턴트(Drawer, 15·18번 문서)도 최종 사용자
+> 프로덕션 기능으로 그대로 재사용한다(07번 문서 §5.4, 02번 문서 §5.2 참고). "검증용 직접 호출"은
+> 개발자 페이지에만 해당하고, Drawer는 같은 경로를 실제 업무 기능으로 쓴다.
 
 Gmail과 Google Calendar 변경 알림은 Workmate가 직접 수신하고 브라우저에는 같은 SSE 연결로 임시 할 일 제안을 보낸다. Priority Service는 Gmail을 호출하지 않고 승인되어 Task DB에 저장된 업무만 순위 대상으로 사용한다.
 

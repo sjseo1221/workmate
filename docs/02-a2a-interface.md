@@ -95,6 +95,48 @@ Interface URL은 배포 환경에서 Orchestrator가 접근 가능한 주소로 
       "description": "최신 업무 신호를 기준으로 우선순위 Top 3와 직전 순위 대비 변경 사유를 계산한다.",
       "tags": ["priority", "task", "ranking"],
       "examples": ["우선순위를 다시 계산해줘"]
+    },
+    {
+      "id": "get_meeting_analysis",
+      "name": "회의 분석 재조회",
+      "description": "이미 분석한 회의의 저장된 요약·Action Item 목록을 재분석 없이 다시 조회한다.",
+      "tags": ["meeting", "action-item"],
+      "examples": ["그 회의 분석 결과 다시 보여줘"]
+    },
+    {
+      "id": "review_action_items",
+      "name": "Action Item 검토",
+      "description": "회의에서 추출된 Action Item 후보를 한 번에 승인(Task 생성)·수정·거절 처리한다.",
+      "tags": ["meeting", "action-item", "task"],
+      "examples": ["이 회의 Action Item 다 승인해줘"]
+    },
+    {
+      "id": "review_proposal",
+      "name": "제안 검토",
+      "description": "Gmail·Calendar에서 발행된 임시 Task 제안을 승인(Task 생성) 또는 무시 처리한다.",
+      "tags": ["task", "email", "calendar"],
+      "examples": ["이 제안 승인해줘"]
+    },
+    {
+      "id": "manage_tasks",
+      "name": "할 일 관리",
+      "description": "호출자의 Task를 조회(list)·등록(create)·수정(update)·삭제(delete)한다.",
+      "tags": ["task"],
+      "examples": ["할 일 목록 보여줘"]
+    },
+    {
+      "id": "read_email",
+      "name": "메일 본문 조회",
+      "description": "Gmail에서 메일 본문을 그 자리에서 다시 가져온다(저장하지 않음). message_id 또는 검색어(query, 최근 30일 제한)로 찾는다.",
+      "tags": ["email"],
+      "examples": ["그 메일 내용 요약해줘"]
+    },
+    {
+      "id": "assistant_ask",
+      "name": "자연어 어시스턴트",
+      "description": "자유 문장을 보고 나머지 10개 Skill 중 무엇을 어떤 인자로 호출할지 LLM으로 판단해 답을 자연어로 돌려주는 Meta Skill.",
+      "tags": ["assistant", "router"],
+      "examples": ["오늘 브리핑 보여줘"]
     }
   ]
 }
@@ -103,6 +145,13 @@ Interface URL은 배포 환경에서 Orchestrator가 접근 가능한 주소로 
 
 
 Agent Card JSON은 구현 시 공식 A2A Python SDK 모델로 생성하고 검증한다. 공식 SDK 런타임 경계는 `workmate-agent/app/a2a/runtime.py`에 두고, 공개 `/a2a` Route는 SDK REST Handler와 `AgentExecutor`를 사용하도록 구현한다. 예시를 손으로 복사해 별도 전송 모델을 만들지 않는다. MVP 응답은 `Cache-Control: public, max-age=3600`을 제공하고 Orchestrator는 캐시 만료 후 다시 조회한다. 조건부 재검증 요구가 생기기 전에는 별도 `ETag` 계약을 추가하지 않는다.
+
+> **갱신(2026-08-24, 99번 문서 정합성 검증)**: 위 6개 Skill(`get_meeting_analysis`~`assistant_ask`)은
+> 원래 Drawer 전용 내부 Skill(Agent Card 비공개)로 시작했다가 2026-08-17에 그 결정이 뒤집혀
+> `app/a2a/runtime.py`의 `_SKILLS`(Agent Card)에 합류했다 — 18번 문서 "핵심 설계 결정 1"은 뒤집히기
+> 전 상태를 기록한 것이니 최신 상태는 이 문서를 따른다. 다만 아래 §2.1 표와 §3의 `TypedResult`/
+> `WorkmateResultEnvelope` 공식 Schema는 이 6개의 출력 형식을 아직 담지 못한다(`daily_briefing` 등
+> 기존 5개만 `oneOf` 변형이 있음) — Orchestrator가 이 6개를 호출할 계약이 아직 미완성 상태라는 뜻이다.
 
 ## 2. 공개 Skill
 
@@ -115,8 +164,21 @@ Agent Card JSON은 구현 시 공식 A2A Python SDK 모델로 생성하고 검�
 | `analyze_meeting` | `AnalyzeMeetingInput` | `meeting_analysis` | 장기 Task                |
 | `search_meetings` | `SearchMeetingsInput` | `grounded_answer`  | 즉시 완료 Task           |
 | `rank_priorities` | `RankPrioritiesInput` | `priority_ranking` | 즉시 완료 Task           |
+| `get_meeting_analysis` | `GetMeetingAnalysisInput` | _(미정의)_    | 즉시 완료 Task           |
+| `review_action_items`  | `ReviewActionItemsInput`  | _(미정의)_    | 즉시 완료 Task           |
+| `review_proposal`      | `ReviewProposalInput`     | _(미정의)_    | 즉시 완료 Task           |
+| `manage_tasks`         | `ManageTasksInput`        | _(미정의)_    | 즉시 완료 Task           |
+| `read_email`           | _(Schema 문서 미정의)_    | _(미정의)_    | 즉시 완료 Task           |
+| `assistant_ask`        | `AssistantAskInput`       | _(미정의)_    | 장기 Task(내부적으로 `analyze_meeting`으로 풀릴 수 있어 항상 Task Polling 경로를 탄다) |
 
 “즉시 완료”는 Task를 사용하지 않는다는 뜻이 아니라, 첫 `SendMessage` 응답 안에 최종 Artifact가 포함된 `TASK_STATE_COMPLETED` Task를 반환한다는 뜻이다. `weekly_report`는 예상 처리시간이 HTTP timeout 기준을 넘을 때 장기 Task로 전환할 수 있다.
+
+아래 6개 Skill(`get_meeting_analysis`~`assistant_ask`)의 입력 Schema는
+[docs/schemas/workmate-skill-schemas.schema.json](schemas/workmate-skill-schemas.schema.json)에 있다
+(`read_email`만 예외로 아직 공식 Schema 문서에 없다 — 18번 문서 구현 당시 이 문서를 갱신하지 않았다).
+출력은 5개 기존 Skill처럼 `WorkmateResultEnvelope`/`TypedResult`로 정형화돼 있지 않고, 각 REST
+엔드포인트가 이미 내던 응답을 얇은 어댑터가 그대로 돌려준다 — 정식 공개 계약으로 다듬는 작업은 아직
+남아 있다.
 
 ### 2.2 공통 입력 필드
 
@@ -579,6 +641,11 @@ Adapter Contract Test는 다음을 고정한다.
 
 ### 5.1.1 런타임 구현 범위와 테스트 영향
 
+> **갱신(2026-08-24, 99번 문서 정합성 검증 28번 항목)**: 이 절은 **M0.1 시점 스냅샷**이다 — SDK
+> 전송 골격만 연결돼 있고 실제 업무 Workflow는 아직 없던 때의 기록이다(07번 문서 §7.1.1과 같은
+> 성격, 그쪽 갱신 각주 참고). M1~M5(M5.5 제외)가 모두 완료된 지금은 5개가 아니라 11개 Skill이
+> 있고, 전부 실제 업무 Workflow에 연결돼 있다 — 아래 문단을 "지금도 그렇다"로 읽지 않는다.
+
 구현 목표는 공개 `/a2a` 경로에서 공식 SDK REST Handler와 `AgentExecutor`를 직접 사용하는 것이다. A2A 전송 계층은 SDK의 `SendMessageRequest`, `Task`, `Artifact`, SSE Streaming 응답을 사용하고, 업무 도메인·내부 UI API의 Pydantic 모델은 유지한다. SDK 런타임 경계는 `workmate-agent/app/a2a/runtime.py`에 두며, M0.1-01·02에서 이 전송 경계를 구현·검증했다. M0.1-03에서는 `skill_id → Workflow Registry`와 A2A Task·Message 멱등성·Artifact·`task_id ↔ thread_id`·Checkpoint 영속 경계를 연결한다.
 
 - 실제 Workflow 연결 시 `AgentExecutor`는 공통 `skill_id`, `user_id`, `request_id`를 전송 계층과 독립적인 요청 객체로 변환하고 `skill_id → Workflow` Registry를 호출한다. Workflow 결과는 공통 Artifact 변환기에서 SDK `Task`·`Artifact`로 직렬화한다.
@@ -613,7 +680,7 @@ Adapter Contract Test는 다음을 고정한다.
 | GET    | `/api/v1/notifications/stream`                      | Gmail 할 일 제안 SSE 수신     |
 | POST   | `/api/v1/email-task-proposals:review`               | 임시 메일 제안 승인·무시      |
 | POST   | `/api/v1/calendar-task-proposals:review`            | 임시 일정 제안 승인·무시      |
-| GET    | `/api/v1/internal/skill-chat/skills`               | 내부 검증 챗봇의 5개 Skill 목록 |
+| GET    | `/api/v1/internal/skill-chat/skills`               | 내부 검증 챗봇의 Skill 목록(2026-08-17 이전 5개, 현재 11개) |
 | POST   | `/api/v1/internal/skill-chat/messages`             | 내부 검증 챗봇 메시지 전송과 Skill 실행 |
 | GET    | `/api/v1/internal/skill-chat/tasks/{id}`           | 내부 검증 Task 상태와 Artifact 조회 |
 | GET    | `/health/live`                                      | API Process 생존 확인         |
@@ -621,7 +688,7 @@ Adapter Contract Test는 다음을 고정한다.
 
 회의 생성과 녹음 입력을 분리한다. 사용자는 완성된 파일을 업로드하거나 실시간 녹음 세션을 시작할 수 있으며, 두 방식 모두 원본 음성이 확정된 뒤 같은 `analyze_meeting` Workflow를 호출한다. 파일은 `multipart/form-data`, 실시간 음성 Chunk는 WebSocket, 나머지는 JSON을 사용한다.
 
-내부 검증 챗봇 API는 `WORKMATE_INTERNAL_CHAT_ENABLED=true`일 때만 노출한다. `skills` 조회는 Agent Card의 공개 Skill 목록과 동일한 5개를 반환하며, 메시지 요청은 선택한 `skill_id`와 자연어 또는 Schema JSON 입력을 받아 같은 Workflow를 호출한다. 응답은 Markdown·구조화 JSON·Task 상태를 함께 제공하고, 장기 Task는 전용 조회 경로로 Polling한다. 이 경로는 A2A Service Token을 사용하지 않고 UI Session/OIDC 인증을 사용한다.
+내부 검증 챗봇 API는 `WORKMATE_INTERNAL_CHAT_ENABLED=true`일 때만 노출한다. `skills` 조회는 Agent Card의 공개 Skill 목록과 동일한 목록(2026-08-17 이전 5개, 현재 11개 — 99번 문서 1번 항목)을 반환하며, 메시지 요청은 선택한 `skill_id`와 자연어 또는 Schema JSON 입력을 받아 같은 Workflow를 호출한다. 응답은 Markdown·구조화 JSON·Task 상태를 함께 제공하고, 장기 Task는 전용 조회 경로로 Polling한다. 이 경로는 A2A Service Token을 사용하지 않고 UI Session/OIDC 인증을 사용한다 — 2026-08-17 이후로는 이 API를 💬 Workmate 어시스턴트(Drawer, 15·18번 문서)도 최종 사용자 프로덕션 기능으로 그대로 재사용한다(07번 문서 §5.4 참고).
 
 [^recording-session]: 별도 REST `recording-sessions`/`:complete` Route는 두지 않는다. WebSocket 연결 자체가 세션 시작이고, 연결 종료(정상 종료 또는 접속 끊김)가 세션 완료 신호다 — 서버가 그 시점에 수신한 Chunk를 병합해 원본 음성을 확정한다. "녹음 중간에 끊겼다가 이어서 재개" 같은 요구가 생기면 그때 명시적 세션 재개 Route를 추가한다(2026-08-15 결정, `workmate-ui-integration-gaps.md` #8).
 

@@ -58,7 +58,12 @@
 3. Vector 후보와 Trigram 후보를 각각 생성한 뒤 RRF로 합친다.
 4. HNSW는 후보 검색 인덱스로 사용하고 정확 검색 대비 Recall을 모니터링한다.
 5. 검색 기본 경로에는 Reranker를 넣지 않는다. 필요하면 조건부 호출 후 실패·지연 시 RRF 결과로 돌아간다.
-6. date_to는 미만(Exclusive)이다. 하루 조회는 다음 날짜를 date_to로 전달한다.
+6. date_to는 포함(Inclusive)이다 — `date_to`로 받은 날짜의 23:59:59.999999까지 결과에 포함한다.
+   하루 조회는 그 날짜를 `date_from`·`date_to`에 그대로 전달하면 된다(다음 날짜를 따로 보낼 필요
+   없음, 02 §2.3과 동일). > **정정(2026-08-24, 99번 문서 정합성 검증 17번 항목)**: 이전엔
+   "Exclusive, 다음 날짜를 전달"로 반대로 적혀 있었다 — 실제 코드
+   (`app/workflows/meetings.py`의 `_date_boundary(end=True)` → `app/repositories/meeting_chunks.py`의
+   `m.started_at <= %s`)를 3단계까지 추적해 Inclusive임을 확인했다.
 7. Cosine 0.45 단독 답변 가능성 판정은 정상 질문 오탐이 높아 운영 기본값으로 사용하지 않는다.
 
 답변 가능성 판정은 검색 점수와 분리한다. 운영 Workflow는 `Dense + Trigram RRF Top-K → metadata·근거 검증 → 조건부 Reranker/groundedness → 답변 또는 insufficient_evidence` 순서를 사용한다. Reranker는 후보 Chunk ID 밖의 근거를 반환할 수 없고, 실패·Timeout이면 RRF 결과와 `warnings`를 반환한다. 단일 Cosine 임계값은 평가용 진단 지표로만 기록한다.
@@ -267,40 +272,56 @@ R2_REGION                      ->    R2_REGION
 
 ## 6. 구현 완료 체크리스트
 
-- [ ] gpt-4o-transcribe 파일·Streaming Provider Adapter 구현
-- [ ] 24kHz PCM16 변환과 200ms Chunk 경계 구현
-- [ ] ACK·Partial 이벤트 분리 처리
-- [ ] Gap·중복·재연결·잘못된 Session 처리
-- [ ] 최종 transcript timestamp 저장
-- [ ] Action Item 근거 구간 재추출
-- [ ] 승인 후 Task 등록과 멱등성 보장
-- [ ] 실패·재시도·LangGraph Checkpoint 복구
-- [ ] vector(1536)와 Cosine HNSW Migration
-- [ ] Trigram RRF 기본 검색 구현
-- [ ] date_to Exclusive 규칙 적용
-- [ ] Reranker 조건부 호출과 RRF fallback
-- [ ] Health Check와 Docker Compose 검증
-- [ ] 백엔드 준비 후 R2 Storage Adapter·Presigned URL API 구현
-- [ ] 백엔드 준비 후 `Meeting.source_audio_uri` Object Key 저장과 R2 `HeadObject` 검증 연결
-- [ ] R2 30일 Lifecycle 정책을 관리 권한으로 확인
-- [ ] 실제 운영 DB·Object Storage·Orchestrator A2A 계약 테스트
+> **갱신(2026-08-24, 99번 문서 정합성 검증 15번 항목)**: 이 체크리스트는 06번 문서의 마일스톤별
+> 증빙 체계가 자리잡기 전에 쓰던 추적 방식으로 보인다 — 이후 진행 상태 추적이 06번 문서로 넘어가면서
+> 이 목록 자체는 오래 갱신되지 않았다. 실제 코드(`workmate-agent/app/`)를 직접 확인해 상태를
+> 갱신했다. 각 항목의 근거는 아래 괄호 참고.
+
+- [x] gpt-4o-transcribe 파일·Streaming Provider Adapter 구현(`app/stt.py`)
+- [x] 24kHz PCM16 변환과 200ms Chunk 경계 구현(`app/audio.py`의 `STT_SAMPLE_RATE = 24000`, `app/stt.py`)
+- [x] ACK·Partial 이벤트 분리 처리(`app/recording_stream.py`의 `chunk_ack`/`transcript.partial` 이벤트)
+- [x] Gap·중복·재연결·잘못된 Session 처리(`app/recording_stream.py`의 `CHUNK_GAP`·`duplicate` 처리, M3.2 완료 증빙)
+- [x] 최종 transcript timestamp 저장(M3.3 완료 증빙)
+- [x] Action Item 근거 구간 재추출(`app/meeting_analysis.py`의 서버 측 후검증 — 16번 문서 항목 1과 동일 대상)
+- [x] 승인 후 Task 등록과 멱등성 보장(`app/action_item_api.py`의 `idempotent` 필드)
+- [x] 실패·재시도·LangGraph Checkpoint 복구(M0.1-04 완료 증빙 — Task 재시작 복구 Contract Test 포함)
+- [x] vector(1536)와 Cosine HNSW Migration(`migrations/004_search_data.sql`)
+- [x] Trigram RRF 기본 검색 구현(`app/repositories/meeting_chunks.py`의 `search_hybrid()`)
+- [x] date_to Inclusive 규칙 적용(`app/repositories/meeting_chunks.py`의 `m.started_at <= %s`) —
+      2026-08-24 정정(99번 문서 17번 항목) 전에는 이 항목이 "Exclusive 규칙"으로 잘못 서술돼
+      있었다. 위 §2.1 규칙 6 참고
+- [ ] Reranker 조건부 호출과 RRF fallback — 실제로 운영 코드(`workmate-agent/app/`)엔 Reranker가
+      없다(평가 하네스 `embedding-evaluation/`에만 있음). 15번 문서가 "07 §8.2.1이 M4.4 범위로
+      지정한 것이라 지금 갭이 아님"이라고 확인해 둔 대로, 미체크가 정확하다
+- [x] Health Check와 Docker Compose 검증(M5.3 완료 증빙)
+- [x] 백엔드 준비 후 R2 Storage Adapter·Presigned URL API 구현(`app/storage/r2.py`, M3.6 완료 증빙)
+- [x] 백엔드 준비 후 `Meeting.source_audio_uri` Object Key 저장과 R2 `HeadObject` 검증 연결(M3.6 완료 증빙)
+- [ ] R2 30일 Lifecycle 정책을 관리 권한으로 확인 — 아래 §9가 스스로 기록한 대로 제한형 Token의
+      `AccessDenied`로 아직 확인 못함(관리 권한 Token 또는 Cloudflare Dashboard 확인 필요)
+- [ ] 실제 운영 DB·Object Storage·Orchestrator A2A 계약 테스트 — DB·Object Storage는 M5.2·M5.3
+      완료 증빙이 있으나, Orchestrator 종단 간 계약은 Agent Card가 5→11개로 늘어난 이후(2026-08-17)
+      재검증됐는지 불확실하다(99번 문서 7번 항목 참고) — 그 부분만 미체크로 남긴다
 
 ## 7. 운영 전 남은 검증
 
+> **갱신(2026-08-24, 99번 문서 정합성 검증 16번 항목)**: 아래 표는 작성 당시 "아직 검증 안 됨"
+> 목록이었지만, 06번 문서(마일스톤별 증빙)를 대조한 결과 10줄 중 9줄이 이미 완료 처리돼 있었다 —
+> 이 문서만 갱신되지 않고 있었다. 완료 여부·증빙 링크를 아래 표 오른쪽 열에 추가했다.
+
 현재 결과만으로 확정하지 않은 항목은 다음 마일스톤의 완료 조건으로 연결한다. 조건이 발생하지 않은 항목을 미리 실행하거나 완료로 표시하지 않는다.
 
-| 검증 항목 | 담당 마일스톤 | 수행 시점·완료 조건 |
-| --- | --- | --- |
-| 공식 SDK·Adapter·Streaming·Task 재시작 복구 | M0.1-04 | Agent Card `Cache-Control`, 5개 Skill, 헤더·상태·오류 변환, `/message:stream` 첫 Task와 후속 상태·Artifact 순서, 조회·취소, 활성 Task `POST /a2a/tasks/{id}:subscribe`, Terminal Task Subscribe 오류, 비허용 `GET` Subscribe와 제외 Route `404/405` Contract Test 통과 |
-| LLM 보류 후보 재평가 | M0.2-01 | 기본 모델의 할당량 소진·계약 종료·완료 기준 미달이 발생할 때 동일 Case로 재평가 |
-| Google OAuth 테스트 사용자 | M0.2-04·05 | 기존 승인 계정 이력 검수; 새 계정 사용 시 OAuth 동의 화면의 테스트 사용자 등록 후 재검증 |
-| 브라우저 MediaRecorder Binary Frame 종단 간 테스트 | M3.2 | 실제 브라우저 연결·ACK·Gap·중복·재연결 통과 |
-| 실제 회의 음성 WER/CER·화자 분리·잡음·겹침 발화 | M3.3 | 실제 회의 평가 세트와 결과·제약을 증빙에 기록 |
-| R2 30일 Lifecycle 실제 삭제 | M3.6 | Dashboard 또는 관리 권한으로 규칙과 만료 삭제를 확인 |
-| 운영 동시 접속·비용·Provider rate limit | M5.2 | 목표 부하에서 제한·재시도·부분 실패 동작 측정 |
-| PostgreSQL 운영 Migration·백업·복구 | M5.3 | Compose/운영형 환경에서 Migration과 복구 Drill 통과 |
-| Docker Compose 실행 환경 | M5.3 | Linux Docker Engine 기동 후 Health·Migration·Smoke Test 통과 |
-| Orchestrator 실제 A2A 호출과 장기 Task 재개 | M5.4 | 실제 Orchestrator에서 5개 Skill과 Terminal 상태까지 종단 간 검증 |
+| 검증 항목 | 담당 마일스톤 | 수행 시점·완료 조건 | 상태(06번 문서 기준) |
+| --- | --- | --- | --- |
+| 공식 SDK·Adapter·Streaming·Task 재시작 복구 | M0.1-04 | Agent Card `Cache-Control`, 5개 Skill, 헤더·상태·오류 변환, `/message:stream` 첫 Task와 후속 상태·Artifact 순서, 조회·취소, 활성 Task `POST /a2a/tasks/{id}:subscribe`, Terminal Task Subscribe 오류, 비허용 `GET` Subscribe와 제외 Route `404/405` Contract Test 통과 | ✅ 완료(실행 `20260812-230413`) |
+| LLM 보류 후보 재평가 | M0.2-01 | 기본 모델의 할당량 소진·계약 종료·완료 기준 미달이 발생할 때 동일 Case로 재평가 | ✅ 완료(`latest_approved_run_id=20260813-093322`) |
+| Google OAuth 테스트 사용자 | M0.2-04·05 | 기존 승인 계정 이력 검수; 새 계정 사용 시 OAuth 동의 화면의 테스트 사용자 등록 후 재검증 | ✅ 완료(둘 다) |
+| 브라우저 MediaRecorder Binary Frame 종단 간 테스트 | M3.2 | 실제 브라우저 연결·ACK·Gap·중복·재연결 통과 | ✅ 완료 |
+| 실제 회의 음성 WER/CER·화자 분리·잡음·겹침 발화 | M3.3 | 실제 회의 평가 세트와 결과·제약을 증빙에 기록 | ✅ 완료 |
+| R2 30일 Lifecycle 실제 삭제 | M3.6 | Dashboard 또는 관리 권한으로 규칙과 만료 삭제를 확인 | ⚠️ 06번 문서는 완료로 표시하지만, 아래 §9는 "제한형 Token의 `AccessDenied`로 확인 못함"이라고 스스로 기록 — 근거 불일치, 06번 문서의 M3.6 증빙(`evidence/M3/M3.6/`) 원문 확인 필요 |
+| 운영 동시 접속·비용·Provider rate limit | M5.2 | 목표 부하에서 제한·재시도·부분 실패 동작 측정 | ✅ 완료 |
+| PostgreSQL 운영 Migration·백업·복구 | M5.3 | Compose/운영형 환경에서 Migration과 복구 Drill 통과 | ✅ 완료 |
+| Docker Compose 실행 환경 | M5.3 | Linux Docker Engine 기동 후 Health·Migration·Smoke Test 통과 | ✅ 완료 |
+| Orchestrator 실제 A2A 호출과 장기 Task 재개 | M5.4 | 실제 Orchestrator에서 5개 Skill과 Terminal 상태까지 종단 간 검증 | ✅ 완료로 표시돼 있으나 증빙이 2026-08-14(Agent Card가 5→11개로 늘어난 08-17 이전) — 99번 문서 7번 항목 참고 |
 
 ## 8. Google OAuth 검증 결과
 

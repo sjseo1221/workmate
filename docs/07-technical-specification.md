@@ -225,6 +225,16 @@ cancelled  → TASK_STATE_CANCELED
 | `analyze_meeting` | Meeting Analysis | 장기 Task                   |
 | `search_meetings` | Meeting Search   | 즉시 완료 Task               |
 | `rank_priorities` | Priority         | 즉시 완료 Task               |
+| `get_meeting_analysis` | Get Meeting Analysis | 즉시 완료 Task          |
+| `review_action_items`  | Review Action Items  | 즉시 완료 Task          |
+| `review_proposal`      | Review Proposal      | 즉시 완료 Task          |
+| `manage_tasks`         | Manage Tasks         | 즉시 완료 Task          |
+| `read_email`           | Read Email            | 즉시 완료 Task          |
+| `assistant_ask`        | Assistant Ask         | 장기 Task(내부적으로 `analyze_meeting`으로 풀릴 수 있어 항상 Task Polling 경로를 탄다) |
+
+> **갱신(2026-08-24, 99번 문서 정합성 검증 20번 항목)**: 아래 6개(`get_meeting_analysis`~
+> `assistant_ask`)는 2026-08-17에 Agent Card 공개 범위에 합류했다(99번 문서 1번 항목 참고) — 이
+> 표는 그 이전 5개만 나열하고 있었다. 02번 문서 §1.1·§2.1과 동일하게 갱신했다.
 
 즉시 Skill은 첫 `SendMessage` 응답에서 최종 Artifact를 포함한 `TASK_STATE_COMPLETED` Task를 반환한다. 최종 업무 결과는 Artifact의 구조화 `DataPart`에 저장하고, UI 표시용 Markdown도 별도 Part로 제공한다. 모든 결과에는 `schema_version`, `request_id`, `generated_at`, `data_freshness`, `warnings`를 포함하며 `warnings`는 공개 Schema의 Warning 객체 배열을 사용한다. Skill 데이터의 정식 계약은 [Workmate Skill JSON Schema](schemas/workmate-skill-schemas.schema.json)를, A2A Artifact 구조의 정식 계약은 [A2A Artifact JSON Schema](schemas/a2a-artifact.schema.json)를 따른다.
 
@@ -239,15 +249,31 @@ cancelled  → TASK_STATE_CANCELED
 
 ### 5.4 내부 Skill 검증 챗봇
 
-Workmate는 Orchestrator 연동 전에 5개 공개 Skill을 직접 확인할 수 있는 최소 내부 검증 페이지를 `workmate-agent`에 제공한다. 이 페이지는 M0.4 검증 전용이며 별도 업무 데이터나 제품 상태를 저장하지 않는다. 제품 사용자가 쓰는 최종 화면은 팀 공통 UI에 통합한다. `workmate-ui`는 1차로 완성해 개인용으로 보관하고, 2차로 팀 공통 Orchestrator UI 양식에 맞게 조정해 이식하는 대상이다 — 폐기된 샘플이 아니며 구현·검수에 계속 사용한다.
+Workmate는 Orchestrator 연동 전에 공개 Skill을 직접 확인할 수 있는 최소 내부 검증 페이지를 `workmate-agent`에 제공한다(`GET /internal/skill-chat`, `WORKMATE_INTERNAL_CHAT_ENABLED`로 게이팅). 이 페이지는 M0.4 검증 전용이며 별도 업무 데이터나 제품 상태를 저장하지 않는다. `workmate-ui`는 1차로 완성해 개인용으로 보관하고, 2차로 팀 공통 Orchestrator UI 양식에 맞게 조정해 이식하는 대상이다 — 폐기된 샘플이 아니며 구현·검수에 계속 사용한다.
 
-- 대상 Skill: `daily_briefing`, `weekly_report`, `analyze_meeting`, `search_meetings`, `rank_priorities`
+> **갱신(2026-08-24, 99번 문서 정합성 검증)**: 아래 서술은 원래 "제품 사용자가 쓰는 최종 화면은
+> 팀 공통 UI에 별도로 통합한다"는 전제로 쓰였는데, 2026-08-17 이후 이 전제가 더는 맞지 않는다 —
+> `workmate-ui`의 💬 Workmate 어시스턴트(Drawer, 15·18번 문서)가 **바로 이 절이 설명하는 REST
+> API(`/api/v1/internal/skill-chat/*`)를 최종 사용자 프로덕션 기능으로 그대로 재사용**한다. 즉
+> `WORKMATE_INTERNAL_CHAT_ENABLED`는 더 이상 "교육용 통합 환경에서만 켜는" 플래그가 아니다 — Drawer를
+> 배포하는 모든 환경(운영 포함)에서 이 값이 `true`여야 한다. 대상 Skill 목록도 원래 5개였지만
+> 지금은 11개(`app/a2a/runtime.py`의 `_SKILLS`와 동일 — 99번 문서 1번 항목 참고)로, 개발자 전용
+> 검증 페이지(`/internal/skill-chat`)와 Drawer가 **같은 API·같은 Skill 목록**을 공유한다. 이 절의
+> 나머지 서술(Workflow·Repository 직접 호출, `Task`/`Artifact` 렌더링, Human-in-the-loop 등)은
+> 여전히 유효하다 — "5개"·"교육용 전용"만 낡았다.
+
+- 대상 Skill(2026-08-17 이전, M0.4 최초 범위): `daily_briefing`, `weekly_report`, `analyze_meeting`,
+  `search_meetings`, `rank_priorities`. **현재(2026-08-17 이후)**: 위 5개 + `get_meeting_analysis`,
+  `review_action_items`, `review_proposal`, `manage_tasks`, `read_email`, `assistant_ask` 총 11개
+  (15번 문서 "Skill별 기능 설명" 표 참고).
 - 챗봇은 Orchestrator나 A2A Service Token을 호출하지 않고 같은 LangGraph Workflow·Repository·Domain 함수를 직접 호출한다.
 - 결과는 A2A 경로와 같은 `Task`, `Artifact`, `schema_version`, `warnings`, `request_id` 규약으로 렌더링한다.
 - `analyze_meeting`처럼 오래 걸리는 작업은 내부 Task ID를 표시하고 Polling으로 상태를 갱신한다.
 - Action Item 승인·Task 생성처럼 쓰기가 발생하는 기능은 기존 Human-in-the-loop와 멱등성 규칙을 그대로 적용한다.
 - 브라우저는 사용자 Session/OIDC만 사용하며 Service Token과 R2 Secret을 받지 않는다.
-- `WORKMATE_INTERNAL_CHAT_ENABLED=false`이면 내부 API와 UI 진입을 차단한다. 교육용 통합 환경에서만 `true`로 켠다.
+- `WORKMATE_INTERNAL_CHAT_ENABLED=false`이면 내부 API와 UI 진입을 차단한다. 이 값이 `true`인
+  환경에서는 개발자 전용 검증 페이지뿐 아니라 Drawer도 함께 동작한다(위 갱신 각주 참고) — Drawer를
+  제공하려는 환경은 반드시 `true`로 켜야 한다.
 - API는 자연어와 JSON 입력을 모두 검증하고, UI는 Artifact·최신성·`warnings`·오류·장기 Task 상태·취소 결과를 표시한다.
 - A2A 경로와 내부 챗봇은 같은 Workflow·Repository·Domain 함수를 호출하며 `user_id` 권한 필터와 Provider 부분 실패 규칙을 공유한다.
 
@@ -266,13 +292,28 @@ flowchart LR
     R -->|analyze_meeting| M[Meeting Workflow]
     R -->|search_meetings| S[Search Workflow]
     R -->|rank_priorities| P[Priority Workflow]
+    R -->|get_meeting_analysis| GM[Get Meeting Analysis]
+    R -->|review_action_items| RA[Review Action Items]
+    R -->|review_proposal| RP[Review Proposal]
+    R -->|manage_tasks| MT[Manage Tasks]
+    R -->|read_email| RE[Read Email]
+    R -->|assistant_ask| AA[Assistant Ask]
     D --> O[Build Artifact]
     W --> O
     M --> O
     S --> O
     P --> O
+    GM --> O
+    RA --> O
+    RP --> O
+    MT --> O
+    RE --> O
+    AA --> O
     O --> E[END]
 ```
+
+> **갱신(2026-08-24, 99번 문서 정합성 검증 20번 항목)**: `get_meeting_analysis`~`assistant_ask`
+> 6개 분기는 2026-08-17 이후 추가된 경로다 — 이전에는 5개 분기만 있었다.
 
 Skill별 Workflow는 사용자 기능 단위다. 공통 Domain 함수와 Repository를 공유하되 Workflow State는 필요한 필드만 가진다.
 
@@ -353,6 +394,14 @@ PostgreSQL Task Store는 외부 A2A Task 상태·Artifact·Message 멱등성 Key
 비즈니스 로직은 FastAPI Route나 `AgentExecutor`에 작성하지 않고, 구현 예정인 Registry가 선택한 Workflow 또는 Domain 함수로 전달한다.
 
 ### 7.1.1 구현 예정 런타임의 검증 범위
+
+> **갱신(2026-08-24, 99번 문서 정합성 검증 21번 항목)**: 이 절은 **M0.1 시점 스냅샷**이다 — SDK
+> 전송 골격만 연결돼 있고 실제 업무 Workflow는 아직 없던 때("현재 5개 Skill은... 런타임 준비
+> Workflow로 응답하며, 이 응답은 업무 결과가 아니다")의 기록이다. 06번 문서 기준 M1~M5(M5.5 제외)가
+> 모두 완료됐고, `analyze_meeting`·`weekly_report`·`search_meetings`·`assistant_ask` 등은 실제
+> 업무 로직으로 동작한다(코드로 직접 확인 완료) — 아래 문단을 "지금도 그렇다"로 읽지 않는다. Skill
+> 개수("5개")도 이후 11개로 늘었다(§5.2 갱신 각주 참고). 이 절은 M0.1 당시 SDK 통합 접근을 기록한
+> 자료로만 남겨둔다.
 
 구현한 공개 `/a2a` 경로는 공식 SDK REST Handler와 `AgentExecutor`를 직접 사용한다. A2A 전송 계층은 SDK `SendMessageRequest`, `Task`, `Artifact`, SSE Streaming 응답을 사용하고, 업무 도메인·내부 UI API의 Pydantic 모델은 유지한다. M0.1-01·02에서 SDK 전송 경계와 Contract Test를 완료했으며, M0.1-03에서 Registry·A2A 인프라 영속 경계를 연결한다. 실제 업무 Workflow는 후속 M1~M4에서 연결한다.
 
@@ -437,7 +486,12 @@ CREATE INDEX meeting_chunks_embedding_idx
 3. Vector Top-K 검색
 4. PostgreSQL pg_trgm Trigram 유사도 Top-K 검색
 5. 두 순위를 Reciprocal Rank Fusion(RRF)으로 결합
-6. 상위 Chunk의 인접 구간을 Context로 확장
+
+> **정정(2026-08-24, 99번 문서 정합성 검증 25번 항목)**: "6. 상위 Chunk의 인접 구간을 Context로
+> 확장"은 설계 당시 계획했으나 구현되지 않았다 —
+> `app/repositories/meeting_chunks.py`의 `search_hybrid()`는 RRF로 정렬한 Chunk를 그대로 반환하고
+> 인접 `sequence_no`를 추가 조회하지 않으며, `app/meeting_answer.py`도 받은 Chunk를 그대로 근거로
+> 쓴다. 현재는 이 단계가 없다 — 이후 이 확장을 다시 계획하면 이 절에 새로 추가한다.
 
 Vector 점수와 Keyword 점수는 척도가 다르므로 원시 점수를 `0.7 + 0.3`으로 직접 더하지 않는다.
 
@@ -513,13 +567,22 @@ Provider Timeout·429·502·503·504는 한 번 재시도하고 최종 Provider 
 
 LLM 사용 위치(실제 호출하는 System Prompt 원문은 [16-llm-prompts.md](16-llm-prompts.md) 참고):
 
-- 통합 회의 분석 Text와 Action Item 후보 추출
+- 통합 회의 분석 Text와 Action Item 후보 추출(2026-08-17부터 회의 제목 자동 생성도 같은 호출에 포함)
 - Gmail 읽음 메일의 할 일 후보 추출
 - 주간 보고서 요약 문장 작성
+- 오늘 브리핑의 메일 업무 관련성 판단(`classify_work_related_emails`, "중요 업무 신호"에서 광고·
+  뉴스레터 등을 걸러냄, 2026-08-17 추가)
+- 회의록 검색 답변 생성(근거 Chunk를 바탕으로 LLM이 답변 문장을 작성, 실패 시에만 결정적 한국어
+  템플릿으로 대체)
+- 💬 Workmate 어시스턴트(`assistant_ask`) 자연어 Router — 문장당 LLM을 3번 호출한다: Context
+  지칭 해석 → Skill 라우팅(`route()`) → 결과를 자연어로 바꾸는 답변 생성(`phrase_answer()`)
+  (2026-08-17 추가, 18번 문서 참고)
 
-오늘 브리핑과 회의록 검색 답변은 LLM을 거치지 않는다 — 브리핑은 Provider 결과를 규칙대로 모아 보여줄
-뿐이고, 검색 답변은 근거 Chunk를 고정된 한국어 템플릿에 채우는 결정적 코드다(2026-08-15 정정 —
-이전 버전은 이 두 곳도 LLM을 쓴다고 잘못 적혀 있었다).
+오늘 브리핑의 요약·주간 보고서의 사실 집계는 LLM을 거치지 않는다 — Provider 결과·Task 상태를
+규칙대로 모아 보여줄 뿐이다(2026-08-15 정정 — 이전 버전은 이 두 곳도 LLM을 쓴다고 잘못 적혀
+있었다). **2026-08-24 재정정**: "오늘 브리핑"·"회의록 검색 답변"을 통째로 "LLM을 안 쓴다"고 적었던
+부분은 다시 낡았다 — 오늘 브리핑은 위처럼 필터링에, 회의록 검색은 답변 생성 자체에 LLM을 쓰도록
+바뀌었다(16번 문서 항목 7·8 참고).
 
 Action Item 생성 시 LLM은 `evidence_span`만 지정한다. 서버가 최종 회의록의 해당 구간에서 원문을 추출해 `evidence_text`로 저장하며 LLM이 작성한 인용문을 원문으로 신뢰하지 않는다. 물리 모델의 `action_items` 테이블에는 `evidence_text text NOT NULL`을 둔다.
 
@@ -856,8 +919,8 @@ node, duration_ms, status, error_code
 | Workflow   | 각 Skill Graph의 성공, 부분 실패, interrupt/resume |
 | Repository | 실제 PostgreSQL+pgvector로 SQL과 Migration 검증    |
 | Provider   | Fake 응답으로 timeout, 429, 502~504, 재시도와 오류 분리 검증 |
-| A2A 계약   | Agent Card, 헤더·출력 형식, 5개 Skill, 상태·오류 Adapter, Artifact Schema, Streaming·Subscribe·복구 |
-| 내부 챗봇  | 자연어/JSON 입력, 5개 Skill 직접 호출, 권한, Artifact·경고·오류 렌더링, 장기 Task Polling·취소 |
+| A2A 계약   | Agent Card, 헤더·출력 형식, 11개 Skill(2026-08-17 이전 5개, 99번 문서 20번 항목 참고), 상태·오류 Adapter, Artifact Schema, Streaming·Subscribe·복구 |
+| 내부 챗봇  | 자연어/JSON 입력, 11개 Skill 직접 호출(2026-08-17 이전 5개), 권한, Artifact·경고·오류 렌더링, 장기 Task Polling·취소 |
 | 검색 평가  | 한국어 질문·정답·출처 20개 이상                    |
 | 종단 간    | Orchestrator와 UI에서 여덟 시나리오 실행           |
 

@@ -10,10 +10,16 @@
 → 네 데이터 소스 병렬 조회
 → 정규화와 중복 제거
 → 우선순위 계산
-→ LLM 요약
+→ 결정적 요약 조합
 → 출력 검증
 → Artifact 반환
 ```
+
+> **정정(2026-08-24, 99번 문서 정합성 검증 23번 항목)**: 이 단계는 "LLM 요약"이 아니라 **결정적
+> 조합**이다 — `daily_briefing`의 `summary`는 조회된 값(오늘 일정 수·메일 신호 수·우선순위 수)을
+> 코드가 고정 템플릿 문장으로 조합해 만들며 LLM을 호출하지 않는다(`app/workflows/daily_briefing.py`,
+> 07 §9.1, 16번 문서). 이 서술은 15번 문서가 2026-08-15에 이미 지적했지만 이 문서 자체는 그대로
+> 남아 있었다.
 
 네 데이터 소스는 Task, Calendar, Gmail, Meeting이다. Calendar 일정과 Gmail 메일은 저장 테이블 없이 요청 시 Provider에서 조회한다. Gmail은 사용자 지역 시각 기준 `[직전 영업일 00:00, as_of)` 범위를 조회한다. 일부 조회가 실패하면 나머지 데이터로 결과를 만들고 경고와 데이터 기준 시각을 표시한다.
 
@@ -35,7 +41,7 @@ flowchart LR
     E --> N
     M --> N
     N --> P[우선순위 계산]
-    P --> L[LLM 요약]
+    P --> L[결정적 요약 조합]
     L --> V[Schema·출력 검증]
     V --> A[Task·Artifact]
     A --> O
@@ -200,10 +206,19 @@ flowchart LR
 MVP 하이브리드 점수:
 
 ```text
-0.7 × vector similarity + 0.3 × keyword score
+RRF(document) = 1 / (60 + vector_rank) + 1 / (60 + keyword_rank)
 ```
 
-별도 Reranker는 평가에서 Top-3 정확도가 부족할 때 추가한다. 근거가 없으면 `관련 회의록에서 확인할 수 없습니다`라고 반환한다.
+> **정정(2026-08-24, 99번 문서 정합성 검증 24번 항목)**: 척도가 다른 두 점수를 `0.7 × vector +
+> 0.3 × keyword`처럼 원시 점수로 직접 더하지 않는다 — Vector·Keyword 각각의 순위(rank)를
+> Reciprocal Rank Fusion(RRF, k=60)으로 결합한다. 실제 구현
+> (`app/repositories/meeting_chunks.py`의 `PostgresMeetingChunkRepository.search_hybrid()`,
+> 447~448번 줄)과 07번 문서 §8.2가 이 공식을 그대로 쓴다. 이 서술은 15번 문서가 이미 "04 §4는
+> RRF 결합의 초기 설명"이라고 지적했지만 이 문서 자체는 그대로 남아 있었다.
+
+별도 Reranker는 평가에서 Top-3 정확도가 부족할 때 추가한다(2026-08-24 확인: 실제 운영 코드
+(`workmate-agent/app/`)엔 아직 연결되지 않았다 — `embedding-evaluation/` 평가 하네스에만 있다).
+근거가 없으면 `관련 회의록에서 확인할 수 없습니다`라고 반환한다.
 
 ## 5. 우선순위 재계산
 
@@ -289,7 +304,13 @@ flowchart LR
     U -->|무시| X
 ```
 
-메일과 제안 결과는 DB에 저장하지 않는다. 무시한 후보는 `[직전 영업일 00:00, as_of)` 범위에 포함되면 다음 브리핑에 다시 표시될 수 있다. 브리핑은 Gmail을 다시 조회하고 `message.id`와 기존 `Task.source_id`를 비교해 `important_signals.related_task_ids`에 등록된 Task ID를 넣는다.
+메일과 제안 결과는 DB에 저장하지 않는다. 브리핑은 Gmail을 다시 조회하고 `message.id`와 기존 `Task.source_id`를 비교해 `important_signals.related_task_ids`에 등록된 Task ID를 넣는다.
+
+> **정정(2026-08-24, 99번 문서 정합성 검증 — 17번 갭 문서 #2, 2026-08-16 결정)**: 위 문단의
+> "무시한 후보는 범위에 포함되면 다음 브리핑에 다시 표시될 수 있다"는 서술은 낡았다 — 이 원칙이
+> "제안 본문(제목·스니펫 등)은 저장하지 않는다"는 뜻으로 재해석되며, "이미 무시했다"는 사실만
+> 남기는 전용 저장소(`ignored_proposals`)가 추가돼 무시한 후보는 이제 **영구 제외**된다(15번
+> 문서 "📬 제안함" 절 참고). 근거 Task ID 매칭 등 이 문단의 나머지 서술은 그대로 유효하다.
 
 ## 8. Google Calendar 일정의 할 일 제안
 
