@@ -4,14 +4,14 @@
 
 ## 1. 현재 상태
 
-- 현재 마일스톤: M2 브리핑·주간 보고
-- 진행 중 하위 마일스톤: M2.4 보고서 UI
-- 현재 스프린트: Sprint 2 — M2 주간 보고
-- 상태: M2.1~M2.3 완료, M2.4 구현 완료·사용자 추후 육안 검수 보류
-- 마지막 갱신: 2026-08-14 07:25 Asia/Seoul
-- 마지막 작업자: Codex
-- 기준 Git Commit: `1ae46d8` (`workmate-agent`)
-- 기준 브랜치: `feat/M0.1-01-sdk-runtime`
+- 현재 트랙: LangGraph 전면 전환 (`docs/30-langgraph-migration-plan.md`)
+- 진행 중 단계: W0 완료, **다음 착수 항목은 W1 계약 스냅샷 추출**
+- 선행 마일스톤: M0~M5 구현 완료 (M2.4 육안 검수는 사용자 보류 상태 유지)
+- 상태: 진행 — 구현·문서·증빙을 원격 Push 완료, W1 미착수
+- 마지막 갱신: 2026-11-03 Asia/Seoul
+- 마지막 작업자: Claude
+- 기준 Git Commit: `8043c1e` (`workmate-agent`), `c4ea51d` (`workmate-ui`)
+- 기준 브랜치: `feat/M0.1-01-sdk-runtime` (Superproject·`workmate-agent`), `main` (`workmate-ui`)
 
 ## 2. 완료된 항목
 
@@ -845,3 +845,390 @@ M1.5-05 실행 `20260813-225921`은 PostgreSQL 통합 5개와 기존 M0/M1 회�
   기존 설계 문서 어디에도 `workmate-ui`(단독)를 참조하는 곳은 없었다.
 - `workmate-ui`의 Superproject 편입 방식(Submodule 등록 vs 일반 추적 디렉터리)은 아직 미확정이며
   후속 결정 필요.
+
+### 2026-09-23 LangGraph 전면 전환 계획 확정과 W0 기준선
+
+- `docs/30-langgraph-migration-plan.md`를 **빅뱅 전면 재작성** 기준으로 개정했다. 초판의 "병행 경로 +
+  `WORKMATE_USE_LANGGRAPH` 플래그 + 단계별 점진 전환"은 폐기했다.
+- 전제 확정: 운영 배포 중이 아니고, 호환보다 LangGraph 설계 정합성을 우선한다.
+- 결정 확정: D1=B(공개 계약까지 `interrupt`/`resume`로 개편), D2=A(계약 스냅샷 선추출),
+  D3=B(`langchain-openai` 도입), D4=A(`weekly_classification`→`app/domain/`,
+  `external_sync`→`app/sync/` 이동), D5=A(폴링 유지 + `INPUT_REQUIRED` 분기),
+  D6=B(`a2a_checkpoints` DROP Migration 포함).
+- 동결 구역: `app/workflows/` 전체, `app/a2a/runtime.py`, `app/internal_chat.py`,
+  `workmate-ui/app/views/AssistantDrawer.tsx`, `tools/m51_legacy_adapter.py`.
+- W0 기준선: `uv run python -m unittest discover -s tests -v` → 440 tests, OK, skipped 12, 실패 0.
+  건너뛴 12개는 전부 `WORKMATE_TEST_DATABASE_URL` 미설정으로 SKIP된 PostgreSQL 통합 테스트다.
+- 실행 환경 복구(자동 재작업): `.venv`가 사라진 `C:\Python312`(3.12.4)를 가리켜 `uv run`이 실패했다.
+  `uv python install 3.12`(3.12.13) → `uv venv --clear --python 3.12` → `uv sync`로 복구했고
+  `uv.lock` 의존성 버전은 변경하지 않았다.
+- 상태: 검수 중. 자동 진행 보류 사유 — (1) `app/workflows/assistant_router.py`,
+  `app/workflows/meetings.py`, `app/meeting_answer.py`와 테스트 2개의 **미커밋 변경**이 남아 있어 전환
+  기준 Commit이 확정되지 않았다(다른 작업자의 구현이라 자동 커밋하지 않는다). (2) PostgreSQL 테스트 DB
+  미구성으로 해당 경로 기준선이 없다.
+- 다음 착수 항목: W1 계약 스냅샷 추출 — 옛 구현이 살아 있는 동안에만 가능하므로 W3보다 먼저 끝낸다.
+- 증빙: `docs/evidence/langgraph/W0/runs/20260923-065508/result.md`
+
+### 2026-09-23 LangGraph W0 완료 — 기준선 확정
+
+- 미커밋 변경 5개 파일을 사용자 결정에 따라 2개 로컬 커밋으로 고정했다(`274c204` proposal_id Schema
+  누락 수정, `8043c1e` 회의 검색 LLM 근거 답변 + warning 분류). 원격 Push는 하지 않았다.
+- PostgreSQL 테스트 DB를 구성했다 — Docker Desktop 기동 후 `pgvector/pgvector:pg16` 컨테이너를
+  `55432` 포트로 띄우고 `WORKMATE_TEST_DATABASE_URL`을 설정했다. `migrations/004_search_data.sql`이
+  `vector`·`pg_trgm` 확장을 요구해 표준 postgres 이미지가 아닌 pgvector 이미지를 쓴다.
+- 확정 기준선: `workmate-agent@8043c1e`, **440 passed / 0 failed / 0 skipped**(20.2s).
+  1차 실행에서 SKIP됐던 PostgreSQL 통합 테스트 12개가 전부 실행·통과했다.
+- 상태: W0 완료(자동 승인 — 검수 항목 4개 전부 PASS, 미실행·수동 검수·차단 없음).
+- 다음 착수 항목: W1 계약 스냅샷 추출. 옛 구현이 살아 있는 동안에만 가능하므로 W3보다 먼저 끝낸다.
+- 증빙: `docs/evidence/langgraph/W0/runs/20260923-065508/result.md`
+
+### 2026-09-23 LangGraph 단계별 상세 계획 문서 10건 작성
+
+- `docs/30-langgraph-migration-plan.md` §5의 작업 순서 표가 단계당 한 줄뿐이라 착수 시점마다 설계를
+  다시 해야 하는 문제가 있어, W0~W9를 각각 `30-0`~`30-9` 상세 계획 문서로 분리했다.
+- 공통 구성(소프트웨어 공학 표준): 문서 정보 → 목적·범위(In/Out) → 선행 조건(Entry criteria) →
+  요구사항(`Wn-Rxx`) → 설계 → 작업 분해(`Wn-Txx`, WBS) → 검증 설계(`Wn-Vxx`) → 추적성 매트릭스
+  (R↔T↔V) → 완료 정의(Exit criteria) → 위험과 완화 → 롤백·중단 기준 → 참조.
+- 단계별 핵심 제약을 문서에 고정했다. W1은 옛 구현 생존 기간에만 가능(시한 제약)하고 비결정 값
+  정규화 규칙을 정의한다. W2는 HTTP 4xx/5xx 비재시도 구분 보존이 D3=B의 최대 위험이다. W5는
+  오류→HTTP 매핑(422/503)과 A2A 이벤트 순서가 중단 기준이다. W6은 계약 설계안 C1~C5가 별도 승인
+  대상이고 오케스트레이터 저장소 수정은 금지다. W7의 DROP Migration은 비가역이라 마지막 커밋으로
+  분리한다. W9는 스냅샷 diff에서 "설명 불가 차이 0"을 완료 조건으로 둔다.
+- `docs/README.md` 문서 색인과 `docs/30-langgraph-migration-plan.md` §5 표에서 10개 문서로 연결했다.
+- 상태: 계획 문서 작성 완료. 다음 착수 항목은 W1(계약 스냅샷 추출)이며 `30-1` 문서의 WBS를 따른다.
+
+### 2026-09-28 W2 상세 계획을 절 단위 문서 12건으로 분해
+
+- `docs/30-2-w2-graph-foundation.md`의 최상위 번호 절 12개를 각각 `30-2-1`~`30-2-12` 문서로 분해했다.
+  상위 문서는 요약·색인으로 남기고, 충돌 시 상세 문서를 기준으로 한다.
+- 분해 과정에서 코드 전수 조사를 수행해 **재시도 정책 불일치**를 발견했다. OpenAI 호환
+  `/chat/completions` 직접 호출은 6곳·5개 모듈이고 환경변수 계열이 `OPENAI_*`와 `LLM_*`로 갈려 있는데,
+  재시도 정책도 서로 다르다 — `assistant_router`는 3회·네트워크 오류만 재시도하고 HTTP 4xx/5xx를
+  제외하지만(2026-08-19 DNS 대응), `weekly_report._call_llm_with_retry`는 2회 시도하며
+  `LLMProviderError`(timeout·429·5xx·Schema 오류)를 재시도 대상에 포함한다.
+- 이에 따라 W2 설계를 조정했다. `llm.py`에 RetryPolicy를 **두 종류**(`NETWORK_ONLY_RETRY`,
+  `PROVIDER_ERROR_RETRY`) 정의하고 지점별 동작 보존을 기본 방침으로 삼는다. 정책 통일은 동작 변경이라
+  전환 범위에서 제외하고 W9 후속 백로그로 넘긴다.
+- `docs/30-langgraph-migration-plan.md` §9-6("네트워크 오류만 재시도")은 `assistant_router` 계열에만
+  해당하므로 W2 완료 시 서술을 정밀화해야 한다(`30-2-9` §2.5에 기록).
+- `email_action_items.py`는 `daily_briefing`(범위 내)과 `dev_gmail_sync_api`·`proposal_api`(범위 밖)가
+  공유하므로 LLM 경로를 교체하지 않고 Graph 노드가 기존 함수를 그대로 호출한다(`30-2-5` §5.3).
+- 상태: 계획 문서 작성 완료. 다음 착수 항목은 W1(계약 스냅샷 추출), 그다음이 W2다.
+
+### 2026-09-28 W3 상세 계획을 절 단위 문서 12건으로 분해
+
+- `docs/30-3-w3-skill-subgraphs.md`의 최상위 번호 절 12개를 `30-3-1`~`30-3-12`로 분해했다(2,335줄).
+  상위 문서는 요약·색인으로 남긴다.
+- 분해를 위해 Skill 11개의 구현 구조를 조사했고, 계획에 없던 사실 두 가지를 발견했다.
+  1. **`daily_briefing`에 숨은 부작용이 있다.** 내부에서 `rank_priorities` Workflow를 호출하며
+     (`daily_briefing.py:139, 238`), 그 과정에서 `snapshot_repository.save_all()`로 우선순위
+     Snapshot이 저장된다(`priority.py:123`). 이 부작용은 `daily_briefing` 응답에 드러나지 않아
+     **W1 계약 스냅샷으로 검출되지 않는다.** 두 Skill이 저장소를 통해 결합돼 있어, Domain 함수
+     호출로 바꾸면 `rank_priorities`의 `changes` 값이 달라진다.
+  2. **보조 Skill 5종은 UI REST 함수를 호출하는 얇은 래퍼다.** `review_action_items`→
+     `action_item_api`, `review_proposal`→`proposal_api`, `manage_tasks`→`task_api`를 지연 import로
+     호출한다. 이 모듈들은 W3 범위 밖이라 억지로 쪼개면 얻는 것 없이 Checkpoint I/O만 늘어난다.
+- 이에 따라 요구사항 2건과 검증 1건, 설계 결정 5건을 추가했다.
+  - `W3-R10` 숨은 부작용 보존, `W3-R11` 확인 흐름 동결(W6까지 `pending_action` 방식 유지)
+  - `W3-V11` 부작용 DB 직접 검증 — 스냅샷으로 잡히지 않는 항목의 전용 검증
+  - `W3-D1` 부작용 유지(Subgraph 호출), `W3-D2` 주입 핸들, `W3-D3` 공통 State + `input` 하위 dict,
+    `W3-D4` 얇은 래퍼 3노드 최소 분해, `W3-D5` 확인 판정과 실행 사이 노드 분리(W6 대비)
+- W3의 "잘 되는 것처럼 보이는 실패" 두 가지를 중단 기준에 반영했다 — 숨은 부작용 소실과 `user_id`
+  조건 누락은 전용 검증 없이는 영원히 통과하므로, 하나라도 FAIL이면 W3 전체를 미완료로 본다.
+- 상태: 계획 문서 작성 완료. 다음 착수 항목은 W1(계약 스냅샷 추출).
+
+### 2026-09-29 W0~W9 전 단계를 절 단위 문서로 분해 완료
+
+- `docs/30-0`~`30-9`의 모든 최상위 번호 절을 독립 문서로 분해했다. 총 **135개 파일, 26,906줄**.
+  상위 10개 문서는 요약·색인으로 남기고 각 문서 상단에 하위 문서 표를 넣었다.
+- 공통 구성: 문서 정보 → 목적·범위 → 선행 조건 → 요구사항(`Wn-Rxx`) → 설계 → WBS(`Wn-Txx`) →
+  검증 설계(`Wn-Vxx`) → 추적성 매트릭스 → 완료 정의 → 위험 등록부(`Wn-Kxx`) → 롤백·중단 → 참조.
+  단계별 고유 절: W0 §10 실행 결과, W1 §12 후행 전달, W6·W9 §10 승인 경계, W9 §12 후속 백로그.
+- **분해 과정의 코드 조사에서 계획에 없던 사실 네 건을 발견했고, 해당 단계 설계를 수정했다.**
+  1. **재시도 정책이 하나가 아니다**(W2). `assistant_router`는 3회·네트워크 오류만 재시도하고 HTTP
+     4xx/5xx를 제외하지만, `weekly_report._call_llm_with_retry`는 2회 시도하며 429·5xx·Schema 오류를
+     재시도 대상에 포함한다. 계획서 §9-6("네트워크 오류만 재시도")은 전자에만 해당한다. → RetryPolicy
+     2종 정의(W2), 통일하지 않고 각각 보존(W8-D1), §9-6 서술 정밀화를 완료 조건에 추가.
+  2. **`daily_briefing`에 숨은 부작용이 있다**(W3). 내부에서 `rank_priorities` Workflow를 호출해
+     우선순위 Snapshot이 저장된다. 응답에 드러나지 않아 계약 스냅샷으로 검출되지 않는다.
+     → 결정 W3-D1(Subgraph 호출로 부작용 유지) + 전용 검증 W3-V11(DB 직접 확인).
+  3. **멱등성이 절반만 구현돼 있다**(W4). `record_message()`는 중복 여부를 bool로 반환하지만
+     `runtime.py:223`이 반환값을 무시한다. 같은 `message_id` 재전송이 재실행되고, UI REST는
+     `message_id`가 매 요청 새 uuid라 아예 발동하지 않는다. → 결정 W4-D1(96번 설계대로 구현, 동작
+     변경) + 전용 검증 W4-V3, W5에서 외부 노출 시점 기록.
+  4. **보조 Skill 5종은 UI REST 함수를 호출하는 얇은 래퍼다**(W3). 업무 로직이 W3 범위 밖 모듈에
+     있어 억지로 쪼개면 얻는 것 없이 Checkpoint I/O만 늘어난다. → 결정 W3-D4(3노드 최소 분해).
+- 이 네 건은 전부 **계약 스냅샷으로 검출되지 않는 변경**이다. 단계마다 "스냅샷이 못 잡는 변경"을
+  식별하고 전용 검증을 붙이는 것이 이 전환의 패턴이 됐다(W3-V11, W4-V3, W5-V1-4, W8-V7).
+- 승인이 필요한 단계는 둘로 정리됐다. **W6**(계약안 C1~C5 착수 전 승인 + UI 육안 검수)과
+  **W9**(문서 개정 + Merge·Push). 나머지 8단계는 검증이 전부 PASS면 자동 승인 대상이다.
+- W9에 후속 백로그 10건을 이유·우선순위와 함께 정리했다(`30-9-12`). 중간 우선순위 3건은 HTTP 429
+  재시도, `AUTH_REQUIRED` 상태 도입, 오케스트레이터 대응이다.
+- `docs/README.md` 색인을 갱신했다.
+- 상태: 계획 문서 전체 완료. 다음 착수 항목은 **W1(계약 스냅샷 추출)**이며 `30-1-6` WBS를 따른다.
+
+### 2026-09-29 ReAct Agent 전환 계획 추가 (W10) + LangGraph 증거 산출물 보강
+
+- 사용자 요청으로 **ReAct Agent 전환 계획**을 `docs/30-10-w10-react-agent.md`로 추가했다.
+  W0~W9 전환의 일부가 아니라 **W9 완료·승인 후 별도로 착수하는 후속 작업**이다 — 전환의 완료 기준이
+  "의도적으로 바꾼 것 외에는 아무것도 안 바뀌었다"(§9-7)인데 ReAct를 섞으면 그 판정이 불가능해진다.
+- 착수 전 확정할 결정 7건(D7-1~D7-7)과 선행 승인 2건을 명시했다.
+  - **05번 문서 §1 "LLM과 코드의 책임" 표 개정 승인** — 현재 표는 LLM 역할을 "요약·자연어 표현·
+    추출·문장 작성·근거 기반 답변"으로 한정하고 "도구를 고르고 실행 순서를 정한다"가 없다. ReAct는
+    이 칸을 넓히는 일이라 문서 개정이 선행돼야 한다.
+  - 공개 계약 재변경 — `executed_skill_id`가 단수인데 ReAct는 도구를 여러 번 부를 수 있다. W6에서
+    한 번 바꾼 계약을 또 바꾸는 것이라 UI·어댑터·02번 문서가 다시 영향받는다.
+- **최대 위험은 `_SKILL_CATALOG` 134줄의 규칙 유실**(W10-K1)이다. `week_of` 상대 표현 계산,
+  `[분석 완료]` 회의 재분석 금지, 회의 특정 실패 시 되묻기 등 실사용 피드백으로 한 줄씩 쌓인 규칙이
+  도구 설명으로 흩어지면서 조용히 사라질 수 있다. → W10-T2(규칙 전수 목록화 + 회귀 케이스)를
+  착수 관문으로 두고, 이걸 건너뛰면 W10을 시작하지 않는다.
+- 설계 결정 W10-D1: **계산 규칙을 프롬프트가 아니라 코드로 내린다.** 현재 LLM이 `week_of`를 계산하는데
+  (프롬프트에 "오늘-7일" 규칙), 도구가 기본값을 계산하고 LLM은 의도(`relative="last_week"`)만
+  전달하게 바꾼다. 05번 문서 §1("날짜 범위 계산은 코드")과도 일치한다.
+- ReAct가 실제로 해결하는 문제도 기록했다 — 현재 `_ARGUMENTS_SCHEMA`가 **15개 필드를 평평하게**
+  갖고 전부 `required`다(OpenAI strict 모드 제약). 코드가 null을 걸러낸다. 도구별 개별 Schema를
+  쓰면 이 구조적 문제가 해소되고 인자 오배치가 불가능해진다.
+- 신규 검증 W10-V9(선택 안정성): 같은 입력 10회 실행 시 같은 도구 시퀀스가 나오는 비율. 현재 구조는
+  사실상 10/10(temperature=0 단발 분류)이고, 이 수치가 떨어지는 것이 ReAct의 대가다. 6/10 이하면
+  설계 재검토.
+- **함께 보강한 것 — LangGraph 증거 산출물.** "그림만으로는 LangGraph인지 알 수 없다"는 지적에 따라
+  구조를 증명하는 산출물을 세 단계에 추가했다.
+  - `W4-R11` / `W4-V11`: `graph.get_graph().draw_mermaid()`와 `get_state_history()` 출력을 증빙에.
+    손으로 그린 그림과 달리 Graph 객체에서 나온 것이라 코드와 100% 일치한다.
+  - `W6-V7-7`: **확인 대기 중 서버 재시작 → resume** 육안 검수. 다른 케이스는 현재의 재요청 방식도
+    전부 통과하지만, 서버 재시작을 끼우면 Checkpointer 없이는 통과할 수 없다.
+  - `W9-R11`: 개념↔코드 대조표 + **"안 쓰는 것"** 목록(Agent·Tool 추상화·LCEL·Retriever·LangSmith)을
+    97번 문서 개정에 포함. 과장하지 않기 위한 경계 기록이다.
+- 상태: W10 계획 수립 완료(착수 전 승인 대기). 전환의 다음 착수 항목은 여전히 **W1**이다.
+
+### 2026-09-29 — W10(ReAct Agent 전환) 계획 13개 절별 문서로 분해
+
+- 사용자 요청("w10도 상세계획으로 쪼개")으로 `docs/30-10-w10-react-agent.md` 561줄을 W0~W9와 동일한
+  13절 체계로 분해했다. 신규 13개 + 상위 문서 재작성, 총 **2,981줄**.
+  - `30-10-1-document-info.md` — 문서 정보·용어·**왜 별도 단계인가**·착수 금지 조건
+  - `30-10-2-scope.md` — 목적, 좋아지는 것·나빠지는 것, 범위 내(S1~S9)·외, **후속 백로그 관계**
+  - `30-10-3-entry-criteria.md` — W10-E1~E6, 05번 개정이 왜 최우선인가
+  - `30-10-4-requirements.md` — **신규 작성** W10-R1~R13 + 요구사항 간 충돌 3건
+  - `30-10-5-design.md` — W10-D1~D8, ReAct Graph, State, 도구 Schema, 카탈로그 이전, HITL, 예산
+  - `30-10-6-wbs.md` — W10-T1~T11 + 의존 그래프 + 산출물 체크리스트
+  - `30-10-7-verification.md` — W10-V1~V10 상세 케이스(V3-1~V3-7, V5-1~V5-6, V6-1~V6-4, V7-1~V7-5)
+  - `30-10-8-traceability.md` — **신규 작성**. 요구사항↔작업↔검증, **카탈로그 규칙 추적표 형식**,
+    05번 개정↔구현 추적, 계약 변경 누적(W6+W10)
+  - `30-10-9-exit-criteria.md` — E-1~E-7, 자동 승인 불가 사유, 승인 요청 시점 셋
+  - `30-10-10-approval.md` — **D7-1~D7-7 전부 + 근거**, **05번 §1 개정안 전문**, 대안(D7-7 B안) 비교
+  - `30-10-11-risks.md` — W10-K1~K8 + 스냅샷 대응 + 우회 시험
+  - `30-10-12-rollback.md` — 부분 롤백(W10-T4는 유지), 중단 vs 재작업 구분, 금지되는 해결 방법
+  - `30-10-13-references.md` — 읽을 지점, **"안 쓰는 것" W9 대비 변화표**
+- **새로 만든 내용 둘.** 원본에 없던 절이다.
+  - **요구사항 W10-R1~R13** — 원본은 설계에서 요구사항으로 바로 넘어갔다. R3(권한 인자 State 주입),
+    R6(결정적 규칙 불변), R13(스냅샷 23건 불변)을 명시적 요구사항으로 올려 검증에 1:1 연결했다.
+  - **추적성** — 카탈로그 134줄의 각 규칙이 어디로 갔고 무엇이 지키는지 추적하는 표 형식을 정의했다.
+    이 단계 증빙의 중심은 코드 변경 기록이 아니라 `catalog-rules.md`(규칙 이전 대장)다.
+- **승인 시점을 명확히 했다.** 사용자 질문("d7을 왜 지금 확정해야하지")에 따라 `30-10-10` §1.1에
+  **지금 확정하지 않는 이유**를 기록했다. D7-2·D7-3·D7-4·D7-6은 W2~W6을 거치면서 판단 근거가 채워지는
+  결정이고, 05번 문서를 미리 고치면 W1~W9 동안 설계 문서가 구현보다 앞서 나간다(W9가 없애려는 문제와
+  같은 종류). 계획서 §5 주석과 `docs/README.md`에도 반영했다.
+- 승인 지점은 셋이다 — 착수 전(D7 + 05번 개정), 계약 확정(`executed_skill_ids` 설계안), 완료 시(육안
+  검수 + 비용 수용 판단). W6이 둘이었던 것보다 하나 많다.
+- `AGENTS.md`는 수정 제안이 없다. 충돌 지점을 찾지 못했다 — 점수·근거 ID·`user_id`는 W10 이후에도
+  코드가 소유하고 W10-V5·V6이 강제한다(`30-10-10` §3.4).
+- 교차 참조 정정: 계획서 §5 주석·§10, `30-9-12-backlog.md`, `docs/README.md`. 절 번호가 바뀌었으므로
+  옛 "§11"·"§3·§4" 참조를 파일 링크로 교체했다. 링크 검사 결과 깨진 링크 0.
+- 자동 재작업 착수: 해당 없음(문서 작업).
+- 상태: **W10 계획 분해 완료. 착수는 W9 완료 후.** 전환의 다음 착수 항목은 여전히 **W1(계약 스냅샷
+  추출)** 이며, `docs/30-1-6-wbs.md`가 작업 목록이다. W1은 별도 승인이 필요하지 않다.
+
+### 2026-09-30 — 표준 방식 확인 결과: 계획 W6·W8·W10 설계에 영향 (계획 미개정, 사용자 결정 대기)
+
+- 사용자 요청으로 **표준 방식 학습 랩**을 `C:\dev\langgraph-standard-lab`(저장소 밖)에 만들고
+  실제 실행해 확인했다. LangGraph **1.2.12** / langchain **1.4.3** / langchain-core **1.6.6** / Python 3.12.
+  예제 6개 전부 `exit=0`. 실제 `OPENAI_API_KEY`로 호출했다(소액 과금).
+- **계획서와 어긋나는 사실 둘을 확인했다. 계획 문서는 아직 고치지 않았다.**
+
+**(1) `create_react_agent`가 `langchain` 본체로 이사했다.**
+
+```
+from langgraph.prebuilt import create_react_agent   # DeprecationWarning, v2.0에서 제거
+from langchain.agents import create_agent           # 현재 표준
+```
+
+즉 **표준 에이전트 진입점을 `langchain` 본체가 소유한다.** 세션 중 내가 "본체는 레거시
+체인·AgentExecutor라 필요 없다"고 설명한 것은 0.x 기준이었고 1.x에서는 맞지 않는다.
+`docs/30-9-4-requirements.md` W9-R11의 "안 쓰는 것" 목록에서 `AgentExecutor`는 여전히 유효하지만,
+`langchain` 본체를 의존성에서 제외한다는 전제는 재검토 대상이다.
+
+**(2) W6·W8·W10이 직접 만들기로 한 것이 표준 middleware로 제공된다.** 실행으로 확인했다.
+
+| 계획 항목 | 표준 대체 | 확인 내용 |
+| --- | --- | --- |
+| W6 확인 게이트 + `_requires_confirmation()` 4종 | `HumanInTheLoopMiddleware(interrupt_on={...})` | 승인·거부·조건부(`when=lambda`) 3종 모두 동작. 거부 시 루프가 끝나지 않고 모델이 대안 제시 |
+| W10-D5 루프 예산(반복 6회) | `ModelCallLimitMiddleware(run_limit=)` | `run_limit=1`로 종료 확인. 사유가 AIMessage로 남는다 |
+| W10 "같은 도구 연속 2회" | `ToolCallLimitMiddleware(tool_name=, run_limit=)` | **병렬 호출은 함께 센다.** 상한 초과 시 둘 다 차단하고 사유를 ToolMessage로 모델에 전달 |
+| W8 재시도 2종 | `ToolRetryMiddleware(tools=[...], retry_on=)` | 도구별로 정책을 나눠 끼울 수 있다. 3회째 성공 확인 |
+
+- `interrupt` payload 실제 구조: `{"action_requests": [{name, args, description}], "review_configs": [{action_name, allowed_decisions}]}`.
+  재개는 `Command(resume={"decisions": [{"type": "approve"}]})`이며 **`decisions` 키로 감싸야 한다**(리스트를 바로 넘기면 TypeError).
+- **D7-2=B(커스텀 StateGraph)는 여전히 성립하지만 이유가 달라진다.** "표준이 안 해 주니까"가 아니라
+  (a) 도구 호출과 무관한 노드(`validate_contract`·`persist_result`)가 필요하고 (b) Skill 11개를
+  Subgraph로 나눠 Root에서 분기해야 하고 (c) A2A Task Store와 맞물려야 하기 때문이다. workmate는
+  셋 다 해당한다.
+- 부수 확인: `langchain-openai`는 `langchain-core`만 전이 의존으로 끌어온다(본체 미포함).
+  `langchain` 본체를 추가해도 기존 충돌은 없었으나, 이 랩은 `a2a-sdk`·`fastapi`를 쓰지 않으므로
+  workmate에서의 충돌 위험은 별도로 확인해야 한다(W2-T1).
+- 랩 구성(1,002줄, 계획 문서 0줄): `domain.py`(도구 6개) · `model.py`(실제/대본 모델) ·
+  `01` prebuilt → `02` Checkpointer → `03` HITL → `04` astream 3모드 → `05` 커스텀 StateGraph +
+  `draw_ascii`/`draw_mermaid` → `06` 예산·재시도. `langgraph.json`으로 `langgraph dev` Studio 준비됨.
+- **미결정 사항.** 위 발견을 계획에 반영할지는 사용자 결정 대기다. 후보는 (a) 계획 유지 +
+  이유만 정정 (b) W6·W8·W10을 middleware 기반으로 재설계 (c) 진입점을 `create_agent`로 바꾸고
+  Root Graph만 커스텀. 어느 쪽이든 `docs/30-2-5-design.md` §6 의존성, `docs/30-6-5-design.md`,
+  `docs/30-8-5-design.md`, `docs/30-10-5-design.md`, `docs/30-10-10-approval.md` D7-2 개정이 필요하다.
+- 자동 재작업 착수: 아니오 — 계획 개정은 범위·설계 변경이라 사용자 승인 대상.
+- 상태: **전환의 다음 착수 항목은 여전히 W1(계약 스냅샷 추출).** 이 발견은 W1에 영향을 주지 않는다.
+
+### 2026-09-30 — 위 학습 랩 삭제, 표준 방식 영향도 조사로 전환
+
+- 직전 항목의 `C:\dev\langgraph-standard-lab`은 **사용자 요청으로 전부 삭제했다.** 별도 학습
+  프로젝트는 의도와 달랐다. 해당 경로는 더 이상 존재하지 않으므로 직전 항목의 랩 구성·파일 목록은
+  이력으로만 읽는다. **단, 거기서 실행으로 확인한 라이브러리 사실(표준 진입점 이사, middleware 제공
+  범위, interrupt payload 구조)은 유효하다.**
+- 사용자 의도는 **기존 `workmate-agent`를 표준 방식으로 바꿀 때의 영향도 조사**다. 코드·계획 문서는
+  변경하지 않았다(조사만).
+
+**조사 결과 — 구조적 충돌의 핵심**
+
+| | 표준 방식 | workmate 현재 |
+| --- | --- | --- |
+| 외부 공개면 | 에이전트 1개 | Agent Card에 **Skill 11개** |
+| 무엇을 할지 결정 | 항상 LLM | 호출자가 `skill_id`로 지정 |
+| 응답 | messages(+`structured_response`) | **A2A Artifact** (DataPart JSON + text/markdown) |
+| 상태 | messages 중심 | `data`·`markdown`·`warnings`·`task_state` |
+
+**호출자별 영향도 (실측)**
+
+| 호출자 | 현재 호출 | 표준(단일 에이전트)로 바꿀 때 |
+| --- | --- | --- |
+| 오케스트레이터 | 어댑터가 문장을 `assistant_ask`로 넘긴다(`tools/m51_legacy_adapter.py`) | **영향 거의 없음 — 이미 단일 진입점** |
+| `AssistantDrawer.tsx` | `assistant_ask` + `analyze_meeting`·`manage_tasks`·`review_action_items` | 중간 |
+| `Briefing.tsx` | `daily_briefing`·`rank_priorities` | **버튼=Skill. 에이전트를 끼울 이유 없음** |
+| `Report.tsx` | `weekly_report` | 동상 |
+| `Search.tsx` | `search_meetings` | 동상 |
+| `Archive.tsx` | `analyze_meeting` | 동상 |
+
+**기술적 충돌 셋**
+1. 표준에서 최종 응답은 LLM이 만든다. workmate `data`는 Domain 계산값(점수·`source_refs`)과 같아야
+   하므로 도구 반환값이 LLM을 우회해야 한다 → 에이전트 뒤 노드가 필요 → StateGraph로 내려감.
+2. `create_agent(response_format=)`는 에이전트당 하나. Skill 11개의 서로 다른 Schema를 못 담는다.
+3. `warnings` 누적 채널이 AgentState에 없다. `daily_briefing` 3층 부분 실패가 표현되지 않는다.
+
+**영향 규모 (실측)**
+
+| 구분 | 대상 | 규모 |
+| --- | --- | --- |
+| 전면 교체 | `app/workflows/` 9개 모듈 | 3,144줄 |
+| 전면 교체 | `registry.py` | 92줄 |
+| 수정 | `runtime.py`·`internal_chat.py`·`persistence.py` | 1,476줄 |
+| 재작성 | 의존 테스트 18개 파일 | 4,675줄 (전체 64개 중) |
+| **무변경이어야 함** | `repositories`·`domain`·`providers` 19개 파일 | 3,047줄 |
+| 수정 | `workmate-ui` 5화면 | Drawer 필수, 나머지 4개는 선택 |
+| **승인 필요** | 오케스트레이터 저장소 | 어댑터 흡수 우선 시도 |
+
+**결론** 표준 방식이 맞는 범위는 **`assistant_ask` 하나**이며, 이는 계획 W10과 같은 결론이다.
+새로 얻은 것은 (a) 진입점을 `create_agent`로 둘 수 있다(D7-2=A 재검토 여지) (b) HITL·루프 예산·
+재시도를 middleware로 대체해 직접 만들 코드가 줄어든다는 점이다.
+
+- 자동 재작업 착수: 아니오 — 조사만 수행. 계획 개정은 사용자 결정 대기.
+- 상태: **다음 착수 항목은 여전히 W1(계약 스냅샷 추출).**
+
+### 2026-09-30 — 표준 Agent 영향도 조사 완료 + 의존성 충돌 검증 (docs/31 신규)
+
+- 사용자 요청으로 (1) 미검증 4건을 실제로 검증하고 (2) 조사 결과를 문서로 기록했다.
+  **`workmate-agent` 코드와 계획서 W0~W10은 변경하지 않았다.**
+- 신규 문서: [`docs/31-standard-agent-impact-analysis.md`](docs/31-standard-agent-impact-analysis.md)
+  (조사·기록용, 구현 항목 아님). `docs/README.md`에 색인 추가.
+
+**검증 1 — 의존성 충돌: 없음 (가장 큰 미확인 위험 해소)**
+
+workmate 고정 의존성 11개를 그대로 둔 임시 프로젝트에 LangChain 스택 5개(`langgraph`,
+`langgraph-checkpoint-sqlite`, `langgraph-checkpoint-postgres`, `langchain-openai`, `langchain`)를
+더해 `uv lock`으로 해석하고, **대조군**(LangChain 없이 재해석)과 비교했다.
+
+| 비교 | 결과 |
+| --- | --- |
+| 해석 | 91개 패키지, exit 0 |
+| **LangChain 추가가 밀리게 하는 기존 패키지** | **0개** |
+| 재해석만으로 밀리는 것(LangChain 무관) | 17개 |
+| 고정(`==`) 버전 9개 | **전부 유지** (`a2a-sdk 1.1.2`·`fastapi 0.116.1`·`psycopg 3.2.10` 등) |
+| `a2a-sdk` + `fastapi` + `langchain` 동시 import | **성공** |
+
+**별건 발견 — 현재 `uv.lock`이 낡았다.** 위 17개는 LangChain과 무관하게 누구든 `uv lock`을 다시
+돌리면 밀린다. 그중 **`oauthlib` 3.3.1 → 4.0.0 (메이저)** 가 있어 Google OAuth 경로 영향 가능성이
+있다. W2-T1에서 lock이 갱신될 때 함께 드러나므로 그 시점 확인 항목이다.
+
+**버전 상한** workmate의 `requires-python = ">=3.12,<3.13"`에서 `langchain`이 **1.3.2**,
+`langgraph`가 **1.2.2**로 해석된다(상한 없이는 1.4.3 / 1.2.12). middleware 14개로 필요한 넷은 전부
+포함.
+
+**검증 2~4**
+
+| 항목 | 결과 |
+| --- | --- |
+| `ModelRetryMiddleware` | 존재 확인. `max_retries`·`retry_on`·backoff. **`tools=` 없음** — 모델 호출 전체에 적용 |
+| `response_format` | **에이전트당 1개**(단일 타입). Skill 11개의 서로 다른 Schema를 담을 수 없음 확인 |
+| **`create_agent`를 Subgraph로 합성** | **두 방식 모두 성공** — (a) wrapper 노드(부모 State가 `messages` 불필요) (b) `add_node("agent", inner)` 직접(`messages` 채널 겹칠 때). 반환 타입이 `CompiledStateGraph`다 |
+
+세 번째가 A안 성립의 관건이었고 **성립한다.** `WorkmateState`가 `messages`를 갖지 않아도 wrapper
+노드로 `assistant_ask` 분기에 끼울 수 있다.
+
+**영향도 조사 결과 (요약)**
+
+- `assistant_router.py` 937줄 → **~354줄 삭제, 146줄 재작성, 137줄(`_SKILL_CATALOG`) 분해 이전, ~180줄 유지**
+- UI: [`workmate-format.ts`](workmate-ui/lib/workmate-format.ts) 460줄 중 **~55줄만** 챗봇 계약(나머지 405줄은 버튼 화면용, 무변경)
+- 테스트: `test_assistant_router.py` 1,019줄 전면 재작성 등 **1,829줄**
+- **정정** Drawer는 `assistant_ask` **하나만** 호출한다. 앞서 "3개를 직접 부른다"고 기록한 것은 틀렸다 — 주석과 확인 대기 판정용 문자열 비교였다.
+- **미해결** 오케스트레이터 어댑터의 `INPUT_REQUIRED` 처리. 지금은 `pending_action`을 무시해도 Task가 완료되지만, interrupt로 멈추면 Task가 끝나지 않는다.
+
+**W1~W10 변경 필요 여부**
+
+| 단계 | 변경 |
+| --- | --- |
+| W1 계약 스냅샷 | **불필요** (+케이스 2건 권장: `history_context`, `context_reference`) |
+| W2 Graph 골격 | **필요** — 의존성에 `langchain` 본체, 재시도 소유권 |
+| W3·W4·W7 | 작음 |
+| W5 진입점 교체 | **불필요** |
+| W6 interrupt·계약 | **큼** — C2·C3를 자유롭게 설계할 수 없다(middleware가 모양을 정함) |
+| W8 재시도·관측 | **필요** — 에이전트 안쪽은 middleware, 나머지 10개 Skill은 노드 `RetryPolicy`. **두 체계 공존** |
+| W9 문서·증빙 | **필요** — W9-R11 "안 쓰는 것"에서 `langchain` 본체 제외 전제가 깨짐 |
+| W10 ReAct | **큼** — D7-2 재검토, 예산 4종이 middleware. **단 W10-T2(카탈로그 137줄)와 W10-V5(결정적 규칙 보존)는 그대로 필요** |
+
+**아직 확인하지 않은 것** 440개 테스트 통과 여부(해석 성공 ≠ 런타임 호환, `oauthlib` 4.0 포함),
+`AsyncPostgresSaver`와 `psycopg 3.2.10` 실연결, `with_structured_output(method=)` 동등성,
+middleware와 A2A `TaskUpdater` 이벤트 순서 상호작용.
+
+- 자동 재작업 착수: 아니오 — 조사·문서화만. 선택지 A/B/C 판단과 계획 개정은 사용자 결정 대기.
+- 상태: **다음 착수 항목은 여전히 W1(계약 스냅샷 추출).** 이 조사는 W1에 영향을 주지 않는다.
+
+### 2026-11-03 저장소 구성 정리와 원격 Push
+
+- **사용자 요청으로 원격 Push를 수행했다.** AGENTS.md의 "백로그 완료 시 로컬 커밋만" 규칙에 대한
+  명시적 예외(사용자 요청)에 해당한다. 강제 Push는 하지 않았고 기존 커밋을 덮어쓰지 않았다.
+- `workmate-ui`를 Submodule로 확정했다(`https://github.com/sjseo1221/workmate-ui-demo.git`).
+  2026-09-05 기록에서 "Submodule 등록 vs 일반 추적 디렉터리 미확정"으로 남겨 둔 결정을 Submodule로
+  닫았다.
+- `workmate-ui`의 화면 소스가 그때까지 **미추적 상태**였다 — `app/views/` 12개와 `lib/` 8개가 한 번도
+  커밋된 적이 없었다. 3개 커밋으로 고정했다(로그 ignore → 구현 → 테스트).
+  검증: `npm run build` + `node --test` **71개 통과**, `eslint` 경고 0.
+- `AI-agent_game_platform` Submodule을 **추적에서 제거**했다(사용자 결정). `.gitmodules` 항목과
+  gitlink를 함께 지웠다. 상대 저장소(`harrys-enjoy`)는 전혀 수정하지 않았다 — AGENTS.md 금지 사항
+  준수. 연동 작업을 다시 참조해야 하면 `git submodule add`로 되살린다.
+- 오케스트레이터 연동 문서 `docs/19`~`docs/25`, `docs/m5.1-orchestrator-payload-plan.md`와
+  `a2a-smoke-test/` 11개 파일 삭제를 확정 커밋했다(사용자 결정).
+- `.gitignore` 보강: `.local-dev/`(RSA 개인키·발급 JWT 포함), 기동 로그 6종,
+  `Workmate-AI-portfolio*.pdf`.
+- 캡처용 dev 파라미터 패치(`?token=`·`?view=`·`?q=`·`?chat=`)를 `workmate-ui` 4개 파일에서
+  **되돌린 뒤** Push했다. 재사용이 필요하면 `.local-dev/ui-capture-patch/` 사본으로 재적용한다.
+- Push 전 검증: `workmate-agent` **440 tests OK (skipped 12)**,
+  `git diff --check` 통과, 비밀정보 스캔(`sk-`·`AIza`·PRIVATE KEY·`client_secret`·Bearer) 무검출.
+  건너뛴 12개는 `WORKMATE_TEST_DATABASE_URL` 미설정 PostgreSQL 통합 테스트다 — W0 완료 시점에는
+  pgvector 컨테이너를 띄워 440개 전부 통과시켰고, 이번 Push 검증에서는 컨테이너를 띄우지 않았다.
+- 자동 재작업 착수: 아니오 — 저장소 구성 작업이며 코드 동작 변경이 없다.
+- 상태: **다음 착수 항목은 여전히 W1(계약 스냅샷 추출).** 옛 구현이 살아 있는 동안에만 가능하다.
