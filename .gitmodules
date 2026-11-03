@@ -1,3 +1,6 @@
 [submodule "workmate-agent"]
 	path = workmate-agent
 	url = https://github.com/sjseo1221/workmate-agent.git
+[submodule "workmate-ui"]
+	path = workmate-ui
+	url = https://github.com/sjseo1221/workmate-ui-demo.git
