@@ -31,3 +31,16 @@
 **/*.m4a
 **/*.webm
 **/*.ogg
+
+# 로컬 화면 캡처용 OIDC 발급기와 기동 로그 — 커밋하지 않는다.
+# .local-dev/ 안에는 RSA 개인키와 발급된 JWT가 들어 있다.
+.local-dev/
+.agent.log
+.agent.err.log
+.oidc.log
+.oidc.err.log
+.ui.log
+.ui.err.log
+
+# 포트폴리오 PDF는 문서에서 다시 내보낼 수 있는 산출물이다
+Workmate-AI-portfolio*.pdf
