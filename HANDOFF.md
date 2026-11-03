@@ -11,7 +11,7 @@
 - 마지막 갱신: 2026-11-03 Asia/Seoul
 - 마지막 작업자: Claude
 - 기준 Git Commit: `8043c1e` (`workmate-agent`), `c4ea51d` (`workmate-ui`)
-- 기준 브랜치: `feat/M0.1-01-sdk-runtime` (Superproject·`workmate-agent`), `main` (`workmate-ui`)
+- 기준 브랜치: `main` (세 저장소 전부) — 작업 브랜치 `feat/M0.1-01-sdk-runtime`과 동일 Commit
 
 ## 2. 완료된 항목
 
@@ -1232,3 +1232,18 @@ middleware와 A2A `TaskUpdater` 이벤트 순서 상호작용.
   pgvector 컨테이너를 띄워 440개 전부 통과시켰고, 이번 Push 검증에서는 컨테이너를 띄우지 않았다.
 - 자동 재작업 착수: 아니오 — 저장소 구성 작업이며 코드 동작 변경이 없다.
 - 상태: **다음 착수 항목은 여전히 W1(계약 스냅샷 추출).** 옛 구현이 살아 있는 동안에만 가능하다.
+
+### 2026-11-03 main 병합
+
+- 사용자 결정으로 작업 브랜치를 `main`에 올렸다. 두 저장소 모두 `main`이 뒤처져만 있어
+  (`-0`) **fast-forward**로 합쳤다 — merge 커밋도 강제 Push도 없다.
+  - Superproject `45104b6 → 48d26e4` (71 커밋)
+  - `workmate-agent` `fdddd22 → 8043c1e` (28 커밋, 142개 파일 22,610행)
+  - `workmate-ui`는 처음부터 `main`이라 추가 병합 없음
+- `workmate-agent`의 기존 `main`은 M0.1 이전 Legacy Mock Shell(`app.py`, `smoke_test.py`)에
+  멈춰 있었다. 이번 병합으로 실제 구현·테스트·Migration이 `main`에 들어갔다.
+- 이로써 AGENTS.md의 "Merge는 `latest_approved_run_id` 확정 뒤에만"과 "`main` 직접 Push 금지"
+  두 규칙을 사용자 결정으로 우회했다. LangGraph 전환은 W0만 완료 상태이므로, `main`은
+  **전환 전 기준선**을 담고 있다 — W1 이후의 전환 작업은 별도 작업 브랜치에서 진행한다.
+- 자동 재작업 착수: 아니오 — 브랜치 병합이며 코드 변경이 없다.
+- 상태: **다음 착수 항목은 여전히 W1(계약 스냅샷 추출).**
