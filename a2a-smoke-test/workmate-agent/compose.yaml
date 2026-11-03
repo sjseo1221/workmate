@@ -1,8 +1,0 @@
-services:
-  workmate:
-    build: .
-    ports:
-      - "8001:8000"
-    environment:
-      SERVICE_TOKEN: ${SERVICE_TOKEN:-dev-service-token}
-      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:8001/a2a/v1}
