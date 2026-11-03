@@ -32,6 +32,17 @@ Workmate AI는 메일, 캘린더, 회의록, Task DB 정보를 통합해 브리�
 | 22 | [오늘 브리핑·주간 업무보고 재이식 계획](22-today-briefing-weekly-report-port-plan.md) | 19번 문서 3단계 롤백 후, `workmate-ui` 원본과 대조해 빠진 필드(경고 배너·소스 상태·배점 내역) 없이 다시 이식하는 계획·구현 완료 기록 |
 | 23 | [오케스트레이터 vs workmate-ui "제안함" 로직 차이 분석](23-proposals-orchestrator-vs-workmate-ui-diff.md) | 인증 방식·SSE Provider 마운트 범위·개발 서버 동작 등 두 구현의 실제 코드 차이를 항목별로 정리(분석·기록용, 구현 항목 아님) |
 | 24 | [오케스트레이터 vs workmate-ui "제안함" UI(시각) 차이 분석](24-proposals-orchestrator-vs-workmate-ui-ui-diff.md) | 23번 문서의 로직 분석과 짝을 이루는 화면 표현 차이 — 버튼 시각 위계·상태 색 표시·Toast 구성·안 읽은 배지·카드 스니펫/추천 이유 노출 여부를 JSX·CSS 대조로 정리(분석·기록용, 구현 항목 아님) |
+| 25 | [오케스트레이터 pull 이후 충돌·드리프트 기록](25-orchestrator-pull-conflicts.md) | 모노레포 재구성 이후 빌드 경로·포트·환경변수·볼륨 드리프트와 로컬 검증 결과 |
+| 26 | [회의 검색 데모 환경 보완 가이드](26-meeting-search-demo-environment.md) | `search_meetings` HTTP 503 원인, 팀 전달용 Compose 보완 항목과 검증 절차 |
+| 30 | [Workmate LangGraph 전면 전환 계획](30-langgraph-migration-plan.md) | 빅뱅 전면 재작성의 전제·원칙·범위·확정 결정(D1~D6)·위험·완료 기준. 단계별 상세는 30-0~30-9 |
+| 30-0~30-9 | [W0 기준선](30-0-w0-baseline.md) · [W1 계약 스냅샷](30-1-w1-contract-snapshot.md) · [W2 Graph 골격](30-2-w2-graph-foundation.md) · [W3 Skill Subgraph](30-3-w3-skill-subgraphs.md) · [W4 Root Graph](30-4-w4-root-graph.md) · [W5 진입점 교체](30-5-w5-entrypoint-swap.md) · [W6 interrupt·공개 계약](30-6-w6-interrupt-resume.md) · [W7 레거시 삭제](30-7-w7-legacy-removal.md) · [W8 재시도·관측](30-8-w8-retry-observability.md) · [W9 문서·증빙](30-9-w9-docs-evidence.md) | 단계별 계획의 **요약·색인**. 각 문서 상단에 하위 문서 표가 있다 |
+| 30-10 | [ReAct Agent 전환 계획](30-10-w10-react-agent.md) | **전환 후속 작업**의 요약·색인. `assistant_ask`의 단발 분류 라우팅을 ReAct 루프로. 05번 문서 §1 개정과 결정 D7-1~D7-7 승인이 선행 조건이며, 승인은 **착수 시점에** 받는다 |
+| 30-10-1~13 | W10의 절별 상세 (예: [30-10-5 설계](30-10-5-design.md), [30-10-10 승인 경계](30-10-10-approval.md)) | 30-0~30-9와 같은 13절 체계. W10 고유 절: §10 승인 경계(**D7-1~D7-7 + 05번 개정안 + 대안 비교**) |
+| 30-N-1~13 | 각 단계의 절별 상세 문서 (예: [30-2-5 설계](30-2-5-design.md), [30-6-10 승인 경계](30-6-10-approval.md)) | 절 단위 상세 — 문서 정보 / 목적·범위 / 선행 조건 / 요구사항 `Wn-Rxx` / 설계 / WBS `Wn-Txx` / 검증 `Wn-Vxx` / 추적성 / 완료 정의 / 위험 `Wn-Kxx` / 롤백 / 참조. 단계별 고유 절: W0 §10 실행 결과, W1 §12 후행 전달, W6·W9 §10 승인 경계, W9 §12 후속 백로그 |
+| 31 | [표준 Agent 방식 전환 영향도 분석](31-standard-agent-impact-analysis.md) | **조사·기록용**(구현 항목 아님). `langchain.agents.create_agent` + middleware가 표준 진입점임을 실행으로 확인하고, 기존 `workmate-agent`를 그 방식으로 바꿀 때의 영향을 심볼·줄 단위로 정리. 선택지 A/B/C와 W1~W10 변경 필요 여부, 의존성 충돌 검증 결과 포함 |
+| 96 | [Workmate LangGraph StateGraph 목표 아키텍처](96-workmate-langgraph-target-architecture.md) | Workmate를 실제 LangGraph `StateGraph`로 구현했다고 가정한 Root Graph·Subgraph·Checkpoint·Interrupt 목표 도식 |
+| 97 | [Workmate LangGraph 구조 도식](97-workmate-langgraph-structure.md) | 전체 문서를 종합한 목표 LangGraph, 현재 Workflow Runtime, Skill별 분기·상태·영속성 도식 |
+| 99 | [Workmate PPT 콘텐츠 원고](99-workmate-ppt-content.md) | Skill, 모델·API 스펙, LangGraph 설계와 실제 Workflow 구조, LLM·Embedding·STT 평가 및 구현 반영 내용 |
 
 문서 번호 8은 기존 통합 초안과의 링크 충돌을 피하기 위해 예약 번호로 남기며 새 문서에 재사용하지 않는다.
 
